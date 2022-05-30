@@ -68,7 +68,7 @@ function fix {
         # will be affected. Script should be re-run to ensure we are
         # looking at an up to date environment.
         inlineNote "\nRestarting checks to see if the problem is resolved."
-        (./tools/doctor.sh) && exit
+        (./.tools/doctor.sh) && exit
     fi
 }
 
