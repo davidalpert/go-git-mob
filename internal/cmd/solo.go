@@ -58,7 +58,7 @@ func (o *SoloOptions) Run() error {
 		return err
 	}
 
-	me, err := cfg.GetMe()
+	me, err := cfg.GetUser()
 	if err != nil {
 		return err
 	}
