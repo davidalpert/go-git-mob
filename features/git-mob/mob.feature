@@ -1,23 +1,19 @@
 Feature: mob
 
   Background:
-    Given a file named "~/.gitconfig" with:
-    """
-    [user]
-      name = Hoban Washburne
-      email = wash@serenity.com
-    """
+    Given I run `git config --global user.name "Jane Doe"`
+    And I run `git config --global user.email "jane@example.com"`
     Given a file named "~/.git-coauthors" with:
     """
     {
       "coauthors": {
-        "mr": {
-          "name": "Mal Reynolds",
-          "email": "mal@serenity.com"
+        "ad": {
+          "name": "Amy Doe",
+          "email": "amy@findmypast.com"
         },
-        "zw": {
-          "name": "Zoe Washburne",
-          "email": "zoe@serenity.com"
+        "bd": {
+          "name": "Bob Doe",
+          "email": "bob@findmypast.com"
         }
       }
     }
@@ -25,44 +21,44 @@ Feature: mob
 
   # @announce-stdout @announce-stderr
   Scenario: start mob with one coauthor
-    When I run git mob `mr`
+    When I run git mob `ad`
     Then the output should contain:
     """
-    Hoban Washburne <wash@serenity.com>
-    Mal Reynolds <mal@serenity.com>
+    Jane Doe <jane@example.com>
+    Amy Doe <amy@findmypast.com>
     """
     And the file "~/.gitconfig" should contain:
     """
     [git-mob]
-    \tco-author = Mal Reynolds <mal@serenity.com>
+    \tco-author = Amy Doe <amy@findmypast.com>
     """
 
   # @announce-stdout @announce-stderr
   Scenario: start mob with two coauthors
-    When I run git mob `mr zw`
+    When I run git mob `ad bd`
     Then the output should contain:
     """
-    Hoban Washburne <wash@serenity.com>
-    Mal Reynolds <mal@serenity.com>
-    Zoe Washburne <zoe@serenity.com>
+    Jane Doe <jane@example.com>
+    Amy Doe <amy@findmypast.com>
+    Bob Doe <bob@findmypast.com>
     """
     And the file "~/.gitconfig" should contain:
     """
     [git-mob]
-    \tco-author = Mal Reynolds <mal@serenity.com>
-    \tco-author = Zoe Washburne <zoe@serenity.com>
+    \tco-author = Amy Doe <amy@findmypast.com>
+    \tco-author = Bob Doe <bob@findmypast.com>
     """
 
   Scenario: change coauthors
-    When I run git mob `mr`
-    And I run git mob `zw`
+    When I run git mob `ad`
+    And I run git mob `bd`
     Then the output should contain:
     """
-    Hoban Washburne <wash@serenity.com>
-    Zoe Washburne <zoe@serenity.com>
+    Jane Doe <jane@example.com>
+    Bob Doe <bob@findmypast.com>
     """
     And the file "~/.gitconfig" should contain:
     """
     [git-mob]
-    \tco-author = Zoe Washburne <zoe@serenity.com>
+    \tco-author = Bob Doe <bob@findmypast.com>
     """
