@@ -21,11 +21,64 @@ func GetAll(key string) ([]string, error) {
 	return nil, nil
 }
 
+func ResetMob() error {
+	c, err := config.LoadConfig(config.GlobalScope)
+	if err != nil {
+		return err
+	}
+
+	if c.Raw.HasSection("git-mob") {
+		s := c.Raw.Section("git-mob")
+		s.RemoveOption("co-author")
+		return writeConfig(c)
+	}
+
+	return nil
+}
+
+func writeConfig(c *config.Config) error {
+	b, err := c.Marshal()
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(GlobalConfigFilePath, b, os.ModePerm)
+}
+
+func AddCoAuthors(aa ...Author) error {
+	c, err := config.LoadConfig(config.GlobalScope)
+	if err != nil {
+		return err
+	}
+
+	for _, a := range aa {
+		c.Raw.AddOption("git-mob", "", "co-author", fmt.Sprintf("%s <%s>", a.Name, a.Email))
+	}
+
+	if len(aa) > 0 {
+		return writeConfig(c)
+	}
+
+	return nil
+}
+
+func GetMe() (*Author, error) {
+	c, err := config.LoadConfig(config.GlobalScope)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Author{
+		Name:  c.User.Name,
+		Email: c.User.Email,
+	}, nil
+}
+
 func GetCoAuthors() ([]Author, error) {
 	//fmt.Printf("GetCoAuthors\n")
 	c, err := config.LoadConfig(config.GlobalScope)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	if c.Raw.HasSection("git-mob") {
@@ -87,8 +140,9 @@ func EnsureCoauthorsFileExists() error {
 }
 
 var (
-	CoAuthorsFilePath string
-	reCoauthor        *regexp.Regexp
+	CoAuthorsFilePath    string
+	GlobalConfigFilePath string
+	reCoauthor           *regexp.Regexp
 )
 
 const (
@@ -97,5 +151,6 @@ const (
 
 func init() {
 	CoAuthorsFilePath = env.GetValueOrDefault(EnvKeyCoauthorsPath, path.Join(env.HomeDir, ".git-coauthors"))
+	GlobalConfigFilePath = env.GetValueOrDefault(EnvKeyCoauthorsPath, path.Join(env.HomeDir, ".gitconfig"))
 	reCoauthor = regexp.MustCompile(`(?P<Name>[^<]+)\s+\<(?P<Email>[^>]+)\>`)
 }
