@@ -30,6 +30,34 @@
 ## Changelog
 
 
+<a name="v0.2.0"></a>
+## [v0.2.0] - 2022-05-31
+### Bug Fixes
+- doctor would constantly regenerate chglog config
+
+### Build
+- go mod tidy
+- add depgraph target
+- ignore doctor.sh fixes
+
+### Code Refactoring
+- replicate git-authors specs from git-mob
+- replace firefly names with git-mob examples
+- move Author into the cfg package
+- extract env helpers to an env package
+
+### Features
+- update .git/.gitmessage when the mob changes
+- mob solo
+- git mob
+- git mob print -i
+- mob print
+
+### Test Coverage
+- add step def to create a git repo
+- add aruba/cucumber specs
+
+
 <a name="v0.1.0"></a>
 ## v0.1.0 - 2022-05-31
 ### Build
@@ -39,10 +67,12 @@
 - add vscode workspace
 
 ### Docs
+- release notes for v0.1.0
 - add initial project README
 
 ### Features
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/davidalpert/go-git-mob/compare/v0.1.0...v0.2.0
