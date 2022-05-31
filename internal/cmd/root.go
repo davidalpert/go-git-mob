@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -27,9 +28,12 @@ func Execute() {
 // NewRootCmd creates the 'root' command and configures it's nested children
 func NewRootCmd(ioStreams utils.IOStreams) *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:           "git-mob",
-		Short:         "A tool for managing git coauthors.",
-		Long:          ``,
+		Use:   "git-mob",
+		Short: "A git plugin to help manage git coauthors.",
+		Long: fmt.Sprintf(`git-mob %s
+
+A git plugin to help manage git coauthors.
+`, version.Detail.Version),
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		CompletionOptions: cobra.CompletionOptions{
@@ -47,8 +51,9 @@ func NewRootCmd(ioStreams utils.IOStreams) *cobra.Command {
 
 	// Register subcommands
 	rootCmd.AddCommand(NewCmdVersion(ioStreams))
+	rootCmd.AddCommand(NewCmdPrint(ioStreams))
 
-	//rootCmd.PersistentFlags().BoolP("verbose", "v", false, "enable verbose output")
+	//rootCmd.PersistentFlags().BoolP("verbose", "vv", false, "enable verbose output")
 
 	return rootCmd
 }

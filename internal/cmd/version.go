@@ -51,8 +51,7 @@ func (o *VersionOptions) Complete(cmd *cobra.Command, args []string) error {
 
 // Validate the options
 func (o *VersionOptions) Validate() error {
-	o.PrinterOptions.Validate()
-	return nil
+	return o.PrinterOptions.Validate()
 }
 
 // Run the command
