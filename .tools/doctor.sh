@@ -190,7 +190,7 @@ EOD
 fi
 
 findCmd git-chglog "go install github.com/git-chglog/git-chglog/cmd/git-chglog@v0.15.1"
-if [ ! -f .chglog/cfg.yml ]; then
+if [ ! -f .chglog/config.yml ]; then
   note "initializing git-chglog"
   git-chglog --init
 fi
