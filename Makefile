@@ -1,0 +1,106 @@
+PROJECTNAME=go-git-mob
+
+# Make is verbose in Linux. Make it silent.
+MAKEFLAGS += --silent
+
+# go versioning flags
+VERSION=$(shell sbot get version)
+
+GOOS=$(shell go env GOOS)
+GOARCH=$(shell go env GOARCH)
+GOPATH=$(shell go env GOPATH)
+
+# ---------------------- targets -------------------------------------
+
+.PHONY: default
+default: help
+
+.PHONY: version
+version: ## show current version
+	echo ${VERSION}
+
+.PHONY: clean
+clean: ## clean build output
+	rm -rf ./bin
+
+./internal/version/detail.go:
+	$(MAKE) gen
+
+.PHONY: gen
+gen: ## invoke go generate
+	@CGO_ENABLED=1 go generate ./...
+
+.PHONY: build
+build: clean ./internal/version/detail.go ## build for current platform
+	mkdir -p ./bin/${GOOS}-${GOARCH}
+	go build -o ./bin/${GOOS}-${GOARCH}/git-mob main.go
+	# ln -s ./bin/${GOOS}-${GOARCH}/git-mob ./bin/git-mob
+
+.PHONY: build-all
+build-all: clean ./internal/version/detail.go ## build for all platforms
+	GOOS=darwin GOARCH=arm64 mkdir -p bin/darwin-arm64
+	GOOS=darwin GOARCH=arm64 go build -o bin/darwin-arm64/git-mob main.go
+	GOOS=darwin GOARCH=amd64 mkdir -p bin/darwin-amd64
+	GOOS=darwin GOARCH=amd64 go build -o bin/darwin-amd64/git-mob main.go
+	GOOS=linux GOARCH=amd64 mkdir -p bin/linux-amd64
+	GOOS=linux GOARCH=amd64 go build -o bin/linux-amd64/git-mob main.go
+
+.PHONY: install
+install: build ## build and install locally into GOPATH
+	cp ./bin/${GOOS}-${GOARCH}/git-mob ${GOPATH}/bin
+
+.PHONY: test
+test: ./internal/version/detail.go ## run tests
+	go test -v ./...
+
+.PHONY: deploy
+deploy: test build ## deploy binaries
+	$(if $(shell which ./deploy.sh),./deploy.sh,$(error "./deploy.sh not found"))
+
+.PHONY: deploy-local
+deploy-local: test build ## deploy binaries locally (for testing)
+	$(if $(shell which ./deploy-local.sh),./deploy-local.sh,$(error "./deploy-local.sh not found"))
+
+.PHONY: doctor
+doctor: ## run doctor.sh to sort out development dependencies
+	./.tools/doctor.sh
+
+.PHONY: changelog
+changelog: ## Generate/update CHANGELOG.md
+	git-chglog --output CHANGELOG.md
+
+eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
+
+.PHONY: tag-release
+tag-release:
+	$(if $(call eq,0,$(shell git diff-files --quiet; echo $$?)),, \
+		$(error There are unstaged changes; clean your working directory before releasing.) \
+	)
+	$(if $(call eq,0,$(shell git diff-index --quiet --cached HEAD --; echo $$?)),, \
+		$(error There are uncomitted changes; clean your working directory before releasing.) \
+	)
+	$(eval next_version := $(shell sbot predict version --mode ${BUMP_TYPE}))
+	# echo "Current Version: ${VERSION}"
+	# echo "   Next Version: ${next_version}"
+	git-chglog --next-tag v$(next_version) --output CHANGELOG.md
+	git add -f CHANGELOG.md
+	git commit --message "docs: release notes for v$(next_version)"
+	sbot release version --mode ${BUMP_TYPE}
+	git show --no-patch --format=short v$(next_version)
+
+SEMVER_TYPES := major minor patch
+BUMP_TARGETS := $(addprefix release-,$(SEMVER_TYPES))
+.PHONY: $(BUMP_TARGETS)
+$(BUMP_TARGETS): test build ## bump version
+	$(eval BUMP_TYPE := $(strip $(word 2,$(subst -, ,$@))))
+	$(MAKE) tag-release BUMP_TYPE=$(BUMP_TYPE)
+
+.PHONY: help
+help: Makefile
+	@echo
+	@echo " ${PROJECTNAME} ${VERSION} - available targets:"
+	@echo
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	printf "\033[36m%-30s\033[0m %s\n" '----------' '------------------'
+	@echo $(BUMP_TARGETS) | tr ' ' '\n' | sort | sed -E 's/((.+)\-(.+))/\1: ## \2 \3 version/' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo
