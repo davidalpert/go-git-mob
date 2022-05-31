@@ -66,17 +66,49 @@ func (o *PrintOptions) Run() error {
 		return err
 	}
 
+	if o.InitialsOnly {
+		return o.printInitialsOnly(aa)
+	}
+
+	return o.printFullMarkup(aa)
+}
+
+func (o *PrintOptions) printInitialsOnly(aa []cfg.Author) error {
+	aaByInitial, err := cfg.ReadAllCoAuthorsFromFile()
+	if err != nil {
+		return err
+	}
+
+	parts := make([]string, len(aa))
+	for i, a := range aa {
+		for initial, author := range aaByInitial {
+			if strings.EqualFold(a.Email, author.Email) {
+				parts[i] = initial
+				break
+			}
+		}
+	}
+
+	o.WriteStringln(strings.Join(parts, " "))
+
+	return nil
+}
+
+func (o *PrintOptions) printFullMarkup(aa []cfg.Author) error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
 		return o.WriteStringln(msg.FormatCoAuthorList(aa))
 		return nil
 	}
-	if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
+
+	if o.FormatCategory() == "table" {
 		o.OutputFormat = utils.StringPointer("json")
 	}
 
-	s, _, err := o.PrinterOptions.FormatOutput(aa)
-	utils.ExitIfErr(err)
-	o.WriteStringln(s)
+	if s, _, err := o.PrinterOptions.FormatOutput(aa); err != nil {
+		return err
+	} else {
+		o.WriteStringln(s)
+	}
 
 	return nil
 }
