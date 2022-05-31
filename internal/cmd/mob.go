@@ -5,6 +5,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/spf13/cobra"
 	"strings"
 )
@@ -80,6 +81,9 @@ func (o *MobOptions) Run() error {
 		return nil
 	}
 	if err = cfg.AddCoAuthors(coauthors...); err != nil {
+		return err
+	}
+	if err = msg.WriteGitMessage(coauthors...); err != nil {
 		return err
 	}
 
