@@ -146,6 +146,8 @@ findCmd gem
 findCmd bundle 'gem install bundler'
 bundle install --quiet
 
+findCmd godepgraph "go install github.com/kisielk/godepgraph@latest"
+
 findCmd sbot "go install github.com/restechnica/semverbot/cmd/sbot@v1.0.0"
 if [ ! -f .semverbot.toml ]; then
   note "initializing sbot"
