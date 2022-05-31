@@ -16,6 +16,9 @@
 # Test binary, built with `go test -c`
 *.test
 
+# Aruba test dir
+tmp/aruba
+
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 

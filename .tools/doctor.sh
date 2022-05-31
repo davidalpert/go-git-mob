@@ -139,6 +139,13 @@ if [[ -n "$GO" ]]; then
   grepVersion 'go' 'go version' "$GO"
 fi
 
+REQUIRED_RUBY_VERSION=`cat .ruby-version`
+findCmd ruby
+grepVersion 'ruby' 'ruby --version' "$REQUIRED_RUBY_VERSION"
+findCmd gem
+findCmd bundle 'gem install bundler'
+bundle install --quiet
+
 findCmd sbot "go install github.com/restechnica/semverbot/cmd/sbot@v1.0.0"
 if [ ! -f .semverbot.toml ]; then
   note "initializing sbot"
@@ -183,7 +190,7 @@ EOD
 fi
 
 findCmd git-chglog "go install github.com/git-chglog/git-chglog/cmd/git-chglog@v0.15.1"
-if [ ! -f .chglog/config.yml ]; then
+if [ ! -f .chglog/cfg.yml ]; then
   note "initializing git-chglog"
   git-chglog --init
 fi
