@@ -18,6 +18,8 @@ Feature: mob
       }
     }
     """
+    And a simple git repo at "example"
+    And I cd to "example"
 
   # @announce-stdout @announce-stderr
   Scenario: start mob with one coauthor
