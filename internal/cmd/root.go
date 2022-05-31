@@ -17,9 +17,23 @@ func Execute() {
 
 	rootCmd.SetArgs(os.Args[1:]) // without program
 
-	err := rootCmd.Execute()
+	// look for matching subcommand
+	var cmdFound bool
+	for _, a := range rootCmd.Commands() {
+		for _, b := range os.Args[1:] {
+			if a.Name() == b {
+				cmdFound = true
+				break
+			}
+		}
+	}
+	if cmdFound == false {
+		// found no matching subcommand; run the default mob command
+		args := append([]string{"mob"}, os.Args[1:]...)
+		rootCmd.SetArgs(args)
+	}
 
-	if err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -50,6 +64,7 @@ A git plugin to help manage git coauthors.
 	}
 
 	// Register subcommands
+	rootCmd.AddCommand(NewCmdMob(ioStreams))
 	rootCmd.AddCommand(NewCmdVersion(ioStreams))
 	rootCmd.AddCommand(NewCmdPrint(ioStreams))
 
