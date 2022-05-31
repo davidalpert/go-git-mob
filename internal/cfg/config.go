@@ -1,9 +1,13 @@
 package cfg
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/env"
 	"github.com/go-git/go-git/v5/config"
+	"io/ioutil"
+	"os"
+	"path"
 	"regexp"
 )
 
@@ -49,10 +53,49 @@ func SetCoAuthors() error {
 	return nil
 }
 
+func ReadAllCoAuthorsFromFile() (map[string]Author, error) {
+	if err := EnsureCoauthorsFileExists(); err != nil {
+		return nil, err
+	}
+
+	b, err := ioutil.ReadFile(CoAuthorsFilePath)
+	if os.IsNotExist(err) {
+
+	}
+
+	var c CoAuthorsFileContent
+	if err = json.Unmarshal(b, &c); err != nil {
+		return nil, err
+	}
+
+	return c.CoAuthorsByInitial, nil
+}
+
+func EnsureCoauthorsFileExists() error {
+	if _, err := os.Stat(CoAuthorsFilePath); os.IsNotExist(err) {
+		cc := CoAuthorsFileContent{
+			CoAuthorsByInitial: make(map[string]Author, 0),
+		}
+		b, err := json.Marshal(cc)
+		if err != nil {
+			return err
+		}
+
+		return os.WriteFile(CoAuthorsFilePath, b, os.ModePerm)
+	}
+	return nil
+}
+
 var (
-	reCoauthor *regexp.Regexp
+	CoAuthorsFilePath string
+	reCoauthor        *regexp.Regexp
+)
+
+const (
+	EnvKeyCoauthorsPath = "GITMOB_COAUTHORS_PATH"
 )
 
 func init() {
+	CoAuthorsFilePath = env.GetValueOrDefault(EnvKeyCoauthorsPath, path.Join(env.HomeDir, ".git-coauthors"))
 	reCoauthor = regexp.MustCompile(`(?P<Name>[^<]+)\s+\<(?P<Email>[^>]+)\>`)
 }
