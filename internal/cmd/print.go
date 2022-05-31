@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
@@ -73,7 +74,7 @@ func (o *PrintOptions) Run() error {
 	return o.printFullMarkup(aa)
 }
 
-func (o *PrintOptions) printInitialsOnly(aa []cfg.Author) error {
+func (o *PrintOptions) printInitialsOnly(aa []authors.Author) error {
 	aaByInitial, err := cfg.ReadAllCoAuthorsFromFile()
 	if err != nil {
 		return err
@@ -94,7 +95,7 @@ func (o *PrintOptions) printInitialsOnly(aa []cfg.Author) error {
 	return nil
 }
 
-func (o *PrintOptions) printFullMarkup(aa []cfg.Author) error {
+func (o *PrintOptions) printFullMarkup(aa []authors.Author) error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
 		return o.WriteStringln(msg.FormatCoAuthorList(aa))
 		return nil

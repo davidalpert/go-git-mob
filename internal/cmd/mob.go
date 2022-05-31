@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/spf13/cobra"
@@ -65,7 +66,7 @@ func (o *MobOptions) Run() error {
 		return err
 	}
 
-	coauthors := make([]cfg.Author, len(o.Initials))
+	coauthors := make([]authors.Author, len(o.Initials))
 	for i, initial := range o.Initials {
 		for ii, a := range all {
 			if strings.EqualFold(initial, ii) {
@@ -82,7 +83,7 @@ func (o *MobOptions) Run() error {
 		return err
 	}
 
-	me, err := cfg.GetMe()
+	me, err := cfg.GetUser()
 	if err != nil {
 		return err
 	}

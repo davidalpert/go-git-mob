@@ -1,14 +1,12 @@
 package cfg
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/env"
 	"github.com/go-git/go-git/v5/config"
-	"io/ioutil"
 	"os"
 	"path"
-	"regexp"
 )
 
 // Get gets the (last) value for the given option key.
@@ -21,6 +19,7 @@ func GetAll(key string) ([]string, error) {
 	return nil, nil
 }
 
+// ResetMob clears out the co-authors from global git config
 func ResetMob() error {
 	c, err := config.LoadConfig(config.GlobalScope)
 	if err != nil {
@@ -36,6 +35,7 @@ func ResetMob() error {
 	return nil
 }
 
+// writeConfig saves the in-memory git config back to the global gitconfig file
 func writeConfig(c *config.Config) error {
 	b, err := c.Marshal()
 	if err != nil {
@@ -45,7 +45,7 @@ func writeConfig(c *config.Config) error {
 	return os.WriteFile(GlobalConfigFilePath, b, os.ModePerm)
 }
 
-func AddCoAuthors(aa ...Author) error {
+func AddCoAuthors(aa ...authors.Author) error {
 	c, err := config.LoadConfig(config.GlobalScope)
 	if err != nil {
 		return err
@@ -62,19 +62,21 @@ func AddCoAuthors(aa ...Author) error {
 	return nil
 }
 
-func GetMe() (*Author, error) {
+// GetUser builds an authors.Author from the current configured user
+func GetUser() (*authors.Author, error) {
 	c, err := config.LoadConfig(config.GlobalScope)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Author{
+	return &authors.Author{
 		Name:  c.User.Name,
 		Email: c.User.Email,
 	}, nil
 }
 
-func GetCoAuthors() ([]Author, error) {
+// GetCoAuthors gets the current list of co-authors from git config
+func GetCoAuthors() ([]authors.Author, error) {
 	//fmt.Printf("GetCoAuthors\n")
 	c, err := config.LoadConfig(config.GlobalScope)
 	if err != nil {
@@ -83,17 +85,13 @@ func GetCoAuthors() ([]Author, error) {
 
 	if c.Raw.HasSection("git-mob") {
 		oo := c.Raw.Section("git-mob").OptionAll("co-author")
-		aa := make([]Author, len(oo))
+		aa := make([]authors.Author, len(oo))
 		for i, o := range oo {
 			//fmt.Printf("found option: %s\n", o)
-			res := reCoauthor.FindAllStringSubmatch(o, 1)
-			if len(res) > 0 {
-				aa[i] = Author{
-					Name:  res[0][1],
-					Email: res[0][2],
-				}
-			} else {
+			if a, err := authors.ParseOne(o); err != nil {
 				return nil, fmt.Errorf("failed to parse co-author from config option: '%s'", o)
+			} else {
+				aa[i] = a
 			}
 		}
 		return aa, nil
@@ -106,43 +104,17 @@ func SetCoAuthors() error {
 	return nil
 }
 
-func ReadAllCoAuthorsFromFile() (map[string]Author, error) {
-	if err := EnsureCoauthorsFileExists(); err != nil {
-		return nil, err
-	}
-
-	b, err := ioutil.ReadFile(CoAuthorsFilePath)
-	if os.IsNotExist(err) {
-
-	}
-
-	var c CoAuthorsFileContent
-	if err = json.Unmarshal(b, &c); err != nil {
-		return nil, err
+func ReadAllCoAuthorsFromFile() (map[string]authors.Author, error) {
+	c, e := authors.ReadCoAuthorsContent()
+	if e != nil {
+		return nil, e
 	}
 
 	return c.CoAuthorsByInitial, nil
 }
 
-func EnsureCoauthorsFileExists() error {
-	if _, err := os.Stat(CoAuthorsFilePath); os.IsNotExist(err) {
-		cc := CoAuthorsFileContent{
-			CoAuthorsByInitial: make(map[string]Author, 0),
-		}
-		b, err := json.Marshal(cc)
-		if err != nil {
-			return err
-		}
-
-		return os.WriteFile(CoAuthorsFilePath, b, os.ModePerm)
-	}
-	return nil
-}
-
 var (
-	CoAuthorsFilePath    string
 	GlobalConfigFilePath string
-	reCoauthor           *regexp.Regexp
 )
 
 const (
@@ -150,7 +122,5 @@ const (
 )
 
 func init() {
-	CoAuthorsFilePath = env.GetValueOrDefault(EnvKeyCoauthorsPath, path.Join(env.HomeDir, ".git-coauthors"))
 	GlobalConfigFilePath = env.GetValueOrDefault(EnvKeyCoauthorsPath, path.Join(env.HomeDir, ".gitconfig"))
-	reCoauthor = regexp.MustCompile(`(?P<Name>[^<]+)\s+\<(?P<Email>[^>]+)\>`)
 }
