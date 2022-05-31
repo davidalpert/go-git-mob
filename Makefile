@@ -15,6 +15,9 @@ GOPATH=$(shell go env GOPATH)
 .PHONY: default
 default: help
 
+.PHONY: cit
+cit: clean build test-unit test-features ## clean build and test-all (except @wip features)
+
 .PHONY: version
 version: ## show current version
 	echo ${VERSION}
@@ -32,9 +35,8 @@ gen: ## invoke go generate
 
 .PHONY: build
 build: clean ./internal/version/detail.go ## build for current platform
-	mkdir -p ./bin/${GOOS}-${GOARCH}
-	go build -o ./bin/${GOOS}-${GOARCH}/git-mob main.go
-	# ln -s ./bin/${GOOS}-${GOARCH}/git-mob ./bin/git-mob
+	mkdir -p ./bin
+	go build -o ./bin/git-mob main.go
 
 .PHONY: build-all
 build-all: clean ./internal/version/detail.go ## build for all platforms
@@ -50,8 +52,19 @@ install: build ## build and install locally into GOPATH
 	cp ./bin/${GOOS}-${GOARCH}/git-mob ${GOPATH}/bin
 
 .PHONY: test
-test: ./internal/version/detail.go ## run tests
+test: test-unit test-features ## run all tests (unit and integration)
+
+.PHONY: test-unit
+test-unit: ./internal/version/detail.go ## run unit tests
 	go test -v ./...
+
+.PHONY: test-features
+test-features: Gemfile.lock build ## Run cucumber/aruba backend features
+	bundle exec cucumber --publish-quiet --tags 'not @wip'
+
+.PHONY: test-features-wip
+test-features-wip: Gemfile.lock build ## Run cucumber/aruba backend features
+	bundle exec cucumber --publish-quiet --tags '@wip'
 
 .PHONY: deploy
 deploy: test build ## deploy binaries
