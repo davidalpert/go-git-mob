@@ -34,6 +34,7 @@ go.work
 
 .idea/
 bin/
+_fixes
 internal/version/detail.go
 
 # End of https://www.toptal.com/developers/gitignore/api/go
