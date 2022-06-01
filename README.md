@@ -19,6 +19,8 @@
   <a href="./README.md"><strong>README</strong></a>
   ·
   <a href="./CHANGELOG.md">CHANGELOG</a>
+  .
+  <a href="./CONTRIBUTING.md">CONTRIBUTING</a>
   <br />
   <!-- <a href="https://github.com/davidalpert/go-git-mob">View Demo</a>
   · -->
@@ -34,14 +36,9 @@
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
-    - [using `go install`](#using-go-install)
-    - [build from source](#build-from-source)
 - [Usage](#usage)
   - [Utility Commands](#utility-commands)
 - [Roadmap](#roadmap)
-- [Local Development](#local-development)
-  - [Prerequisites](#prerequisites)
-  - [Make targets](#make-targets)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -76,35 +73,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Installation
 
-#### using `go install`
-
-1. Clone the repo
-   ```sh
-   git install github.com/davidalpert/go-git-mob
-   ```
-1. Confirm the version
-    ```sh
-    git mob version
-    ```
-
-#### build from source
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/davidalpert/go-git-mob.git
-   ```
-1. Install dependencies
-    ```sh
-    ./.tools/doctor.sh
-    ```
-1. Build and install locally in GOPATH
-    ```sh
-    make install
-    ```
-1. Confirm the version
-    ```sh
-    git mob version
-    ```
+- TODO (we are still in development)
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -137,59 +106,9 @@ Use "git-mob [command] --help" for more information about a command.
 
 See the [open issues](https://github.com/davidalpert/go-git-mob/issues) for a list of proposed features (and known issues).
 
-<!-- CONTRIBUTING -->
-## Local Development
-
-### Prerequisites
-
-`go-git-mob` is built and destributed as a single-file binary so there are no prerequisites.
-
-* [golang](https://golang.org/doc/manage-install)
-  * with a working go installation:
-    ```
-    go install golang.org/dl/go1.18@latest
-    go1.18 download
-    ```
-* [make](https://www.gnu.org/software/make/manual/html_node/index.html#Top) (often comes pre-installed or installed with other dev tooling)
-
-### Make targets
-
-This repo includes a `Makefile` for help running common tasks.
-
-Run `make` with no args to list the available targets:
-```
-$ make
-
- go-git-mob 0.0.0 - available targets:
-
-build-all                      build for all platforms
-build                          build for current platform
-changelog                      Generate/update CHANGELOG.md
-clean                          clean build output
-deploy-local                   deploy binaries locally (for testing)
-deploy                         deploy binaries
-doctor                         run doctor.sh to sort out development dependencies
-gen                            invoke go generate
-install                        build and install locally into GOPATH
-test                           run tests
-version                        show current version
-----------                     ------------------
-release-major                  release major version
-release-minor                  release minor version
-release-patch                  release patch version
-
-```
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+See the [CONTRIBUTING](CONTRIBUTING.md) guide for local development setup and contribution guidelines.
 
 <!-- LICENSE -->
 ## License
@@ -206,7 +125,7 @@ Project Link: [https://github.com/davidalpert/go-git-mob](https://github.com/dav
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* [Richard Kotze & Dennis Ideler](https://tech.findmypast.com/co-author-commits-with-git-mob/) and for the [git-mob](https://github.com/rkotze/git-mob) nodejs implementation
+* [Richard Kotze & Dennis Ideler](https://tech.findmypast.com/co-author-commits-with-git-mob/) for the [git-mob](https://github.com/rkotze/git-mob) nodejs implementation
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

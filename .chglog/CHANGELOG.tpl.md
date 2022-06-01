@@ -19,6 +19,8 @@
   <a href="./README.md">README</a>
   ·
   <a href="./CHANGELOG.md"><strong>CHANGELOG</strong></a>
+  .
+  <a href="./CONTRIBUTING.md">CONTRIBUTING</a>
   <br />
   <!-- <a href="https://github.com/davidalpert/go-git-mob">View Demo</a>
   · -->
