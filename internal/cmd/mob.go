@@ -6,20 +6,24 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"sort"
 	"strings"
 )
 
 type MobOptions struct {
 	*utils.PrinterOptions
 	utils.IOStreams
-	Initials []string
+	Initials               []string
+	ListOnly               bool
+	AllCoAuthorsByInitials map[string]authors.Author
 }
 
 func NewMobOptions(ioStreams utils.IOStreams) *MobOptions {
 	return &MobOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: utils.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
 	}
 }
 
@@ -28,7 +32,7 @@ func NewCmdMob(ioStreams utils.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "mob",
 		Short: "configure co-authors",
-		Args:  cobra.MinimumNArgs(1),
+		Args:  cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
 				return err
@@ -42,18 +46,31 @@ func NewCmdMob(ioStreams utils.IOStreams) *cobra.Command {
 
 	o.PrinterOptions.AddPrinterFlags(cmd)
 
+	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
+
 	return cmd
 }
 
 // Complete the options
 func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.Initials = args
+
+	if allCoAuthorsByInitials, err := cfg.ReadAllCoAuthorsFromFile(); err != nil {
+		return err
+	} else {
+		o.AllCoAuthorsByInitials = allCoAuthorsByInitials
+	}
+
 	return nil
 }
 
 // Validate the options
 func (o *MobOptions) Validate() error {
-	if len(o.Initials) < 1 {
+	if o.ListOnly && 1 < len(o.Initials) {
+		return fmt.Errorf("cannot configure a mob while listing availble coauthors")
+	}
+
+	if len(o.Initials) < 1 && !o.ListOnly {
 		return fmt.Errorf("must supply at least one co-author")
 	}
 
@@ -62,14 +79,60 @@ func (o *MobOptions) Validate() error {
 
 // Run the command
 func (o *MobOptions) Run() error {
-	all, err := cfg.ReadAllCoAuthorsFromFile()
-	if err != nil {
-		return err
+	if o.ListOnly {
+		return o.listCoAuthors()
 	}
 
+	return o.setMob()
+}
+
+func (o *MobOptions) listCoAuthors() error {
+
+	initials := make([]string, 0)
+	for ii, _ := range o.AllCoAuthorsByInitials {
+		initials = append(initials, ii)
+	}
+
+	sort.Strings(initials)
+
+	if o.FormatCategory() == "text" {
+		for _, ii := range initials {
+			a := o.AllCoAuthorsByInitials[ii]
+			fmt.Printf("%s %s %s\n", ii, a.Name, a.Email)
+		}
+		return nil
+	}
+
+	output := make([]flattenedCoAuthorListItem, len(initials))
+	for i, ii := range initials {
+		a := o.AllCoAuthorsByInitials[ii]
+		output[i] = flattenedCoAuthorListItem{
+			Initials: ii,
+			Name:     a.Name,
+			Email:    a.Email,
+		}
+	}
+
+	return o.WithTableWriter("available co-authors", func(table *tablewriter.Table) {
+		table.SetHeader([]string{"Initials", "Name", "Email"})
+		for _, ii := range initials {
+			a := o.AllCoAuthorsByInitials[ii]
+			table.Append([]string{ii, a.Name, a.Email})
+		}
+
+	}).WriteOutput(output)
+}
+
+type flattenedCoAuthorListItem struct {
+	Initials string `json:"initials"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+}
+
+func (o *MobOptions) setMob() error {
 	coauthors := make([]authors.Author, len(o.Initials))
 	for i, initial := range o.Initials {
-		for ii, a := range all {
+		for ii, a := range o.AllCoAuthorsByInitials {
 			if strings.EqualFold(initial, ii) {
 				coauthors[i] = a
 				break
@@ -77,13 +140,13 @@ func (o *MobOptions) Run() error {
 		}
 	}
 
-	if err = cfg.ResetMob(); err != nil {
+	if err := cfg.ResetMob(); err != nil {
 		return nil
 	}
-	if err = cfg.AddCoAuthors(coauthors...); err != nil {
+	if err := cfg.AddCoAuthors(coauthors...); err != nil {
 		return err
 	}
-	if err = msg.WriteGitMessage(coauthors...); err != nil {
+	if err := msg.WriteGitMessage(coauthors...); err != nil {
 		return err
 	}
 
@@ -95,7 +158,7 @@ func (o *MobOptions) Run() error {
 	parts := make([]string, len(o.Initials))
 	meTag := fmt.Sprintf("%s <%s>", me.Name, me.Email)
 	for i, initial := range o.Initials {
-		for ii, a := range all {
+		for ii, a := range o.AllCoAuthorsByInitials {
 			if strings.EqualFold(initial, ii) {
 				parts[i] = fmt.Sprintf("%s <%s>", a.Name, a.Email)
 				break
@@ -104,6 +167,5 @@ func (o *MobOptions) Run() error {
 	}
 
 	o.WriteStringln(strings.Join(append([]string{meTag}, parts...), "\n"))
-
 	return nil
 }
