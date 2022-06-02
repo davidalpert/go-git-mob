@@ -10,20 +10,20 @@ import (
 	"sort"
 )
 
-type SuggestOptions struct {
+type CoauthorsSuggestOptions struct {
 	*utils.PrinterOptions
 	utils.IOStreams
 }
 
-func NewSuggestOptions(ioStreams utils.IOStreams) *SuggestOptions {
-	return &SuggestOptions{
+func NewCoauthorsSuggestOptions(ioStreams utils.IOStreams) *CoauthorsSuggestOptions {
+	return &CoauthorsSuggestOptions{
 		IOStreams:      ioStreams,
 		PrinterOptions: utils.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdSuggest(ioStreams utils.IOStreams) *cobra.Command {
-	o := NewSuggestOptions(ioStreams)
+func NewCmdCoauthorsSuggest(ioStreams utils.IOStreams) *cobra.Command {
+	o := NewCoauthorsSuggestOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "suggest",
 		Short: "suggest some co-authors to add based on existing committers to your current repo",
@@ -45,12 +45,12 @@ func NewCmdSuggest(ioStreams utils.IOStreams) *cobra.Command {
 }
 
 // Complete the options
-func (o *SuggestOptions) Complete(cmd *cobra.Command, args []string) error {
+func (o *CoauthorsSuggestOptions) Complete(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
 // Validate the options
-func (o *SuggestOptions) Validate() error {
+func (o *CoauthorsSuggestOptions) Validate() error {
 	if !cfg.InsideWorkTree() {
 		return fmt.Errorf("not a git repository")
 	}
@@ -59,7 +59,7 @@ func (o *SuggestOptions) Validate() error {
 }
 
 // Run the command
-func (o *SuggestOptions) Run() error {
+func (o *CoauthorsSuggestOptions) Run() error {
 	aa, err := cfg.ShortLogAuthorSummary()
 	if err != nil {
 		return err
