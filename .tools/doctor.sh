@@ -139,6 +139,8 @@ if [[ -n "$GO" ]]; then
   grepVersion 'go' 'go version' "$GO"
 fi
 
+findCmd vale 'https://vale.sh/docs/vale-cli/installation/'
+
 REQUIRED_RUBY_VERSION=`cat .ruby-version`
 findCmd ruby
 grepVersion 'ruby' 'ruby --version' "$REQUIRED_RUBY_VERSION"
