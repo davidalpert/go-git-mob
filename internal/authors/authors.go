@@ -23,6 +23,23 @@ func (a Author) CoauthorTag() string {
 	return fmt.Sprintf("Co-Authored-By: %s <%s>", a.Name, a.Email)
 }
 
+func (a Author) InitialsFromName() string {
+	//return name.split(' ').map(word => word[0].toLowerCase()).join('');
+	words := strings.Split(a.Name, " ")
+	initials := make([]string, len(words))
+	for i, w := range words {
+		initials[i] = strings.ToUpper(w[0:1])
+	}
+
+	return strings.Join(initials, "")
+}
+
+type AuthorWithInitials struct {
+	Initials string `json:"initials"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+}
+
 // MustParseOne parses an author string into an Author and panics if parsing fails
 func MustParseOne(s string) Author {
 	if a, err := ParseOne(s); err != nil {
