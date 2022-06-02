@@ -16,7 +16,7 @@ GOPATH=$(shell go env GOPATH)
 default: help
 
 .PHONY: cit
-cit: clean build test-unit test-features ## clean build and test-all (except @wip features)
+cit: clean vale build test-unit test-features ## clean build and test-all (except @wip features)
 
 .PHONY: version
 version: ## show current version
