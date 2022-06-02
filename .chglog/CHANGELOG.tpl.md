@@ -10,7 +10,9 @@
 
 <!-- PROJECT LOGO -->
 <br />
+<!-- vale Google.Headings = NO -->
 <h1 align="center">go-git-mob</h1>
+<!-- vale Google.Headings = YES -->
 
 <p align="center">
   A golang port of the nodejs <a href="https://github.com/rkotze/git-mob">git-mob</a> tool,

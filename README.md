@@ -10,7 +10,9 @@
 
 <!-- PROJECT LOGO -->
 <br />
+<!-- vale Google.Headings = NO -->
 <h1 align="center">go-git-mob</h1>
+<!-- vale Google.Headings = YES -->
 
 <p align="center">
   A golang port of the nodejs <a href="https://github.com/rkotze/git-mob">git-mob</a> tool,
@@ -30,14 +32,14 @@
 </p>
 
 <details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <summary><h2 style="display: inline-block">Table of contents</h2></summary>
 
-- [About The Project](#about-the-project)
-  - [Built With](#built-with)
-- [Getting Started](#getting-started)
+- [About the project](#about-the-project)
+  - [Built with](#built-with)
+- [Getting started](#getting-started)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [Utility Commands](#utility-commands)
+  - [Utility commands](#utility-commands)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -47,42 +49,46 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About the project
 
-`go-git-mob` is a tool to help manage git coauthors. It is a golang port of the nodejs `git-mob` tool, and differs from/complimenents [`mob.sh`]() in two key ways:
-- whereas `mob.sh` assumes that all co-authors can be detected from commit messages, `git-mob` and `go-git-mob` understand that not all co-authors have their hands on the keyboard each sesson
-- whereas `mob.sh` assumes that each feature branch will be squashed into a single commit, `git-mob` and `go-git-mob` leave this decision up to you, complimenting your workflow by injecting conventional `Co-authored-by:` comments into each commit message through the use of a git `prepare-commit-message` hook.
+`go-git-mob` helps manage git co-authors when collaborating in real-time.
+
+Like the original nodejs `git-mob` plugin, this golang port tool differs from and complements [`mob.sh`](https://mob.sh/) in two key ways:
+- whereas `mob.sh` detects co-authors from commit messages alone, `git-mob` and `go-git-mob` understand that not all co-authors have their hands on the keyboard each session.
+- whereas `mob.sh` squashes each feature branch into a single commit, `git-mob` and `go-git-mob` leave this decision up to you, complimenting your workflow by injecting conventional `Co-authored-by:` comments into each commit message through the use of a git `prepare-commit-message` hook.
 
 As the original authors of the node `git-mob` tool wrote:
 
+<!-- vale off -->
 > Documenting code collaboration
 >
 > When we work together, we should document that. It’s more than just giving credit to others, it’s also informing everyone about who was responsible for introducing changes to a codebase. Keeping a clear record of your work has lasting value - ever stumbled on an old commit only to be left with unanswered questions? In addition to explaining in your commits why a change was introduced, it also helps to document who implemented the change in case there needs to be a follow up.
+<!-- vale on -->
 
-`go-git-mob` was created to provide a single-file binary version of the node `git-mob` tool which could be installed globally and operate independent of any specific nodejs version in use for a given git repo.
+`go-git-mob` provides a single-file binary version of the node `git-mob` tool which installs globally and operates independent of any specific nodejs version in use for a given git repository.
 
-### Built With
+### Built with
 
 * [Golang 1.18](https://golang.org/)
 * [go-git](https://github.com/go-git/go-git)
 
 <!-- GETTING STARTED -->
-## Getting Started
+## Getting started
 
 To get a local copy up and running follow these simple steps.
 
 ### Installation
 
-- TODO (we are still in development)
+- TODO; coming as the project nears v1.0
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-- TODO
+- TODO; coming as the project nears v1.0
 
-### Utility Commands
+### Utility commands
 
-The `git-mob` binary also ships with a number of utility commands which you can explore using the `--help` flag:
+The `git-mob` binary also ships with several utility commands which you can explore using the `--help` flag:
 
 ```
 $: git mob -h
@@ -104,7 +110,9 @@ Use "git-mob [command] --help" for more information about a command.
 <!-- ROADMAP -->
 ## Roadmap
 
+<!-- vale Google.Parens = NO -->
 See the [open issues](https://github.com/davidalpert/go-git-mob/issues) for a list of proposed features (and known issues).
+<!-- vale Google.Parens = YES -->
 
 ## Contributing
 
