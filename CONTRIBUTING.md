@@ -10,7 +10,7 @@
 
 <!-- PROJECT LOGO -->
 <br />
-<h1 align="center">go-git-mob</h1>
+<h1 align="center"><code>go-git-mob</code></h1>
 
 <p align="center">
   A golang port of the nodejs <a href="https://github.com/rkotze/git-mob">git-mob</a> tool,
@@ -30,12 +30,12 @@
 </p>
 
 <details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <summary><h2 style="display: inline-block">Table of contents</h2></summary>
 
-- [Review Existing Issues](#review-existing-issues)
+- [Review existing issues](#review-existing-issues)
   - [Up for grabs](#up-for-grabs)
-- [Setup for Local Development](#setup-for-local-development)
-  - [Install Prerequisites](#install-prerequisites)
+- [Setup for local development](#setup-for-local-development)
+  - [Install prerequisites](#install-prerequisites)
   - [Get the code](#get-the-code)
   - [Visit the doctor](#visit-the-doctor)
   - [Run locally](#run-locally)
@@ -46,29 +46,25 @@
 
 </details>
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create.  Any contributions you make are **greatly appreciated**.
+Contributions make the open source community an great place to learn, inspire, and create.
 
 Please review this contribution guide to streamline your experience.
 
-## Review Existing Issues
+## Review existing issues
 
-This project's github [issues](https://github.com/davidalpert/go-git-mob/issues) are a great place to report bugs and discuss proposed changes or new features.
+Please review existing [issues](https://github.com/davidalpert/go-git-mob/issues) before reporting bug reports or requesting new features.
 
-A quick discussion to coordinate a proposed change can someimes save hours of rework. 
-
-Please review existing issues before creating a new one or submitting a pull request.
+A quick discussion to coordinate a proposed change before you start can save hours of rework. 
 
 ### Up for grabs
 
-Our current focus is on reaching feature parity and releasing v1.0.
+The [v1.0 - feature parity](https://github.com/davidalpert/go-git-mob/projects/1) project board tracks progress through the remaining work in this current release.
 
-- please review our [v1.0 - feature parity](https://github.com/davidalpert/go-git-mob/projects/1) project board which tracks that scope
+## Setup for local development
 
-## Setup for Local Development
+### Install prerequisites
 
-### Install Prerequisites
-
-* [make](https://www.gnu.org/software/make/manual/html_node/index.html#Top) (often comes pre-installed or installed with other dev tooling)
+* [Make](https://www.gnu.org/software/make/manual/html_node/index.html#Top)  - often comes bundled with C compiler tools
 * [golang 1.18](https://golang.org/doc/manage-install)
   * with a working go installation:
     ```
@@ -77,15 +73,15 @@ Our current focus is on reaching feature parity and releasing v1.0.
     ```
   * open a terminal with `go1.18` as the linked `go` binary
 
-* ruby (for running acceptance tests)
+* ruby 3.0.2
 
-  * this project uses ruby and cucumber/aruba for integration tests; we include a `.ruby-version` file which specifies the specific version of ruby that is expected/supported
+  * this project uses ruby and cucumber/aruba for integration tests and includes a `.ruby-version` file which specifies the supported/required version of ruby
   * use a ruby version manager like [rbenv](https://github.com/rbenv) or [asdf](https://asdf-vm.com/); or
   * install directly from [ruby-lang.org](https://www.ruby-lang.org/en/documentation/installation/)
 
 ### Get the code
 
-1. [Fork the repo on Github](https://github.com/davidalpert/go-git-mob/fork)
+1. [Fork the repository on Github](https://github.com/davidalpert/go-git-mob/fork)
 
 1. Clone your fork
    ```sh
@@ -94,16 +90,16 @@ Our current focus is on reaching feature parity and releasing v1.0.
 
 ### Visit the doctor
 
-This repo includes a `doctor.sh` script which helps validate that development dependencies are configured correctly.
+This repository includes a `doctor.sh` script which validates development dependencies.
 
 1. Verify dependencies
     ```sh
     ./.tools/doctor.sh
     ```
 
-This script attempts to fix basic issues (running `go get` or `bundle install`)
+This script attempts to fix basic issues, for example by running `go get` or `bundle install`.
 
-If `doctor.sh` reports an issue that it cannot resolve you may need to help it by taking action.
+If `doctor.sh` reports an issue that it can't resolve you may need to help it by taking action.
 
 Please log any issues with the doctor script by [reporting a bug](https://github.com/davidalpert/go-git-mob/issues).
 
@@ -121,9 +117,9 @@ Please log any issues with the doctor script by [reporting a bug](https://github
 
 ## Useful Make targets
 
-This repo includes a `Makefile` for help running common tasks.
+This repository includes a `Makefile` for help running common tasks.
 
-Run `make` with no args to list the available targets:
+Run `make` with no arguments to list the available targets:
 ```
 $ make
 
@@ -149,9 +145,9 @@ release-patch                  release patch version
 
 ## Development workflow
 
-We use a standard open-source fork/pull-request workflow:
+This project follows a standard open source fork/pull-request workflow:
 
-1. [Fork the repo on Github](https://github.com/davidalpert/go-git-mob/fork)
+1. [Fork the repository on Github](https://github.com/davidalpert/go-git-mob/fork)
 1. Create your Feature Branch
    ```
    git checkout -b GH-123-amazing-feature
@@ -174,17 +170,17 @@ We use a standard open-source fork/pull-request workflow:
 
 ### Branching guidelines
 
-When working on a pull request to address or resolve a github issue, prefix the branch name with the github issue key.
+When working on a pull request to address or resolve a Github issue, prefix the branch name with the Github issue key.
 
-For example, suppose you are working on an issue with an id of 23
+For example, suppose you pick up an issue with an id of 23
 
-Create a branch which starts with `GH-23` and an optional hyphanated description.
+Create a branch which starts with `GH-23` and an optional hyphenated description.
 
 ### Commit message guidelines
 
 This project uses [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) to generate [CHANGELOG](CHANGELOG.md).
 
-The format of a conventional commit is:
+Format of a conventional commit:
 ```
 <type>[optional scope]: <description>
 
@@ -193,7 +189,7 @@ The format of a conventional commit is:
 [optional footer(s)]
 ```
 
-Our currently list of supported type tags include
+List of supported commit type tags include:
 ```yaml
   - "build"    # Changes that affect the build system or external dependencies
   - "ci"       # Changes to our CI configuration files and scripts 
@@ -205,4 +201,4 @@ Our currently list of supported type tags include
   - "test"     # Adding missing tests or correcting existing tests
 ```
 
-Prefixing your commits with one of these type tags and the description will automatically be included in the [CHANGELOG](CHANGELOG.md) for the next release.
+Prefix your commits with one of these type tags to automatically include the commit description in the [CHANGELOG](CHANGELOG.md) for the next release.
