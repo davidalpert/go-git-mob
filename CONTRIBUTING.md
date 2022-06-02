@@ -33,6 +33,7 @@
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
 
 - [Review Existing Issues](#review-existing-issues)
+  - [Up for grabs](#up-for-grabs)
 - [Setup for Local Development](#setup-for-local-development)
   - [Install Prerequisites](#install-prerequisites)
   - [Get the code](#get-the-code)
@@ -56,6 +57,12 @@ This project's github [issues](https://github.com/davidalpert/go-git-mob/issues)
 A quick discussion to coordinate a proposed change can someimes save hours of rework. 
 
 Please review existing issues before creating a new one or submitting a pull request.
+
+### Up for grabs
+
+Our current focus is on reaching feature parity and releasing v1.0.
+
+- please review our [v1.0 - feature parity](https://github.com/davidalpert/go-git-mob/projects/1) project board which tracks that scope
 
 ## Setup for Local Development
 
