@@ -25,7 +25,7 @@ Feature: Suggest co-authors from commit history
 
   Scenario: suggest co-authors as text
     Given I cd to "example"
-    When I run git mob `suggest`
+    When I run git mob `coauthors suggest`
     Then the output should contain:
     """
     Here are some suggestions for coauthors based on existing authors of this repository:
@@ -36,7 +36,7 @@ Feature: Suggest co-authors from commit history
 
   Scenario: suggest co-authors as a table
     Given I cd to "example"
-    When I run git mob `suggest -otable`
+    When I run git mob `coauthors suggest -otable`
     Then the output should contain:
     """
     +----------+----------+--------------------+
@@ -51,7 +51,7 @@ Feature: Suggest co-authors from commit history
 
   Scenario: suggest co-authors as yaml
     Given I cd to "example"
-    When I run git mob `suggest -oyaml`
+    When I run git mob `coauthors suggest -oyaml`
     Then the output should contain:
     """
     - initials: AD
@@ -67,7 +67,7 @@ Feature: Suggest co-authors from commit history
 
   Scenario: suggest co-authors as json
     Given I cd to "example"
-    When I run git mob `suggest -ojson`
+    When I run git mob `coauthors suggest -ojson`
     Then the output should contain:
     """
     [
