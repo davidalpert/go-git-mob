@@ -6,9 +6,12 @@ rbenv
 nodenv
 asdf
 aruba
+Golang
 golang
 nodejs
 go-git-mob
 git-mob
 GPL
 url
+Kotze
+Idele
