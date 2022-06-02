@@ -103,10 +103,10 @@ func (o *MobOptions) listCoAuthors() error {
 		return nil
 	}
 
-	output := make([]flattenedCoAuthorListItem, len(initials))
+	output := make([]authors.AuthorWithInitials, len(initials))
 	for i, ii := range initials {
 		a := o.AllCoAuthorsByInitials[ii]
-		output[i] = flattenedCoAuthorListItem{
+		output[i] = authors.AuthorWithInitials{
 			Initials: ii,
 			Name:     a.Name,
 			Email:    a.Email,
@@ -121,12 +121,6 @@ func (o *MobOptions) listCoAuthors() error {
 		}
 
 	}).WriteOutput(output)
-}
-
-type flattenedCoAuthorListItem struct {
-	Initials string `json:"initials"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
 }
 
 func (o *MobOptions) setMob() error {

@@ -6,6 +6,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/env"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
+	"github.com/go-git/go-git/v5/plumbing/object"
 	"os"
 	"path"
 	"strings"
@@ -166,6 +167,49 @@ func ReadAllCoAuthorsFromFile() (map[string]authors.Author, error) {
 	}
 
 	return c.CoAuthorsByInitial, nil
+}
+
+func ShortLogAuthorSummary() (map[string]authors.Author, error) {
+	// git shortlog --summary --email --number HEAD'
+
+	r, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{
+		DetectDotGit:          true,
+		EnableDotGitCommonDir: false,
+	})
+	if err == git.ErrRepositoryNotExists {
+		return nil, fmt.Errorf("not a git repository")
+	}
+
+	commitIter, err := r.Log(&git.LogOptions{
+		All: true, // TODO: make this more performant
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error reading git log: %v", err)
+	}
+
+	foundAuthorsByEmail := make(map[string]authors.Author, 0)
+	err = commitIter.ForEach(func(c *object.Commit) error {
+		if _, found := foundAuthorsByEmail[c.Author.Email]; !found {
+			foundAuthorsByEmail[c.Author.Email] = authors.Author{
+				Name:  c.Author.Name,
+				Email: c.Author.Email,
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error iterating through git commits: %v", err)
+	}
+
+	result := make(map[string]authors.Author)
+	for _, a := range foundAuthorsByEmail {
+		result[a.InitialsFromName()] = authors.Author{
+			Name:  a.Name,
+			Email: a.Email,
+		}
+	}
+
+	return result, nil
 }
 
 var (
