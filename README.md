@@ -38,6 +38,7 @@
   - [Built with](#built-with)
 - [Getting started](#getting-started)
   - [Installation](#installation)
+  - [Uninstall](#uninstall)
 - [Usage](#usage)
   - [Utility commands](#utility-commands)
 - [Roadmap](#roadmap)
@@ -85,41 +86,34 @@ git mob
 ```
 which offers several sub-commands:
 ```
+git mob coauthors suggest
 git mob print
 git mob solo
-git mob coauthors suggest
+git mob version
 ```
 
-<!--
-For easier use and compatibility with `git-mob`, `go-git-mob` includes an `explode` sub-command:
+For easier use and compatibility with `git-mob`, `go-git-mob` includes an `install` sub-command:
 ```
-git mob explode
+git mob install
 ```
  which sets up the following top-level git plugins as aliases to the matching `git mob` sub-commands:
 ```
 git mob-print
+git mob-version
 git solo
 git suggest-coauthors
 ```
 
 ### Uninstall
 
-1. Remove any top-level aliases:
 
-    `go-git-mob` ships with an `implode` sub-command:
+`go-git-mob` ships with an `implode` sub-command:
 
-    ```
-    git mob implode
-    ```
+```
+git mob implode
+```
 
-    which cleans up and removes the top-level mob plugins leaving just `git mob`
-
-2. Remove the `git-mob` binary from your path:
-
-    ```
-    which git-mob && rm $(which git-mob)
-    ```
--->
+which cleans up and removes the top-level mob plugins and deletes itself.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
