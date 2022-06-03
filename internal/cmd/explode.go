@@ -55,20 +55,13 @@ func (o *ExplodeOptions) Validate() error {
 
 // Run the command
 func (o *ExplodeOptions) Run() error {
-	cmdMap := map[string]string{
-		"git-mob-print":         "git-mob print",
-		"git-mob-version":       "git-mob version",
-		"git-solo":              "git-mob solo",
-		"git-suggest-coauthors": "git-mob coauthors suggest",
-	}
-
 	e, err := os.Executable()
 	if err != nil {
 		return err
 	}
 	eDir := path.Dir(e)
 
-	for plugin, cmd := range cmdMap {
+	for plugin, cmd := range GitMobPluginMap {
 		p := fmt.Sprintf("%s", path.Join(eDir, plugin))
 		c := fmt.Sprintf(`
 #!/bin/sh
@@ -81,6 +74,12 @@ func (o *ExplodeOptions) Run() error {
 		}
 	}
 
-	//return o.IOStreams.WriteOutput(cmdMap, o.PrinterOptions.WithDefaultOutput("json"))
 	return nil
+}
+
+var GitMobPluginMap = map[string]string{
+	"git-mob-print":         "git-mob print",
+	"git-mob-version":       "git-mob version",
+	"git-solo":              "git-mob solo",
+	"git-suggest-coauthors": "git-mob coauthors suggest",
 }
