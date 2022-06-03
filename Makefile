@@ -53,7 +53,18 @@ build-all: clean ./internal/version/detail.go ## build for all platforms
 
 .PHONY: install
 install: build ## build and install locally into GOPATH
-	cp ./bin/${GOOS}-${GOARCH}/git-mob ${GOPATH}/bin
+	echo "writing: ${GOPATH}/bin/git-mob"
+	cp ./bin/git-mob ${GOPATH}/bin
+	${GOPATH}/bin/git-mob install
+
+.PHONY: uninstall
+uninstall: ## uninstall locally from GOPATH
+# ifneq ("$(wildcard $(${GOPATH}/bin/git-mob))","")
+ifneq ("$(shell which git-mob)","")
+	${GOPATH}/bin/git-mob uninstall
+else
+	echo "git-mob not found in GOPATH"
+endif
 
 .PHONY: test
 test: test-unit test-features ## run all tests (unit and integration)
