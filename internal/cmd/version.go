@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
@@ -60,7 +59,6 @@ func (o *VersionOptions) Run() error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
 		s := fmt.Sprintf("%s %s", o.VersionDetails.AppName, o.VersionDetails.Version)
 		o.WriteStringln(s)
-		o.WriteStringln(cfg.GitPath(".message"))
 	} else {
 		if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
 			o.OutputFormat = utils.StringPointer("json")
