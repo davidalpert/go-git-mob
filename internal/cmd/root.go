@@ -24,6 +24,13 @@ func Execute() {
 			if a.Name() == b {
 				cmdFound = true
 				break
+			} else {
+				for _, alias := range a.Aliases {
+					if alias == b {
+						cmdFound = true
+						break
+					}
+				}
 			}
 		}
 	}
@@ -68,6 +75,7 @@ A git plugin to help manage git coauthors.
 	rootCmd.AddCommand(NewCmdSolo(ioStreams))
 	rootCmd.AddCommand(NewCmdCoauthors(ioStreams))
 	rootCmd.AddCommand(NewCmdExplode(ioStreams))
+	rootCmd.AddCommand(NewCmdImplode(ioStreams))
 	rootCmd.AddCommand(NewCmdVersion(ioStreams))
 	rootCmd.AddCommand(NewCmdPrint(ioStreams))
 

@@ -1,9 +1,12 @@
 Feature: explode
 
   Background:
-  Scenario: creates helper plugins
-    Given I have installed go-git-mob into "local_bin" within the current directory
+    Given I run `git config --global user.name "Jane Doe"`
+    And I run `git config --global user.email "jane@example.com"`
+    And I have installed go-git-mob into "local_bin" within the current directory
     And I look for executables in "local_bin" within the current directory
+
+  Scenario: creates helper plugins
     When I run `git mob explode`
     Then a file named "local_bin/git-mob" should exist
     And a file named "local_bin/git-mob-print" should exist
@@ -12,20 +15,14 @@ Feature: explode
     And a file named "local_bin/git-suggest-coauthors" should exist
 
   Scenario: helper-plugins work: mob-version
-    Given I have installed go-git-mob into "local_bin" within the current directory
-    And I look for executables in "local_bin" within the current directory
     When I run `git mob explode`
     And I run `git mob-version`
     Then the output should contain "git-mob"
 
   Scenario: helper-plugins work: suggest-coauthors
-    Given I have installed go-git-mob into "local_bin" within the current directory
-    And I look for executables in "local_bin" within the current directory
-    And I run `git config --global user.name "Jane Doe"`
-    And I run `git config --global user.email "jane@example.com"`
-    And a simple git repo at "example"
-    When I cd to "example"
-    And I run `git mob explode`
+    Given a simple git repo at "example"
+    When I run `git mob explode`
+    And I cd to "example"
     And I run `git suggest-coauthors`
     Then the output should contain:
       """
