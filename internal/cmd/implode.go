@@ -72,6 +72,6 @@ func (o *ImplodeOptions) Run() error {
 		}
 	}
 
-	fmt.Println("attempting to remove:", e)
+	fmt.Println("removing:", e)
 	return os.Remove(e)
 }
