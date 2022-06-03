@@ -27,7 +27,7 @@ clean: ## clean build output
 	rm -rf ./bin
 
 .PHONY: vale
-vale: ## clean build output
+vale: ## run linting rules against markdown files
 	vale README.md CONTRIBUTING.md # we don't valedate CHANGELOG.md as that reflects historical commit summaries
 
 ./internal/version/detail.go:
