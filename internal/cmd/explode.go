@@ -25,7 +25,7 @@ func NewCmdExplode(ioStreams utils.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "explode",
 		Short:   "creates helper git plugin scripts",
-		Aliases: []string{"rehash"},
+		Aliases: []string{"install", "rehash"},
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
