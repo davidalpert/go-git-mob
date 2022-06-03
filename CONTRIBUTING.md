@@ -41,7 +41,7 @@
   - [Run locally](#run-locally)
 - [Useful Make targets](#useful-make-targets)
 - [Development workflow](#development-workflow)
-  - [Branching guidelines](#branching-guidelines)
+  - [Branch names](#branch-names)
   - [Commit message guidelines](#commit-message-guidelines)
 
 </details>
@@ -147,10 +147,12 @@ release-patch                  release patch version
 
 This project follows a standard open source fork/pull-request workflow:
 
-1. [Fork the repository on Github](https://github.com/davidalpert/go-git-mob/fork)
+1. First, [fork the repository on Github](https://github.com/davidalpert/go-git-mob/fork)
+
+
 1. Create your Feature Branch
    ```
-   git checkout -b GH-123-amazing-feature
+   git checkout -b 123-amazing-feature
    ```
 1. Commit your Changes
    ```
@@ -162,19 +164,21 @@ This project follows a standard open source fork/pull-request workflow:
    ```
 3. Push to the Branch
    ```
-   git push origin GH-123-amazing-feature
+   git push origin 123-amazing-feature
    ```
 4. Open a Pull Request
 
-    https://github.com/davidalpert/go-git-mob/compare/GH-123-amazing-feature
+    https://github.com/davidalpert/go-git-mob/compare/123-amazing-feature
 
-### Branching guidelines
+### Branch names
 
-When working on a pull request to address or resolve a Github issue, prefix the branch name with the Github issue key.
+When working on a pull request to address or resolve a Github issue, prefix the branch name with the Github issue number.
 
-For example, suppose you pick up an issue with an id of 23
+In the preceding example, after picking up an issue with an id of 123, create a branch which starts with `GH-123` or just `123-` and a hyphenated description:
 
-Create a branch which starts with `GH-23` and an optional hyphenated description.
+```
+git checkout -b 123-amazing-feature
+```
 
 ### Commit message guidelines
 
