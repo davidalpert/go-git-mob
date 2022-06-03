@@ -39,6 +39,7 @@
   - [Get the code](#get-the-code)
   - [Visit the doctor](#visit-the-doctor)
   - [Run locally](#run-locally)
+  - [Install from source](#install-from-source)
 - [Useful Make targets](#useful-make-targets)
 - [Development workflow](#development-workflow)
   - [Branch names](#branch-names)
@@ -114,6 +115,22 @@ Please log any issues with the doctor script by [reporting a bug](https://github
     go run main.go version
     go run main.go --help
     ```
+
+### Install from source
+
+```sh
+make install
+```
+This target builds the app and copies it into your GOPATH and makes it executable from any terminal which includes GOPATH in its path.
+
+To install you can run either
+```
+make uninstall
+```
+or 
+```
+git mob implode
+```
 
 ## Useful Make targets
 
