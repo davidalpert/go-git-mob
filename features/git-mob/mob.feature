@@ -19,10 +19,9 @@ Feature: mob
     }
     """
     And a simple git repo at "example"
-    And I cd to "example"
 
-  # @announce-stdout @announce-stderr
   Scenario: start mob with one coauthor
+    Given I cd to "example"
     When I run git mob `ad`
     Then the output should contain:
     """
@@ -35,8 +34,16 @@ Feature: mob
     \tco-author = Amy Doe <amy@findmypast.com>
     """
 
-  # @announce-stdout @announce-stderr
+  Scenario: start mob with a nonexistant coauthor
+    Given I cd to "example"
+    When I run git mob `be`
+    Then the output should contain:
+    """
+    could not find coauthor with initials 'be'; run 'git mob --list' to see a list of available co-authors
+    """
+
   Scenario: start mob with two coauthors
+    Given I cd to "example"
     When I run git mob `ad bd`
     Then the output should contain:
     """
@@ -52,6 +59,7 @@ Feature: mob
     """
 
   Scenario: change coauthors
+    Given I cd to "example"
     When I run git mob `ad`
     And I run git mob `bd`
     Then the output should contain:
@@ -63,4 +71,13 @@ Feature: mob
     """
     [git-mob]
     \tco-author = Bob Doe <bob@findmypast.com>
+    """
+
+  Scenario: no git-coauthors file
+    Given I remove the file "~/.git-coauthors"
+    And I cd to "example"
+    When I run git mob `ad`
+    Then the output should contain:
+    """
+    could not find coauthor with initials 'ad'; run 'git mob --list' to see a list of available co-authors
     """
