@@ -72,6 +72,9 @@ func ReadCoAuthorsContent() (CoAuthorsFileContent, error) {
 }
 
 func ReadCoAuthorsContentFromFile(filePath string) (CoAuthorsFileContent, error) {
+	if err := EnsureCoauthorsFileExists(filePath); err != nil {
+		return CoAuthorsFileContent{}, nil
+	}
 	b, err := os.ReadFile(filePath)
 	if err != nil {
 		return CoAuthorsFileContent{}, err
@@ -125,8 +128,8 @@ func (f CoAuthorsFileContent) FindInitialsFromCoAuthorStrings(ss ...string) []st
 	return result
 }
 
-func EnsureCoauthorsFileExists() error {
-	if _, err := os.Stat(CoAuthorsFilePath); os.IsNotExist(err) {
+func EnsureCoauthorsFileExists(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
 		cc := CoAuthorsFileContent{
 			CoAuthorsByInitial: make(map[string]Author, 0),
 		}
@@ -135,7 +138,7 @@ func EnsureCoauthorsFileExists() error {
 			return err
 		}
 
-		return os.WriteFile(CoAuthorsFilePath, b, os.ModePerm)
+		return os.WriteFile(path, b, os.ModePerm)
 	}
 	return nil
 }
