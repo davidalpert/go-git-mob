@@ -57,6 +57,9 @@ install: build ## build and install locally into GOPATH
 	cp ./bin/git-mob ${GOPATH}/bin
 	${GOPATH}/bin/git-mob install
 
+.PHONY: implode
+implode: uninstall ## uninstall locally from GOPATH
+
 .PHONY: uninstall
 uninstall: ## uninstall locally from GOPATH
 # ifneq ("$(wildcard $(${GOPATH}/bin/git-mob))","")
