@@ -38,12 +38,12 @@ gen: ## invoke go generate
 	@CGO_ENABLED=1 go generate ./...
 
 .PHONY: build
-build: clean ./internal/version/detail.go ## build for current platform
+build: clean ./internal/version/detail.go gen ## build for current platform
 	mkdir -p ./bin
 	go build -o ./bin/git-mob main.go
 
 .PHONY: build-all
-build-all: clean ./internal/version/detail.go ## build for all platforms
+build-all: clean ./internal/version/detail.go gen ## build for all platforms
 	GOOS=darwin GOARCH=arm64 mkdir -p bin/darwin-arm64
 	GOOS=darwin GOARCH=arm64 go build -o bin/darwin-arm64/git-mob main.go
 	GOOS=darwin GOARCH=amd64 mkdir -p bin/darwin-amd64
