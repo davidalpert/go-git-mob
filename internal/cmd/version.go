@@ -57,7 +57,10 @@ func (o *VersionOptions) Validate() error {
 // Run the command
 func (o *VersionOptions) Run() error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
-		s := fmt.Sprintf("%s %s", o.VersionDetails.AppName, o.VersionDetails.Version)
+		s := fmt.Sprintf("%s %s - %s", o.VersionDetails.AppName, o.VersionDetails.Version, o.VersionDetails.GitCommit)
+		if o.VersionDetails.GitDirty {
+			s = fmt.Sprintf("%s [dirty]", s)
+		}
 		o.WriteStringln(s)
 	} else {
 		if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
