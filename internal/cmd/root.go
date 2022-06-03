@@ -24,6 +24,13 @@ func Execute() {
 			if a.Name() == b {
 				cmdFound = true
 				break
+			} else {
+				for _, alias := range a.Aliases {
+					if alias == b {
+						cmdFound = true
+						break
+					}
+				}
 			}
 		}
 	}
