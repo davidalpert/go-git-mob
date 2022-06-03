@@ -67,6 +67,7 @@ A git plugin to help manage git coauthors.
 	rootCmd.AddCommand(NewCmdMob(ioStreams))
 	rootCmd.AddCommand(NewCmdSolo(ioStreams))
 	rootCmd.AddCommand(NewCmdCoauthors(ioStreams))
+	rootCmd.AddCommand(NewCmdExplode(ioStreams))
 	rootCmd.AddCommand(NewCmdVersion(ioStreams))
 	rootCmd.AddCommand(NewCmdPrint(ioStreams))
 
