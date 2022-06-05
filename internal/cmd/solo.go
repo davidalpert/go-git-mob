@@ -54,7 +54,7 @@ func (o *SoloOptions) Validate() error {
 
 // Run the command
 func (o *SoloOptions) Run() error {
-	if err := cfg.ResetMob(); err != nil {
+	if err := resetMob(); err != nil {
 		return err
 	}
 

@@ -137,9 +137,10 @@ func (o *MobOptions) setMob() error {
 		}
 	}
 
-	if err := cfg.ResetMob(); err != nil {
-		return nil
+	if err := resetMob(); err != nil {
+		return err
 	}
+	fmt.Printf("coauthors: %#v\n", coauthors)
 	if err := cfg.AddCoAuthors(coauthors...); err != nil {
 		return err
 	}
@@ -163,6 +164,10 @@ func (o *MobOptions) setMob() error {
 		}
 	}
 
-	o.WriteStringln(strings.Join(append([]string{meTag}, parts...), "\n"))
-	return nil
+	return o.WriteStringln(strings.Join(append([]string{meTag}, parts...), "\n"))
+}
+
+// resetMob clears out the co-authors from global git config
+func resetMob() error {
+	return cfg.RemoveAllGlobal("git-mob.co-author")
 }
