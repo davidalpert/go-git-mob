@@ -5,6 +5,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/env"
+	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -25,7 +26,7 @@ const (
 )
 
 func GitMessagePath() string {
-	return env.GetValueOrDefault(EnvKeyGitMessagePath, cfg.GitPath(".gitmessage"))
+	return env.GetValueOrDefault(EnvKeyGitMessagePath, revParse.GitPath(".gitmessage"))
 }
 
 func CommitTemplatePath() string {

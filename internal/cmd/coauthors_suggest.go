@@ -5,6 +5,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"sort"
@@ -51,7 +52,7 @@ func (o *CoauthorsSuggestOptions) Complete(cmd *cobra.Command, args []string) er
 
 // Validate the options
 func (o *CoauthorsSuggestOptions) Validate() error {
-	if !cfg.InsideWorkTree() {
+	if !revParse.InsideWorkTree() {
 		return fmt.Errorf("not a git repository")
 	}
 
