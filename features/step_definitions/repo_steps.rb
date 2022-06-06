@@ -43,3 +43,16 @@ Given('a simple git repo at {string} with the following empty commits:') do |pat
     run_command_and_stop('git config --remove-section user', fail_on_error: true)
   end
 end
+
+Then('the most recent commit log should contain:') do |doc_string|
+  msg = 'TBD'
+
+  Dir.chdir(aruba.current_directory) do
+    msg = `git log -1 --format=full`
+  end
+
+  aruba.announcer.announce(:git_log, msg)
+
+  expect(msg)
+    .to match_string doc_string
+end
