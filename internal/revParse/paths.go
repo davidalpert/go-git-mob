@@ -44,3 +44,7 @@ func TopLevelDirectory() string {
 func GitPath(rel ...string) string {
 	return path.Join(append([]string{TopLevelDirectory(), ".git"}, rel...)...)
 }
+
+func GitPathRelativeToTopLevelDirectory(rel ...string) string {
+	return path.Join(append([]string{".git"}, rel...)...)
+}

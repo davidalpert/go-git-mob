@@ -72,6 +72,7 @@ A git plugin to help manage git coauthors.
 
 	// Register subcommands
 	rootCmd.AddCommand(NewCmdMob(ioStreams))
+	rootCmd.AddCommand(NewCmdMobInit(ioStreams))
 	rootCmd.AddCommand(NewCmdMobPrepareCommitMsg(ioStreams))
 	rootCmd.AddCommand(NewCmdSolo(ioStreams))
 	rootCmd.AddCommand(NewCmdCoauthors(ioStreams))
