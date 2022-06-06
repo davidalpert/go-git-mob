@@ -23,6 +23,10 @@ func (a Author) CoauthorTag() string {
 	return fmt.Sprintf("Co-Authored-By: %s <%s>", a.Name, a.Email)
 }
 
+func (a Author) CoauthorTagBytes() []byte {
+	return []byte(a.CoauthorTag())
+}
+
 func (a Author) InitialsFromName() string {
 	//return name.split(' ').map(word => word[0].toLowerCase()).join('');
 	words := strings.Split(a.Name, " ")
