@@ -78,11 +78,11 @@ test-unit: ./internal/version/detail.go ## run unit tests
 
 .PHONY: test-features
 test-features: Gemfile.lock build ## Run cucumber/aruba backend features
-	bundle exec cucumber --publish-quiet --tags 'not @wip'
+	bundle exec cucumber --publish-quiet --tags 'not @wip' --tags 'not @ignore'
 
 .PHONY: test-features-wip
 test-features-wip: Gemfile.lock build ## Run cucumber/aruba backend features
-	bundle exec cucumber --publish-quiet --tags '@wip'
+	bundle exec cucumber --publish-quiet --tags '@wip' --tags 'not @ignore'
 
 .PHONY: depgraph
 depgraph: ## create a dotgraph visualizing package dependencies
