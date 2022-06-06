@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
 	"os"
@@ -13,7 +14,13 @@ var cfgFile string
 
 // Execute builds the default root command and invokes it with os.Args
 func Execute() {
-	rootCmd := NewRootCmd(utils.DefaultOSStreams())
+	streams := utils.DefaultOSStreams()
+	// configure the logger here in the outer scope so that we can defer
+	// any cleanup such as writing/flushing the stream
+	logCleanupFn := diagnostics.ConfigureLogger(streams)
+	defer logCleanupFn()
+
+	rootCmd := NewRootCmd(streams)
 
 	rootCmd.SetArgs(os.Args[1:]) // without program
 

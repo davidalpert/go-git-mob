@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/apex/log"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/spf13/cobra"
 	"os"
@@ -79,24 +81,41 @@ func (o *MobPrepareCommitMsgOptions) Validate() error {
 
 // Run the command
 func (o *MobPrepareCommitMsgOptions) Run() error {
+	lg := diagnostics.Log.WithFields(log.Fields{
+		"COMMIT_MSG_FILE": o.CommitMessageFile,
+		"COMMIT_SOURCE":   o.Source,
+		"COMMIT_SHA":      o.CommitObject,
+	})
+
 	fileBytes, err := os.ReadFile(o.CommitMessageFile)
 	if os.IsNotExist(err) {
-		return fmt.Errorf("opening '%s': %v", o.CommitMessageFile, err)
+		wrapper := fmt.Errorf("opening '%s': %v", o.CommitMessageFile, err)
+		lg.WithError(wrapper).Error("prepare-commit-msg")
+		return wrapper
 	}
+	lg = lg.WithField("COMMIT_MSG", string(fileBytes))
 
 	aa, err := cfg.GetCoAuthors()
 	if err != nil {
-		return fmt.Errorf("reading co-authors: %v", err)
+		wrapper := fmt.Errorf("reading co-authors: %v", err)
+		lg.WithError(wrapper).Error("prepare-commit-msg")
+		return wrapper
 	}
 
 	if len(aa) == 0 {
+		lg.Debug("prepare-commit-msg: no coauthors")
 		return nil // nothing to do
 	}
+	lg = lg.WithField("co-authors", aa)
 
 	updated, err := msg.AppendCoauthorMarkup(aa, fileBytes)
 	if err != nil {
+		lg.WithError(err).Error("prepare-commit-msg")
 		return err
 	}
+
+	lg = lg.WithField("COMMIT_MSG_AFTER", string(updated))
+	lg.Debug("prepare-commit-msg")
 
 	return os.WriteFile(o.CommitMessageFile, updated, os.ModePerm)
 }

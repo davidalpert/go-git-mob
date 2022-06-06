@@ -2,8 +2,8 @@ package env
 
 import (
 	"fmt"
+	"github.com/apex/log"
 	"github.com/mitchellh/go-homedir"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"time"
@@ -68,14 +68,10 @@ func GetValueOrDefaultBool(envKey string, defaultValue bool) bool {
 	return defaultValue
 }
 
-func GetValueOrDefaultLogLevel(envKey string, defaultValue logrus.Level) logrus.Level {
+func GetValueOrDefaultLogLevel(envKey string, defaultValue log.Level) log.Level {
 	v := os.Getenv(envKey)
 	if v != "" {
-		level, err := logrus.ParseLevel(v)
-		if err != nil {
-			panic(fmt.Errorf("failed parsing '%s' as log.Level: %v", v, err))
-		}
-		return level
+		return log.MustParseLevel(v)
 	}
 
 	return defaultValue

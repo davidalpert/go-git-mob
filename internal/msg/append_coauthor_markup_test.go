@@ -148,9 +148,30 @@ Co-Authored-By: Hoban Washburne <wash@serenity.com>
 Co-Authored-By: Zoe Washburne <zoe@serenity.com>
 
 `,
+
 			wantErr: false,
 		},
+		{
+			name: "existing coauthors one duplicate coauthor; duplicates are removed",
+			haveAuthors: []authors.Author{
+				{
+					Name:  "Bob Doe",
+					Email: "bob@findmypast.com",
+				},
+			},
+			haveMsg: `empty mobbed commit
+
+Co-Authored-By: Amy Doe <amy@findmypast.com>
+`,
+			wantMsg: `empty mobbed commit
+
+Co-Authored-By: Amy Doe <amy@findmypast.com>
+Co-Authored-By: Bob Doe <bob@findmypast.com>
+
+`,
+		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := AppendCoauthorMarkup(tt.haveAuthors, []byte(tt.haveMsg))
