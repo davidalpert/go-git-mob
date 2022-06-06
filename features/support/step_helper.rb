@@ -2,6 +2,7 @@
 
 require 'aruba'
 require 'aruba/cucumber'
+require_relative 'matchers/match_string'
 require 'yaml'
 
 # Aruba ------------------------------------------------
