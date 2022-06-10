@@ -18,3 +18,7 @@ Then('the {channel} should show usage') do |_channel|
   # pending # Write code here that turns the phrase above into concrete actions
   all_output_includes('Usage:')
 end
+
+When('I sleep for {int} seconds') do |n_seconds|
+    sleep(n_seconds)
+end

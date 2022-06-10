@@ -34,7 +34,7 @@ Feature: git mob appends coauthors to commits
       Co-Authored-By: Amy Doe <amy@findmypast.com>
       """
 
-  @announce-git-log @wip @announce-stdout
+  @announce-git-log @wip @ignore @announce-stdout
   Scenario: add coauthor when rebasing
     Given I set the environment variables to:
       | variable         | value        |
