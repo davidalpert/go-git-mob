@@ -160,6 +160,9 @@ func (o *MobOptions) setMob() error {
 		}
 	}
 
+	if err := setCommitTemplate(); err != nil {
+		return err
+	}
 	if err := resetMob(); err != nil {
 		return err
 	}
@@ -193,4 +196,12 @@ func (o *MobOptions) setMob() error {
 // resetMob clears out the co-authors from global git config
 func resetMob() error {
 	return cfg.RemoveAllGlobal("git-mob.co-author")
+}
+
+// setCommitTemplate sets the local commit.template config setting to take advantage of `.gitmessage`
+func setCommitTemplate() error {
+	if !cfg.Has("commit.template") {
+		return cfg.Set("commit.template", msg.CommitTemplatePath())
+	}
+	return nil
 }
