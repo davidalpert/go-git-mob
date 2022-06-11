@@ -52,5 +52,18 @@ Feature: git-solo.spec
       A commit body that goes into more detail.
       """
 
+  Scenario: ignores positional arguments
+    Given I cd to "example"
+    And I successfully run `git mob ad bd`
+    When I successfully run `git solo yolo`
+    Then the stdout from "git solo yolo" should contain:
+      """
+      Jane Doe <jane@example.com>
+      """
+    And the stdout from "git solo yolo" should not contain:
+      """
+      Bob Doe <bob@example.com>
+      """
+
 # @wip
 # @announce-stdout
