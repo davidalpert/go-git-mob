@@ -84,6 +84,10 @@ test-features: Gemfile.lock build ## Run cucumber/aruba backend features
 test-features-wip: Gemfile.lock build ## Run cucumber/aruba backend features
 	bundle exec cucumber --publish-quiet --tags '@wip' --tags 'not @ignore'
 
+.PHONY: list-ignored
+list-ignored: ## list ignored specs
+	bundle exec cucumber --publish-quiet --tags '@ignore' --dry-run
+
 .PHONY: depgraph
 depgraph: ## create a dotgraph visualizing package dependencies
 	 godepgraph -s -novendor -p github.com/go-git/go-git,github.com/spf13,github.com/go-xmlfmt,github.com/gocarina/gocsv,github.com/olekukonko/tablewriter,golang.org,gopkg.in $(shell cat go.mod | grep module | sed -E 's/module //') | dot -T svg > dependencygraph.svg
