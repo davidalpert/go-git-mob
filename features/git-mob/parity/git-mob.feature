@@ -141,5 +141,17 @@ Feature: git-mob.spec
       Co-authored-by: Bob Doe <bob@example.com>
       """
 
+  Scenario: appends co-authors to a new commit template
+    Given a simple git repo at "example"
+    And I cd to "example"
+    And a file named ".git/.gitmessage" does not exist
+    When I successfully run `git mob ad bd`
+    And a file named ".git/.gitmessage" should contain:
+      """
+
+      Co-authored-by: Amy Doe <amy@example.com>
+      Co-authored-by: Bob Doe <bob@example.com>
+      """
+
 # @wip
 # @announce-stdout
