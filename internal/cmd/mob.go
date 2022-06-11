@@ -156,7 +156,7 @@ func (o *MobOptions) setMob() error {
 			}
 		}
 		if coauthors[i].Name == "" {
-			return fmt.Errorf("could not find coauthor with initials '%s'; run 'git mob --list' to see a list of available co-authors", initial)
+			return fmt.Errorf("author with initials '%s' not found; run 'git mob --list' to see a list of available co-authors", initial)
 		}
 	}
 
