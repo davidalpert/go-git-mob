@@ -57,5 +57,30 @@ Feature: git-mob.spec
       Jane Doe <jane@example.com>
       """
 
+  Scenario: prints current mob
+    Given a file named "~/.git-coauthors" with:
+      """
+      {
+        "coauthors": {
+          "ad": {
+            "name": "Amy Doe",
+            "email": "amy@example.com"
+          },
+          "bd": {
+            "name": "Bob Doe",
+            "email": "bob@example.com"
+          }
+        }
+      }
+      """
+    And I successfully run `git mob ad bd`
+    When I successfully run `git mob`
+    Then the output should contain:
+      """
+      Jane Doe <jane@example.com>
+      Amy Doe <amy@example.com>
+      Bob Doe <bob@example.com>
+      """
+
 # @wip
 # @announce-stdout
