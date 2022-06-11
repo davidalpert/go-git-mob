@@ -25,7 +25,7 @@ Feature: logging support
   Scenario: commit with logging
     Given I cd to "example"
     And an empty file ".git/COMMIT_EDITMSG"
-    When I successfully run `git mob prepare-commit-msg .git/COMMIT_EDITMSG message`
+    When I successfully run `git mob hooks prepare-commit-msg .git/COMMIT_EDITMSG message`
     Then the file ".git/COMMIT_EDITMSG" should contain:
       """
 

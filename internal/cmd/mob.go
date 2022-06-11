@@ -58,6 +58,15 @@ Examples:
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
 
+	cmd.AddCommand(NewCmdMobInit(ioStreams))
+	cmd.AddCommand(NewCmdMobHooks(ioStreams))
+	cmd.AddCommand(NewCmdSolo(ioStreams))
+	cmd.AddCommand(NewCmdCoauthors(ioStreams))
+	cmd.AddCommand(NewCmdExplode(ioStreams))
+	cmd.AddCommand(NewCmdImplode(ioStreams))
+	cmd.AddCommand(NewCmdVersion(ioStreams))
+	cmd.AddCommand(NewCmdPrint(ioStreams))
+
 	return cmd
 }
 
