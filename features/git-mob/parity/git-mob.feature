@@ -27,5 +27,28 @@ Feature: git-mob.spec
     When I successfully run `git mob --version`
     Then the output should match /\d.\d.\d/
 
-  # @wip
-  # @announce-stdout
+  Scenario: --list prints a list of avaialable co-authors
+    Given a file named "~/.git-coauthors" with:
+      """
+      {
+        "coauthors": {
+          "ad": {
+            "name": "Amy Doe",
+            "email": "amy@example.com"
+          },
+          "bd": {
+            "name": "Bob Doe",
+            "email": "bob@example.com"
+          }
+        }
+      }
+      """
+    When I successfully run `git mob --list`
+    Then the output should contain:
+      """
+      ad Amy Doe amy@example.com
+      bd Bob Doe bob@example.com
+      """
+
+# @wip
+# @announce-stdout
