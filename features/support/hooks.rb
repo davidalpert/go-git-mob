@@ -17,3 +17,7 @@ end
 Before('@not-windows') do
   pending if GitMob::OS.windows?
 end
+
+Before('@pending') do
+  pending
+end
