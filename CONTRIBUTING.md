@@ -44,6 +44,9 @@
 - [Development workflow](#development-workflow)
   - [Branch names](#branch-names)
   - [Commit message guidelines](#commit-message-guidelines)
+- [Behavior-driven development with gherkin, cucumber, and aruba](#behavior-driven-development-with-gherkin-cucumber-and-aruba)
+  - [Use git-mob's log file in a feature spec](#use-git-mobs-log-file-in-a-feature-spec)
+  - [Custom step definitions](#custom-step-definitions)
 
 </details>
 
@@ -223,3 +226,53 @@ List of supported commit type tags include:
 ```
 
 Prefix your commits with one of these type tags to automatically include the commit description in the [CHANGELOG](CHANGELOG.md) for the next release.
+
+## Behavior-driven development with gherkin, cucumber, and aruba
+
+This project includes integration tests written in [gherkin](https://cucumber.io/docs/gherkin/), a domain-specific language designed to specify given-when-then style specifications.
+
+These specs live in the `./features/git-mob` folder:
+
+    Scenario: start mob with one coauthor
+      Given I cd to "example"
+      When I run git mob `ad`
+      Then the output should contain:
+      """
+      Jane Doe <jane@example.com>
+      Amy Doe <amy@findmypast.com>
+      """
+
+This project uses the ruby [cucumber](https://cucumber.io/docs/installation/ruby/) implementation and the [cucumber/aruba](https://relishapp.com/cucumber/aruba/docs) gem which provides step definitions to manipulate files and run command-line applications.
+
+
+### Use git-mob's log file in a feature spec
+
+To enable `git-mob`'s debug logs set the following environment variables:
+
+    Given I set the environment variables to:
+      | variable         | value        |
+      | GITMOB_LOG_LEVEL | debug        |
+      | GITMOB_LOG_FILE  | .git/mob.log |
+
+Show the log later with a step like:
+
+    And I successfully run `cat .git/mob.log`
+
+### Custom step definitions
+
+This project includes several useful domain-specific step definitions, including:
+
+    Then the most recent commit log should contain:
+      """
+      empty mobbed commit
+
+      Co-Authored-By: Amy Doe <amy@findmypast.com>
+      """
+
+That step uses `git log -1 --format=full` to read the formatted log message of
+the previous git commit (at `HEAD~1`) and compare it to the provided string.
+
+When feature specs using this step misbehave, decorate your features or scenarios with following custom [announcer](https://relishapp.com/cucumber/aruba/v/0-11-0/docs/core/announce-output-during-test-run) to print the full log message to STDOUT while running the tests:
+
+    @announce-git-log
+
