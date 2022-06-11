@@ -95,5 +95,15 @@ Feature: git-mob.spec
       """
       author with initials 'zz' not found
       """
+
+  Scenario: overwrites old mob when setting a new mob
+    Given I successfully run `git mob ad`
+    When I successfully run `git mob bd`
+    Then the output should contain:
+      """
+      Jane Doe <jane@example.com>
+      Bob Doe <bob@example.com>
+      """
+
 # @wip
 # @announce-stdout
