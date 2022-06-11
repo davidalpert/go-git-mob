@@ -89,5 +89,11 @@ Feature: git-mob.spec
       Bob Doe <bob@example.com>
       """
 
+  Scenario: errors when co-author initials not found
+    When I run `git mob zz`
+    Then the output should contain:
+      """
+      author with initials 'zz' not found
+      """
 # @wip
 # @announce-stdout
