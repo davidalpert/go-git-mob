@@ -35,5 +35,22 @@ Feature: git-solo.spec
       Bob Doe <bob@example.com>
       """
 
+  Scenario: removes co-authors from commit template
+    Given I cd to "example"
+    And a file named ".git/.gitmessage" with:
+      """
+      A commit title
+
+      A commit body that goes into more detail.
+      """
+    And I successfully run `git mob ad bd`
+    When I successfully run `git solo`
+    Then a file named ".git/.gitmessage" should contain:
+      """
+      A commit title
+
+      A commit body that goes into more detail.
+      """
+
 # @wip
 # @announce-stdout
