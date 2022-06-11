@@ -65,5 +65,12 @@ Feature: git-solo.spec
       Bob Doe <bob@example.com>
       """
 
-# @wip
-# @announce-stdout
+  @pending
+  # allow running some mob commands outside a working tree
+  # so that the mob follows across project folders
+  Scenario: warns when used outside of a git repo
+    # also hard to test not being in a working tree
+    # because by default the aruba test folder is
+    # still "inside" the core project's working tree
+    When I run `git mob`
+    Then the exit status should be 1
