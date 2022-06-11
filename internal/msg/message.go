@@ -42,5 +42,19 @@ func WriteGitMessage(coAuthorList ...authors.Author) error {
 
 	content := "\n" + "\n" + FormatCoAuthorList(coAuthorList)
 
+	if _, err := os.Stat(p); err == nil {
+		b, err := os.ReadFile(p)
+		if err != nil {
+			return fmt.Errorf("reading git message file: %v", err)
+		}
+
+		i := strings.Index(string(b), "\n\nCo-authored-by:")
+		if i > 0 {
+			content = string(b[:i]) + content
+		} else {
+			content = string(b) + content
+		}
+	}
+
 	return ioutil.WriteFile(p, []byte(content), os.ModePerm)
 }
