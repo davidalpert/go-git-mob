@@ -67,5 +67,13 @@ Feature: git-mob.spec
       Bob Doe <bob@example.com>
       """
 
+  Scenario: sets mob when co-author initials found
+    When I successfully run `git mob ad`
+    Then the output should contain:
+      """
+      Jane Doe <jane@example.com>
+      Amy Doe <amy@example.com>
+      """
+
 # @wip
 # @announce-stdout
