@@ -71,7 +71,7 @@ SHA1=$3
 
 set -e
 
-git mob prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
+git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
 `
 	if err := os.WriteFile(fileName, []byte(fileContents), 0755); err != nil {
 		return fmt.Errorf("writing git hook: %v", err)

@@ -16,7 +16,7 @@ Feature: mob prepare-commit-msg
 
   Scenario: one coauthor - message - empty message
     Given an empty file ".git/COMMIT_EDITMSG"
-    And I successfully run `git mob prepare-commit-msg .git/COMMIT_EDITMSG message`
+    And I successfully run `git mob hooks prepare-commit-msg .git/COMMIT_EDITMSG message`
     Then the file ".git/COMMIT_EDITMSG" should contain:
       """
 
@@ -35,7 +35,7 @@ Feature: mob prepare-commit-msg
       # Your branch is up to date with 'origin/23-feat-append-to-commit-message'.
       #
       """
-    And I successfully run `git mob prepare-commit-msg .git/COMMIT_EDITMSG message`
+    And I successfully run `git mob hooks prepare-commit-msg .git/COMMIT_EDITMSG message`
     Then the file ".git/COMMIT_EDITMSG" should contain:
       """
       Add something awesome
