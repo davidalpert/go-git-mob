@@ -21,5 +21,6 @@ Given('I have installed go-git-mob into {string} within the current directory') 
 
   create_directory(path)
   FileUtils.cp(exe, File.join(aruba.current_directory, path))
+  run_command_and_stop("git mob explode", fail_on_error: true)
   run_command_and_stop("ls -la #{path}", fail_on_error: true)
 end
