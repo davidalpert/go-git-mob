@@ -87,12 +87,8 @@ func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 
 // Validate the options
 func (o *MobOptions) Validate() error {
-	if (o.ListOnly || o.PrintVersion) && 1 < len(o.Initials) {
+	if (o.ListOnly || o.PrintVersion) && 0 < len(o.Initials) {
 		return fmt.Errorf("cannot configure a mob while listing availble coauthors or printing the version")
-	}
-
-	if len(o.Initials) < 1 && !o.ListOnly && !o.PrintVersion {
-		return fmt.Errorf("must supply at least one co-author")
 	}
 
 	return o.PrinterOptions.Validate()

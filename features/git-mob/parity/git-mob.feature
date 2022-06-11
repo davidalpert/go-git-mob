@@ -50,5 +50,12 @@ Feature: git-mob.spec
       bd Bob Doe bob@example.com
       """
 
+  Scenario: prints only primary author when there is no mob
+    When I successfully run `git mob`
+    Then the output should contain:
+      """
+      Jane Doe <jane@example.com>
+      """
+
 # @wip
 # @announce-stdout
