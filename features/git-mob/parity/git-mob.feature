@@ -12,3 +12,10 @@ Feature: git-mob.spec
     And the output should contain "Flags"
     And the output should contain "Examples"
 
+  #@announce-stderr
+  @not-windows
+  Scenario: --help prints help
+    # --help is intercepted by the git plugin launcher which returns a 404 (help not found)
+    When I run `git mob --help`
+    Then the output should contain "No manual entry for git-mob"
+
