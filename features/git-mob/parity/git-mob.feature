@@ -23,5 +23,9 @@ Feature: git-mob.spec
     When I successfully run `git mob -v`
     Then the output should match /\d.\d.\d/
 
+  Scenario: --version prints version
+    When I successfully run `git mob --version`
+    Then the output should match /\d.\d.\d/
+
   # @wip
   # @announce-stdout
