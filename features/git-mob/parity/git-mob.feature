@@ -20,9 +20,10 @@ Feature: git-mob.spec
         }
       }
       """
+    Given a simple git repo at "example"
 
   Scenario: -h prints help
-    When I successfully run `git mob -h`
+    Given I successfully run `git mob -h`
     Then the output should contain "Usage"
     And the output should contain "Flags"
     And the output should contain "Examples"
@@ -58,7 +59,8 @@ Feature: git-mob.spec
       """
 
   Scenario: prints current mob
-    Given I successfully run `git mob ad bd`
+    Given I cd to "example"
+    And I successfully run `git mob ad bd`
     When I successfully run `git mob`
     Then the output should contain:
       """
@@ -68,6 +70,7 @@ Feature: git-mob.spec
       """
 
   Scenario: sets mob when co-author initials found
+    Given I cd to "example"
     When I successfully run `git mob ad`
     Then the output should contain:
       """
@@ -82,6 +85,7 @@ Feature: git-mob.spec
   #       command or disable output formatting; I would prefer
   #       to use a different flag peraps even --o
   Scenario: sets mob and override coauthor
+    Given I cd to "example"
     When I successfully run `git mob -o ad bd`
     Then the output should contain:
       """
@@ -90,6 +94,7 @@ Feature: git-mob.spec
       """
 
   Scenario: errors when co-author initials not found
+    Given I cd to "example"
     When I run `git mob zz`
     Then the output should contain:
       """
