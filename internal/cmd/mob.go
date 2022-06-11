@@ -171,7 +171,8 @@ func (o *MobOptions) setMob() error {
 		return err
 	}
 	if err := msg.WriteGitMessage(coauthors...); err != nil {
-		return err
+		//return err
+		// TODO: what do we do here?
 	}
 
 	me, err := cfg.GetUser()
@@ -200,8 +201,13 @@ func resetMob() error {
 
 // setCommitTemplate sets the local commit.template config setting to take advantage of `.gitmessage`
 func setCommitTemplate() error {
+	p, err := msg.CommitTemplatePath()
+	if err != nil {
+		return nil
+		// TODO swallowing errors?
+	}
 	if !cfg.Has("commit.template") {
-		return cfg.Set("commit.template", msg.CommitTemplatePath())
+		return cfg.Set("commit.template", p)
 	}
 	return nil
 }
