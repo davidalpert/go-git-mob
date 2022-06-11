@@ -18,6 +18,7 @@ type MobOptions struct {
 	utils.IOStreams
 	Initials               []string
 	ListOnly               bool
+	PrintVersion           bool
 	AllCoAuthorsByInitials map[string]authors.Author
 }
 
@@ -57,6 +58,7 @@ Examples:
 	o.PrinterOptions.AddPrinterFlags(cmd)
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
+	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
 
 	cmd.AddCommand(NewCmdMobInit(ioStreams))
 	cmd.AddCommand(NewCmdMobHooks(ioStreams))
@@ -85,11 +87,11 @@ func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 
 // Validate the options
 func (o *MobOptions) Validate() error {
-	if o.ListOnly && 1 < len(o.Initials) {
-		return fmt.Errorf("cannot configure a mob while listing availble coauthors")
+	if (o.ListOnly || o.PrintVersion) && 1 < len(o.Initials) {
+		return fmt.Errorf("cannot configure a mob while listing availble coauthors or printing the version")
 	}
 
-	if len(o.Initials) < 1 && !o.ListOnly {
+	if len(o.Initials) < 1 && !o.ListOnly && !o.PrintVersion {
 		return fmt.Errorf("must supply at least one co-author")
 	}
 
@@ -100,6 +102,12 @@ func (o *MobOptions) Validate() error {
 func (o *MobOptions) Run() error {
 	if o.ListOnly {
 		return o.listCoAuthors()
+	}
+
+	if o.PrintVersion {
+		versionCmd := NewCmdVersion(o.IOStreams)
+		versionCmd.SetArgs([]string{}) // the version command doesn't accept the -v flag
+		return versionCmd.Execute()
 	}
 
 	return o.setMob()
