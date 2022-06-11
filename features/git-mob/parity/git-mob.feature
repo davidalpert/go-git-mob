@@ -97,12 +97,28 @@ Feature: git-mob.spec
       """
 
   Scenario: overwrites old mob when setting a new mob
-    Given I successfully run `git mob ad`
+    Given a simple git repo at "example"
+    And I cd to "example"
+    And a file named ".git/.gitmessage" with:
+      """
+      A commit title
+
+      A commit body that goes into more detail.
+      """
+    And I successfully run `git mob ad`
     When I successfully run `git mob bd`
     Then the output should contain:
       """
       Jane Doe <jane@example.com>
       Bob Doe <bob@example.com>
+      """
+    And a file named ".git/.gitmessage" should contain:
+      """
+      A commit title
+
+      A commit body that goes into more detail.
+
+      Co-authored-by: Bob Doe <bob@example.com>
       """
 
 # @wip
