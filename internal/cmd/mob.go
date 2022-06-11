@@ -6,6 +6,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"sort"
@@ -32,7 +33,16 @@ func NewCmdMob(ioStreams utils.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "mob",
 		Short: "configure co-authors",
-		Args:  cobra.MinimumNArgs(0),
+		Long: fmt.Sprintf(`git-mob %s
+
+A git plugin to help manage git coauthors.
+
+Examples:
+   $ git mob jd                                      # Set John as co-authors
+   $ git solo                                        # Return to working by yourself (i.e. unset all co-authors)
+   $ git mob -l                                      # Show a list of all co-authors, John Doe should be there
+`, version.Detail.Version),
+		Args: cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
 				return err

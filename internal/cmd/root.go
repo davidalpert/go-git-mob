@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics"
-	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -56,12 +55,9 @@ func Execute() {
 // NewRootCmd creates the 'root' command and configures it's nested children
 func NewRootCmd(ioStreams utils.IOStreams) *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:   "git-mob",
-		Short: "A git plugin to help manage git coauthors.",
-		Long: fmt.Sprintf(`git-mob %s
-
-A git plugin to help manage git coauthors.
-`, version.Detail.Version),
+		Use:           "git",
+		Short:         "A git plugin to help manage git coauthors.",
+		Long:          "NOTE: this root command is not intended to be run by itself",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		CompletionOptions: cobra.CompletionOptions{
