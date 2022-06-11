@@ -26,7 +26,7 @@ func NewCmdVersion(ioStreams utils.IOStreams) *cobra.Command {
 	o := NewVersionOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "version",
-		Short: "Show version information",
+		Short: "show version information",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
