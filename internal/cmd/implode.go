@@ -24,7 +24,7 @@ func NewCmdImplode(ioStreams utils.IOStreams) *cobra.Command {
 	o := NewImplodeOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:     "implode",
-		Short:   "removes helper git plugin scripts",
+		Short:   "uninstall git-mob (removes helper git plugin scripts and deletes the git-mob binary)",
 		Aliases: []string{"uninstall"},
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
