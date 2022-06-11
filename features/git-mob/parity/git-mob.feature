@@ -5,6 +5,21 @@ Feature: git-mob.spec
     And I look for executables in "local_bin" within the current directory
     And I successfully run `git config --global user.name "Jane Doe"`
     And I successfully run `git config --global user.email "jane@example.com"`
+    And a file named "~/.git-coauthors" with:
+      """
+      {
+        "coauthors": {
+          "ad": {
+            "name": "Amy Doe",
+            "email": "amy@example.com"
+          },
+          "bd": {
+            "name": "Bob Doe",
+            "email": "bob@example.com"
+          }
+        }
+      }
+      """
 
   Scenario: -h prints help
     When I successfully run `git mob -h`
@@ -28,21 +43,6 @@ Feature: git-mob.spec
     Then the output should match /\d.\d.\d/
 
   Scenario: --list prints a list of avaialable co-authors
-    Given a file named "~/.git-coauthors" with:
-      """
-      {
-        "coauthors": {
-          "ad": {
-            "name": "Amy Doe",
-            "email": "amy@example.com"
-          },
-          "bd": {
-            "name": "Bob Doe",
-            "email": "bob@example.com"
-          }
-        }
-      }
-      """
     When I successfully run `git mob --list`
     Then the output should contain:
       """
@@ -58,22 +58,7 @@ Feature: git-mob.spec
       """
 
   Scenario: prints current mob
-    Given a file named "~/.git-coauthors" with:
-      """
-      {
-        "coauthors": {
-          "ad": {
-            "name": "Amy Doe",
-            "email": "amy@example.com"
-          },
-          "bd": {
-            "name": "Bob Doe",
-            "email": "bob@example.com"
-          }
-        }
-      }
-      """
-    And I successfully run `git mob ad bd`
+    Given I successfully run `git mob ad bd`
     When I successfully run `git mob`
     Then the output should contain:
       """
