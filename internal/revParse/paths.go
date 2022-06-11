@@ -19,21 +19,21 @@ func InsideWorkTree() bool {
 }
 
 // TopLevelDirectory computes the path to the top-level directory of the git repository.
-func TopLevelDirectory() string {
+func TopLevelDirectory() (string, error) {
 	r, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{
 		DetectDotGit:          true,
 		EnableDotGitCommonDir: false,
 	})
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	w, err := r.Worktree()
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
-	return w.Filesystem.Root()
+	return w.Filesystem.Root(), nil
 }
 
 // GitPath resolves the given path to the .git directory (GIT_DIR).
@@ -41,8 +41,12 @@ func TopLevelDirectory() string {
 // GIT_DIR is the location of the .git folder. If this isn’t specified,
 // Git walks up the directory tree until it gets to ~ or /, looking for a
 // .git directory at every step.
-func GitPath(rel ...string) string {
-	return path.Join(append([]string{TopLevelDirectory(), ".git"}, rel...)...)
+func GitPath(rel ...string) (string, error) {
+	tld, err := TopLevelDirectory()
+	if err != nil {
+		return "", err
+	}
+	return path.Join(append([]string{tld, ".git"}, rel...)...), nil
 }
 
 func GitPathRelativeToTopLevelDirectory(rel ...string) string {

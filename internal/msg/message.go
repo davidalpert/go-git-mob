@@ -25,20 +25,32 @@ const (
 	EnvKeyGitMessagePath = "GITMOB_MESSAGE_PATH"
 )
 
-func GitMessagePath() string {
-	return env.GetValueOrDefault(EnvKeyGitMessagePath, revParse.GitPath(".gitmessage"))
+func GitMessagePath() (string, error) {
+	p, err := revParse.GitPath(".gitmessage")
+	if err != nil {
+		return "", err
+	}
+
+	return env.GetValueOrDefault(EnvKeyGitMessagePath, p), nil
 }
 
-func CommitTemplatePath() string {
+func CommitTemplatePath() (string, error) {
 	s := env.GetValueOrDefaultString(EnvKeyGitMessagePath, cfg.Get("commit.template"))
 	if s == "" {
-		s = GitMessagePath()
+		ss, err := GitMessagePath()
+		if err != nil {
+			return "", err
+		}
+		return ss, nil
 	}
-	return s
+	return s, nil
 }
 
 func WriteGitMessage(coAuthorList ...authors.Author) error {
-	p := GitMessagePath()
+	p, err := GitMessagePath()
+	if err != nil {
+		return err
+	}
 
 	content := "\n" + "\n" + FormatCoAuthorList(coAuthorList)
 

@@ -61,7 +61,10 @@ func (o *MobInitOptions) Validate() error {
 // Run the command
 func (o *MobInitOptions) Run() error {
 	f := filepath.Join("hooks", "prepare-commit-msg")
-	fileName := revParse.GitPath(f)
+	fileName, err := revParse.GitPath(f)
+	if err != nil {
+		return fmt.Errorf("the 'init' command is only valid inside a local git working directory: %v", err)
+	}
 	fileNameRel := revParse.GitPathRelativeToTopLevelDirectory(f)
 	fileContents := `#!/bin/sh
 
