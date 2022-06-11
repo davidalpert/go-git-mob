@@ -19,3 +19,9 @@ Feature: git-mob.spec
     When I run `git mob --help`
     Then the output should contain "No manual entry for git-mob"
 
+  Scenario: -v prints version
+    When I successfully run `git mob -v`
+    Then the output should match /\d.\d.\d/
+
+  # @wip
+  # @announce-stdout
