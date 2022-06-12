@@ -25,22 +25,48 @@ const (
 	EnvKeyGitMessagePath = "GITMOB_MESSAGE_PATH"
 )
 
-func GitMessagePath() string {
-	return env.GetValueOrDefault(EnvKeyGitMessagePath, revParse.GitPath(".gitmessage"))
+func GitMessagePath() (string, error) {
+	p, err := revParse.GitPath(".gitmessage")
+	if err != nil {
+		return "", err
+	}
+
+	return env.GetValueOrDefault(EnvKeyGitMessagePath, p), nil
 }
 
-func CommitTemplatePath() string {
+func CommitTemplatePath() (string, error) {
 	s := env.GetValueOrDefaultString(EnvKeyGitMessagePath, cfg.Get("commit.template"))
 	if s == "" {
-		s = GitMessagePath()
+		ss, err := GitMessagePath()
+		if err != nil {
+			return "", err
+		}
+		return ss, nil
 	}
-	return s
+	return s, nil
 }
 
 func WriteGitMessage(coAuthorList ...authors.Author) error {
-	p := GitMessagePath()
+	p, err := GitMessagePath()
+	if err != nil {
+		return err
+	}
 
 	content := "\n" + "\n" + FormatCoAuthorList(coAuthorList)
+
+	if _, err := os.Stat(p); err == nil {
+		b, err := os.ReadFile(p)
+		if err != nil {
+			return fmt.Errorf("reading git message file: %v", err)
+		}
+
+		i := strings.Index(string(b), "\n\nCo-authored-by:")
+		if i > 0 {
+			content = string(b[:i]) + content
+		} else {
+			content = string(b) + content
+		}
+	}
 
 	return ioutil.WriteFile(p, []byte(content), os.ModePerm)
 }

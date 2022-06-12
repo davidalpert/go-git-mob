@@ -61,7 +61,10 @@ func (o *MobInitOptions) Validate() error {
 // Run the command
 func (o *MobInitOptions) Run() error {
 	f := filepath.Join("hooks", "prepare-commit-msg")
-	fileName := revParse.GitPath(f)
+	fileName, err := revParse.GitPath(f)
+	if err != nil {
+		return fmt.Errorf("the 'init' command is only valid inside a local git working directory: %v", err)
+	}
 	fileNameRel := revParse.GitPathRelativeToTopLevelDirectory(f)
 	fileContents := `#!/bin/sh
 
@@ -71,7 +74,7 @@ SHA1=$3
 
 set -e
 
-git mob prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
+git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
 `
 	if err := os.WriteFile(fileName, []byte(fileContents), 0755); err != nil {
 		return fmt.Errorf("writing git hook: %v", err)

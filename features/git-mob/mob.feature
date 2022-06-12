@@ -39,7 +39,7 @@ Feature: mob
     When I run git mob `be`
     Then the output should contain:
     """
-    could not find coauthor with initials 'be'; run 'git mob --list' to see a list of available co-authors
+    author with initials 'be' not found; run 'git mob --list' to see a list of available co-authors
     """
 
   Scenario: start mob with two coauthors
@@ -79,5 +79,5 @@ Feature: mob
     When I run git mob `ad`
     Then the output should contain:
     """
-    could not find coauthor with initials 'ad'; run 'git mob --list' to see a list of available co-authors
+    author with initials 'ad' not found; run 'git mob --list' to see a list of available co-authors
     """
