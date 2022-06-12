@@ -19,9 +19,10 @@ Feature: Suggest co-authors from commit history
     }
     """
     And a simple git repo at "example" with the following empty commits:
-      | Name    | Email              | Commit_Message     |
-      | Amy Doe | amy@findmypast.com | Amy's empty commit |
-      | Bob Doe | bob@findmypast.com | Bob's empty commit |
+      | Name     | Email              | Commit_Message       |
+      | Amy Doe  | amy@findmypast.com | Amy's empty commit   |
+      | Bob Doe  | bob@findmypast.com | Bob's empty commit   |
+      | Jane Doe | jane@example.com   | initial empty commit |
 
   Scenario: suggest co-authors as text
     Given I cd to "example"

@@ -31,16 +31,14 @@ Given('a simple git repo at {string} with the following empty commits:') do |pat
   cd(path) do
     run_command_and_stop('git config --global init.defaultBranch main', fail_on_error: true)
     run_command_and_stop(sanitize_text("git init ."), fail_on_error: true)
-    run_command_and_stop('git commit --allow-empty -m "initial, empty root commit"', fail_on_error: true)
 
-    data = table.raw
-    data.drop(1).reverse.each do |cols|
+    data = table.raw.drop(1) # first row is headings
+    data.reverse.each do |cols|
        run_command_and_stop("git config user.name \"#{cols[0]}\"", fail_on_error: true)
        run_command_and_stop("git config user.email \"#{cols[1]}\"", fail_on_error: true)
        run_command_and_stop("git commit --allow-empty -m \"#{cols[2]}\"", fail_on_error: true)
+       run_command_and_stop('git config --remove-section user', fail_on_error: true)
     end
-
-    run_command_and_stop('git config --remove-section user', fail_on_error: true)
   end
 end
 
