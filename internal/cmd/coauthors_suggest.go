@@ -62,8 +62,8 @@ func (o *CoauthorsSuggestOptions) Validate() error {
 // Run the command
 func (o *CoauthorsSuggestOptions) Run() error {
 	aa, err := cfg.ShortLogAuthorSummary()
-	if err != nil {
-		return err
+	if err != nil || len(aa) == 0 {
+		return fmt.Errorf("unable to find existing authors in this repository")
 	}
 
 	initials := make([]string, len(aa))
@@ -77,11 +77,12 @@ func (o *CoauthorsSuggestOptions) Run() error {
 
 	if o.FormatCategory() == "text" {
 		if len(initials) > 0 {
-			fmt.Println("Here are some suggestions for coauthors based on existing authors of this repository:")
+			fmt.Printf("Here are some suggestions for coauthors based on existing authors of this repository:\n\n")
 			for _, ii := range initials {
 				a := aa[ii]
 				fmt.Printf("git mob add-coauthor %s %s %s\n", ii, a.Name, a.Email)
 			}
+			fmt.Println("\nPaste any line above.")
 		}
 		return nil
 	}

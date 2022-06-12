@@ -27,5 +27,6 @@ Feature: explode
     Then the output should contain:
       """
       Here are some suggestions for coauthors based on existing authors of this repository:
+
       git mob add-coauthor JD Jane Doe jane@example.com
       """
