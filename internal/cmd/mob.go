@@ -19,6 +19,7 @@ type MobOptions struct {
 	Initials               []string
 	ListOnly               bool
 	PrintVersion           bool
+	CurrentGitUser         *authors.Author
 	AllCoAuthorsByInitials map[string]authors.Author
 }
 
@@ -92,8 +93,10 @@ func (o *MobOptions) Validate() error {
 	}
 
 	if !o.ListOnly && !o.PrintVersion {
-		if _, err := cfg.GetUser(); err != nil {
+		if a, err := cfg.GetUser(); err != nil {
 			return err
+		} else {
+			o.CurrentGitUser = a
 		}
 	}
 
@@ -181,17 +184,12 @@ func (o *MobOptions) setMob() error {
 		// TODO: what do we do here?
 	}
 
-	me, err := cfg.GetUser()
-	if err != nil {
-		return err
-	}
-
 	parts := make([]string, len(o.Initials))
-	meTag := fmt.Sprintf("%s <%s>", me.Name, me.Email)
+	meTag := o.CurrentGitUser.String()
 	for i, initial := range o.Initials {
 		for ii, a := range o.AllCoAuthorsByInitials {
 			if strings.EqualFold(initial, ii) {
-				parts[i] = fmt.Sprintf("%s <%s>", a.Name, a.Email)
+				parts[i] = a.String()
 				break
 			}
 		}
