@@ -30,7 +30,7 @@ func NewCmdPrint(ioStreams utils.IOStreams) *cobra.Command {
 	o := NewPrintOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "print",
-		Short: "show co-authors",
+		Short: "show current co-authors",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {

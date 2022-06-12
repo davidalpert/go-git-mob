@@ -28,7 +28,7 @@ Feature: mob-init
 
       set -e
 
-      git mob prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
+      git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
       """
     And the output should contain:
       """

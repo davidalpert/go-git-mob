@@ -167,14 +167,25 @@ func AddCoAuthors(aa ...authors.Author) error {
 
 // GetUser builds an authors.Author from the current configured user
 func GetUser() (*authors.Author, error) {
-	c, err := config.LoadConfig(config.GlobalScope)
-	if err != nil {
-		return nil, err
+	errMsg := "warning: Missing information for the primary author. Set with:\n"
+	name, nameErr := silentRun("git", "config", "user.name")
+	email, emailErr := silentRun("git", "config", "user.email")
+
+	if nameErr != nil {
+		errMsg = errMsg + "\n$ git config --global user.name \"Jane Doe\""
+	}
+
+	if emailErr != nil {
+		errMsg = errMsg + "\n$ git config --global user.email \"jane@example.com\""
+	}
+
+	if nameErr != nil || emailErr != nil {
+		return nil, fmt.Errorf(errMsg)
 	}
 
 	return &authors.Author{
-		Name:  c.User.Name,
-		Email: c.User.Email,
+		Name:  name,
+		Email: email,
 	}, nil
 }
 

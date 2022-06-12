@@ -6,6 +6,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"sort"
@@ -17,6 +18,8 @@ type MobOptions struct {
 	utils.IOStreams
 	Initials               []string
 	ListOnly               bool
+	PrintVersion           bool
+	CurrentGitUser         *authors.Author
 	AllCoAuthorsByInitials map[string]authors.Author
 }
 
@@ -32,7 +35,16 @@ func NewCmdMob(ioStreams utils.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "mob",
 		Short: "configure co-authors",
-		Args:  cobra.MinimumNArgs(0),
+		Long: fmt.Sprintf(`git-mob %s
+
+A git plugin to help manage git coauthors.
+
+Examples:
+   $ git mob jd                                      # Set John as co-authors
+   $ git solo                                        # Return to working by yourself (i.e. unset all co-authors)
+   $ git mob -l                                      # Show a list of all co-authors, John Doe should be there
+`, version.Detail.Version),
+		Args: cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
 				return err
@@ -47,6 +59,16 @@ func NewCmdMob(ioStreams utils.IOStreams) *cobra.Command {
 	o.PrinterOptions.AddPrinterFlags(cmd)
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
+	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
+
+	cmd.AddCommand(NewCmdMobInit(ioStreams))
+	cmd.AddCommand(NewCmdMobHooks(ioStreams))
+	cmd.AddCommand(NewCmdSolo(ioStreams))
+	cmd.AddCommand(NewCmdCoauthors(ioStreams))
+	cmd.AddCommand(NewCmdExplode(ioStreams))
+	cmd.AddCommand(NewCmdImplode(ioStreams))
+	cmd.AddCommand(NewCmdVersion(ioStreams))
+	cmd.AddCommand(NewCmdPrint(ioStreams))
 
 	return cmd
 }
@@ -66,12 +88,16 @@ func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 
 // Validate the options
 func (o *MobOptions) Validate() error {
-	if o.ListOnly && 1 < len(o.Initials) {
-		return fmt.Errorf("cannot configure a mob while listing availble coauthors")
+	if (o.ListOnly || o.PrintVersion) && 0 < len(o.Initials) {
+		return fmt.Errorf("cannot configure a mob while listing availble coauthors or printing the version")
 	}
 
-	if len(o.Initials) < 1 && !o.ListOnly {
-		return fmt.Errorf("must supply at least one co-author")
+	if !o.ListOnly && !o.PrintVersion {
+		if a, err := cfg.GetUser(); err != nil {
+			return err
+		} else {
+			o.CurrentGitUser = a
+		}
 	}
 
 	return o.PrinterOptions.Validate()
@@ -81,6 +107,12 @@ func (o *MobOptions) Validate() error {
 func (o *MobOptions) Run() error {
 	if o.ListOnly {
 		return o.listCoAuthors()
+	}
+
+	if o.PrintVersion {
+		versionCmd := NewCmdVersion(o.IOStreams)
+		versionCmd.SetArgs([]string{}) // the version command doesn't accept the -v flag
+		return versionCmd.Execute()
 	}
 
 	return o.setMob()
@@ -133,10 +165,13 @@ func (o *MobOptions) setMob() error {
 			}
 		}
 		if coauthors[i].Name == "" {
-			return fmt.Errorf("could not find coauthor with initials '%s'; run 'git mob --list' to see a list of available co-authors", initial)
+			return fmt.Errorf("author with initials '%s' not found; run 'git mob --list' to see a list of available co-authors", initial)
 		}
 	}
 
+	if err := setCommitTemplate(); err != nil {
+		return err
+	}
 	if err := resetMob(); err != nil {
 		return err
 	}
@@ -145,20 +180,16 @@ func (o *MobOptions) setMob() error {
 		return err
 	}
 	if err := msg.WriteGitMessage(coauthors...); err != nil {
-		return err
-	}
-
-	me, err := cfg.GetUser()
-	if err != nil {
-		return err
+		//return err
+		// TODO: what do we do here?
 	}
 
 	parts := make([]string, len(o.Initials))
-	meTag := fmt.Sprintf("%s <%s>", me.Name, me.Email)
+	meTag := o.CurrentGitUser.String()
 	for i, initial := range o.Initials {
 		for ii, a := range o.AllCoAuthorsByInitials {
 			if strings.EqualFold(initial, ii) {
-				parts[i] = fmt.Sprintf("%s <%s>", a.Name, a.Email)
+				parts[i] = a.String()
 				break
 			}
 		}
@@ -170,4 +201,17 @@ func (o *MobOptions) setMob() error {
 // resetMob clears out the co-authors from global git config
 func resetMob() error {
 	return cfg.RemoveAllGlobal("git-mob.co-author")
+}
+
+// setCommitTemplate sets the local commit.template config setting to take advantage of `.gitmessage`
+func setCommitTemplate() error {
+	p, err := msg.CommitTemplatePath()
+	if err != nil {
+		return nil
+		// TODO swallowing errors?
+	}
+	if !cfg.Has("commit.template") {
+		return cfg.Set("commit.template", p)
+	}
+	return nil
 }
