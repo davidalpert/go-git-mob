@@ -65,7 +65,7 @@ func (o *ExplodeOptions) Run() error {
 		p := fmt.Sprintf("%s", path.Join(eDir, plugin))
 		c := fmt.Sprintf(`
 #!/bin/sh
-%s
+%s "$@"
 `, cmd)
 
 		fmt.Println("writing:", p)
