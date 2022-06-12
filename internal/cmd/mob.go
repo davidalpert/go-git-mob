@@ -91,6 +91,12 @@ func (o *MobOptions) Validate() error {
 		return fmt.Errorf("cannot configure a mob while listing availble coauthors or printing the version")
 	}
 
+	if !o.ListOnly && !o.PrintVersion {
+		if _, err := cfg.GetUser(); err != nil {
+			return err
+		}
+	}
+
 	return o.PrinterOptions.Validate()
 }
 
