@@ -25,7 +25,7 @@ func NewCmdSolo(ioStreams utils.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "solo",
 		Short: "return to solo work (remove co-authors)",
-		Args:  cobra.NoArgs,
+		Args:  cobra.MinimumNArgs(0), // positional args are allowed (by spec) but ignored
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
 				return err
