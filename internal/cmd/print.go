@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 type PrintOptions struct {
@@ -45,7 +46,7 @@ func NewCmdPrint(ioStreams utils.IOStreams) *cobra.Command {
 
 	o.PrinterOptions.AddPrinterFlags(cmd)
 
-	cmd.Flags().BoolVarP(&o.InitialsOnly, "initials-only", "i", false, "show initials only")
+	cmd.Flags().BoolVarP(&o.InitialsOnly, "initials", "i", false, "show initials only")
 
 	return cmd
 }
