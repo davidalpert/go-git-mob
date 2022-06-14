@@ -21,6 +21,8 @@
   <a href="./README.md">README</a>
   ·
   <a href="./CHANGELOG.md"><strong>CHANGELOG</strong></a>
+  .
+  <a href="./CONTRIBUTING.md">CONTRIBUTING</a>
   <br />
   <!-- <a href="https://github.com/davidalpert/go-git-mob">View Demo</a>
   · -->
@@ -32,8 +34,139 @@
 ## Changelog
 
 
+<a name="v0.3.0"></a>
+## [v0.3.0] - 2022-06-14
+### Bug Fixes
+- remove debugging output
+- change initials-only to initials
+- update path to doctor.sh
+- app version is always 0.0.0
+- given a simple repo with commits do not create an initial commit
+- propagate helper args to the subcommands
+- git mob overwrites template instead of appending coauthors
+- re-add the 'install' alias
+- remove the test .gitmessage path from the version command
+- match subcommands on aliases as well as names
+- start mob with coauthor who didn't exist would work
+- doctor would constantly regenerate chglog config
+
+### Build
+- ignore the actual deploy scripts
+- build-all before deploying all :rollsafe:
+- add a list-ignored target
+- add an implode make target
+- add explicit gen dependency to build targets
+- fix the install target and add an uninstall target
+- add valedation into the ci target
+- add guard-process to auto-run valedation on md file change
+- add valedation as a make target
+- add vale config and a set of initial .styles
+- add vale as a build requirement
+- remove irrelevant scopes
+- go mod tidy
+- add depgraph target
+- ignore doctor.sh fixes
+- add a makefile to tie it all together
+- add baseline tool config
+- add initial doctor.sh script
+- add vscode workspace
+
+### Code Refactoring
+- don't need to load the primary user more than once
+- reorganize subcommands
+- standardize & improve usage text
+- replace go-git with git CLI
+- collect git paths into a revParse module
+- remove duplication in explode.feature
+- rearrange suggest subcommand as a coauthors subcommand
+- replicate git-authors specs from git-mob
+- replace firefly names with git-mob examples
+- move Author into the cfg package
+- extract env helpers to an env package
+
+### Docs
+- add reference for BDD via cucumber/aruba
+- explain the install/uninstall story
+- correct the vale target's help text
+- be more assertive about imploding the binary itself
+- update branch naming convention
+- sketch out initial architectural guidance in README.md
+- resolve vale warnings in README.md
+- resolve vale warnings in CONTRIBUTING.md
+- add link to github project v1.0
+- improve setup and contributing guidance
+- release notes for v0.2.0
+- release notes for v0.1.0
+- add initial project README
+
+### Features
+- set .git/.gitmessage only when inside a working tree
+- set .git/.gitmessage as the commit template
+- write diagnostic logs to file
+- append coauthor to a commit with the message flag
+- initialize a local repo with a prepare-commit-msg script
+- allow format "text" by the format printers
+- add a prepare-commit-msg subcommand
+- print commit SHA and a dirty flag (when built from a dirty repo)
+- implode/uninstall
+- explode/rehash
+- suggest co-authors from git history
+- list all coauthors
+- update .git/.gitmessage when the mob changes
+- mob solo
+- git mob
+- git mob print -i
+- mob print
+- add basic CLI framework
+
+### Test Coverage
+- add/delete/edit-coauthors.spec
+- git-suggest-coauthors.spec
+- check-author.spec shows warning if primary git author is not set
+- git-mob.spec document we don't need to be in a working tree
+- git-solo.spec ignores positional arguments
+- git-solo.spec removes co-authors from commit template
+- git-solo.spec sets the current mob to the primary author
+- git-mob.spec document we don't need to be in a working tree
+- refactor setup; ensure git mob runs inside an example git repo
+- git-mob.spec appends co-authors to a new commit template
+- appends co-authors to an existing commit template
+- git-mob.spec overwrites old mob when setting a new mob
+- git-mob.spec errors when co-author initials not found
+- git-mob.spec sets mob and override coauthor
+- add a [@pending](https://github.com/pending) tag
+- git-mob.specs sets mob when co-author initials found
+- refactor common .git-coauthor setup
+- git-mob.specs prints current mob
+- git-mob.specs prints only primary author when there is no mob
+- git-mob.specs --list print a list of available co-authors
+- --version prints version
+- git-mob.specs -v prints version
+- git-mob.specs --help is an error
+- git-mob.spec -h prints help
+- prove that amending commits adds coauthors
+- ignore featues with an [@ignore](https://github.com/ignore) flag
+- add step def to create a git repo
+- add aruba/cucumber specs
+
+### Pull Requests
+- Merge pull request [#31](https://github.com/davidalpert/go-git-mob/issues/31) from HugeIRL/29-fix-initials-flag
+- Merge pull request [#30](https://github.com/davidalpert/go-git-mob/issues/30) from HugeIRL/patch-1
+- Merge pull request [#28](https://github.com/davidalpert/go-git-mob/issues/28) from davidalpert/parity-specs
+- Merge pull request [#27](https://github.com/davidalpert/go-git-mob/issues/27) from davidalpert/24-feat-support-logging-to-a-file
+- Merge pull request [#26](https://github.com/davidalpert/go-git-mob/issues/26) from davidalpert/23-feat-append-to-commit-message
+- Merge pull request [#22](https://github.com/davidalpert/go-git-mob/issues/22) from davidalpert/21-refactor-go-git-to-git-cli
+- Merge pull request [#20](https://github.com/davidalpert/go-git-mob/issues/20) from davidalpert/17-feature-implode
+- Merge pull request [#19](https://github.com/davidalpert/go-git-mob/issues/19) from davidalpert/16-feature-exploderehash
+- Merge pull request [#18](https://github.com/davidalpert/go-git-mob/issues/18) from davidalpert/12-document-architecture-and-intended-usage
+- Merge pull request [#15](https://github.com/davidalpert/go-git-mob/issues/15) from davidalpert/[GH-5](https://github.com/davidalpert/go-git-mob/issues/5)-integrate-valedation
+- Merge pull request [#14](https://github.com/davidalpert/go-git-mob/issues/14) from davidalpert/[GH-11](https://github.com/davidalpert/go-git-mob/issues/11)-suggest-co-authors
+- Merge pull request [#13](https://github.com/davidalpert/go-git-mob/issues/13) from davidalpert/[GH-6](https://github.com/davidalpert/go-git-mob/issues/6)-list-all-coauthors
+- Merge pull request [#3](https://github.com/davidalpert/go-git-mob/issues/3) from davidalpert/[GH-2](https://github.com/davidalpert/go-git-mob/issues/2)-enhance-contributor-guidelines
+
+
 <a name="v0.2.0"></a>
-## [v0.2.0] - 2022-05-31
+## [v0.2.0] - 2022-05-30
 ### Bug Fixes
 - doctor would constantly regenerate chglog config
 
@@ -48,6 +181,9 @@
 - move Author into the cfg package
 - extract env helpers to an env package
 
+### Docs
+- release notes for v0.2.0
+
 ### Features
 - update .git/.gitmessage when the mob changes
 - mob solo
@@ -61,7 +197,7 @@
 
 
 <a name="v0.1.0"></a>
-## v0.1.0 - 2022-05-31
+## v0.1.0 - 2022-05-30
 ### Build
 - add a makefile to tie it all together
 - add baseline tool config
@@ -76,5 +212,6 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/davidalpert/go-git-mob/compare/v0.1.0...v0.2.0
