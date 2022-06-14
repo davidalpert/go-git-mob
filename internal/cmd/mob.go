@@ -175,7 +175,6 @@ func (o *MobOptions) setMob() error {
 	if err := resetMob(); err != nil {
 		return err
 	}
-	fmt.Printf("coauthors: %#v\n", coauthors)
 	if err := cfg.AddCoAuthors(coauthors...); err != nil {
 		return err
 	}
