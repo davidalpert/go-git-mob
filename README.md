@@ -39,6 +39,9 @@
   - [Built with](#built-with)
 - [Getting started](#getting-started)
   - [Installation](#installation)
+    - [Install a binary release](#install-a-binary-release)
+    - [Install using go install](#install-using-go-install)
+  - [Post-install steps](#post-install-steps)
   - [Uninstall](#uninstall)
 - [Usage](#usage)
   - [Utility commands](#utility-commands)
@@ -81,6 +84,20 @@ To get a local copy up and running follow these simple steps.
 
 ### Installation
 
+#### Install a binary release
+
+- Binary releases coming soon; see https://github.com/davidalpert/go-git-mob/issues/32
+
+#### Install using go install
+
+With a working golang setup at version >= 1.18 you can use `go install`:
+
+```
+go install github.com/davidalpert/go-git-mob@latest
+```
+
+### Post-install steps
+
 As a single file executable `go-git-mob` ships with one git plugin:
 ```
 git mob
@@ -106,7 +123,6 @@ git suggest-coauthors
 ```
 
 ### Uninstall
-
 
 `go-git-mob` ships with an `implode` sub-command:
 
