@@ -42,7 +42,7 @@ gen: ## invoke go generate
 	@CGO_ENABLED=1 go generate ./...
 
 .PHONY: build
-build: clean ./internal/version/detail.go gen ## build for current platform
+build: clean ./internal/version/detail.go ## build for current platform
 	mkdir -p ./bin
 	go build -o ./bin/git-mob main.go
 
@@ -125,6 +125,8 @@ tag-release:
 	$(eval next_version := $(shell sbot predict version --mode ${BUMP_TYPE}))
 	# echo "Current Version: ${VERSION}"
 	# echo "   Next Version: ${next_version}"
+	$(MAKE) cit VERSION=$(next_version)
+	git add -f internal/version/detail.go
 	git-chglog --next-tag v$(next_version) --output CHANGELOG.md
 	git add -f CHANGELOG.md
 	git commit --message "docs: release notes for v$(next_version)"
@@ -134,7 +136,7 @@ tag-release:
 SEMVER_TYPES := major minor patch
 BUMP_TARGETS := $(addprefix release-,$(SEMVER_TYPES))
 .PHONY: $(BUMP_TARGETS)
-$(BUMP_TARGETS): test build ## bump version
+$(BUMP_TARGETS): ## bump version
 	$(eval BUMP_TYPE := $(strip $(word 2,$(subst -, ,$@))))
 	$(MAKE) tag-release BUMP_TYPE=$(BUMP_TYPE)
 
