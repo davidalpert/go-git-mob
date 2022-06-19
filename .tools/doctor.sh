@@ -163,7 +163,10 @@ findCmd ruby
 grepVersion 'ruby' 'ruby --version' "$REQUIRED_RUBY_VERSION"
 findCmd gem
 findCmd bundle 'gem install bundler'
+
+echo "installing bundle..."
 bundle install --quiet
+echo "...bundle installed"
 
 findCmd godepgraph "go install github.com/kisielk/godepgraph@latest"
 
