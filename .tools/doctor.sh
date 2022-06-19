@@ -4,18 +4,35 @@
 
 set -e
 
+if command -v tput &> /dev/null; then
+  tput_available=1
+else
+  tput_available=0
+fi
+
 # Output helpers
+# ------------------------------------
+RED=''
+YELLOW=''
+GREEN=''
+BLUE=''
+CYAN=''
+NC=''
+BOLD=''
+NORMAL=''
+# ------------------------------------
+if [ $tput_available -eq 1 ] && [ -n "$TERM" ] && [ ! "$GITHUB_ACTIONS" == "true" ]; then
 RED="\033[0;31m"
 YELLOW="\033[0;33m"
 GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 CYAN="\033[0;36m"
 NC="\033[0m" # No Color
-
+BOLD=$(TERM=$TERM tput bold)
+NORMAL=$(TERM=$TERM tput sgr0)
+fi
 pass="${GREEN}pass${NC}"
 fail="${RED}fail${NC}"
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
 
 padding=".................................................."
 
