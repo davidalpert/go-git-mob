@@ -164,10 +164,6 @@ grepVersion 'ruby' 'ruby --version' "$REQUIRED_RUBY_VERSION"
 findCmd gem
 findCmd bundle 'gem install bundler'
 
-echo "installing bundle..."
-bundle install --quiet
-echo "...bundle installed"
-
 findCmd godepgraph "go install github.com/kisielk/godepgraph@latest"
 
 findCmd sbot "go install github.com/restechnica/semverbot/cmd/sbot@latest"
@@ -222,5 +218,9 @@ fi
 # if we get here clean up any incomplete fixes
 rm -f _fixes
 
-# and a final newline to finish off
+# and install the bundle to enable testing targets
+printf "\n"
+withPadding "installing bundle"
+bundle install --quiet
+echo -e "$pass bundle install complete"
 printf "\n"
