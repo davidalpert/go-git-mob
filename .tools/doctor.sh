@@ -156,7 +156,12 @@ if [[ -n "$GO" ]]; then
   grepVersion 'go' 'go version' "$GO"
 fi
 
-findCmd vale 'https://vale.sh/docs/vale-cli/installation/'
+# HACK: the following validations are handled by separate actions when run as part of an action workflow
+if [[ ! "$GITHUB_ACTIONS" == "true" ]]; then
+  # TODO: move to a script
+  # findCmd vale 'wget https://github.com/errata-ai/vale/releases/download/v2.15.4/vale_2.15.4_Linux_64-bit.tar.gz --directory-prefix=.tmp/ && tar -xvzf ./tmp/vale_2.15.4_Linux_64-bit.tar.gz -C /usr/local/bin'
+  findCmd vale 'echo "view: https://vale.sh/docs/vale-cli/installation/"'
+fi
 
 REQUIRED_RUBY_VERSION=`cat .ruby-version`
 findCmd ruby
