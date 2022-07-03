@@ -52,7 +52,8 @@ Feature: git-mob.spec
       """
 
   Scenario: prints only primary author when there is no mob
-    When I successfully run `git mob`
+    When I cd to "example"
+    And I successfully run `git mob`
     Then the output should contain:
       """
       Jane Doe <jane@example.com>
