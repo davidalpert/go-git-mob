@@ -29,6 +29,7 @@ Feature: message
     Jane Doe <jane@example.com>
     Amy Doe <amy@findmypast.com>
     """
+        And the file ".git/.gitmessage" should exist
         And the file ".git/.gitmessage" should contain:
     """
 

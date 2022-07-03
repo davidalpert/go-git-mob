@@ -20,7 +20,9 @@ Feature: explode
     Then the output should contain "git-mob"
 
   Scenario: helper-plugins work: suggest-coauthors
-    Given a simple git repo at "example"
+    Given a simple git repo at "example" with the following empty commits:
+      | Name     | Email              | Commit_Message       |
+      | Jane Doe | jane@example.com   | initial empty commit |
     When I run `git mob explode`
     And I cd to "example"
     And I run `git suggest-coauthors`
