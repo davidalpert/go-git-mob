@@ -4,18 +4,35 @@
 
 set -e
 
+if command -v tput &> /dev/null; then
+  tput_available=1
+else
+  tput_available=0
+fi
+
 # Output helpers
+# ------------------------------------
+RED=''
+YELLOW=''
+GREEN=''
+BLUE=''
+CYAN=''
+NC=''
+BOLD=''
+NORMAL=''
+# ------------------------------------
+if [ $tput_available -eq 1 ] && [ -n "$TERM" ] && [ ! "$GITHUB_ACTIONS" == "true" ]; then
 RED="\033[0;31m"
 YELLOW="\033[0;33m"
 GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 CYAN="\033[0;36m"
 NC="\033[0m" # No Color
-
+BOLD=$(TERM=$TERM tput bold)
+NORMAL=$(TERM=$TERM tput sgr0)
+fi
 pass="${GREEN}pass${NC}"
 fail="${RED}fail${NC}"
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
 
 padding=".................................................."
 
@@ -139,14 +156,18 @@ if [[ -n "$GO" ]]; then
   grepVersion 'go' 'go version' "$GO"
 fi
 
-findCmd vale 'https://vale.sh/docs/vale-cli/installation/'
+# HACK: the following validations are handled by separate actions when run as part of an action workflow
+if [[ ! "$GITHUB_ACTIONS" == "true" ]]; then
+  # TODO: move to a script
+  # findCmd vale 'wget https://github.com/errata-ai/vale/releases/download/v2.15.4/vale_2.15.4_Linux_64-bit.tar.gz --directory-prefix=.tmp/ && tar -xvzf ./tmp/vale_2.15.4_Linux_64-bit.tar.gz -C /usr/local/bin'
+  findCmd vale 'echo "view: https://vale.sh/docs/vale-cli/installation/"'
+fi
 
 REQUIRED_RUBY_VERSION=`cat .ruby-version`
 findCmd ruby
 grepVersion 'ruby' 'ruby --version' "$REQUIRED_RUBY_VERSION"
 findCmd gem
 findCmd bundle 'gem install bundler'
-bundle install --quiet
 
 findCmd godepgraph "go install github.com/kisielk/godepgraph@latest"
 
@@ -202,5 +223,9 @@ fi
 # if we get here clean up any incomplete fixes
 rm -f _fixes
 
-# and a final newline to finish off
+# and install the bundle to enable testing targets
+printf "\n"
+withPadding "installing bundle"
+bundle install --quiet
+echo -e "$pass bundle install complete"
 printf "\n"
