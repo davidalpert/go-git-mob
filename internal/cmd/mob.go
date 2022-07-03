@@ -6,6 +6,7 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -93,6 +94,9 @@ func (o *MobOptions) Validate() error {
 	}
 
 	if !o.ListOnly && !o.PrintVersion {
+		if !revParse.InsideWorkTree() {
+			return fmt.Errorf("not inside a git repository working tree")
+		}
 		if a, err := cfg.GetUser(); err != nil {
 			return err
 		} else {

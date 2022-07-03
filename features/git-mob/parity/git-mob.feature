@@ -163,11 +163,9 @@ Feature: git-mob.spec
   # allow running some mob commands outside a working tree
   # so that the mob follows across project folders
   Scenario: warns when used outside of a git repo
-    # also hard to test not being in a working tree
-    # because by default the aruba test folder is
-    # still "inside" the core project's working tree
     When I run `git mob`
     Then the exit status should be 1
+    And the output should contain "not a git repository (or any of the parent directories)"
 
 # @wip
 # @announce-stdout
