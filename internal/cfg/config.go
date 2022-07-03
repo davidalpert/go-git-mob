@@ -1,19 +1,18 @@
 package cfg
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/env"
+	"github.com/davidalpert/go-git-mob/internal/shell"
 	"github.com/go-git/go-git/v5/config"
-	"os/exec"
 	"path"
 	"strings"
 )
 
 // Get gets the (last) value for the given option key.
 func Get(key string) string {
-	o, err := silentRun("git", "config", "--get", key)
+	o, _, err := shell.SilentRun("git", "config", "--get", key)
 	if err != nil {
 		return ""
 	}
@@ -22,7 +21,7 @@ func Get(key string) string {
 
 // GetAll gets all values for a multi-valued option key.
 func GetAll(key string) ([]string, error) {
-	o, err := silentRun("git", "config", "--all", key)
+	o, _, err := shell.SilentRun("git", "config", "--all", key)
 	if err != nil {
 		return make([]string, 0), err
 	}
@@ -31,18 +30,18 @@ func GetAll(key string) ([]string, error) {
 
 // Set sets the option, overwriting the existing value if one exists.
 func Set(key string, value string) error {
-	//const { status } = silentRun(`git config ${key} "${value}"`);
-	_, err := silentRun("git", "config", key, value)
+	//const { status } = SilentRun(`git config ${key} "${value}"`);
+	_, _, err := shell.SilentRun("git", "config", key, value)
 	if err != nil {
-		return fmt.Errorf("option '%s' has multiple values. Cannot overwrite multiple values for option '%s' with a single value", key, key)
+		return fmt.Errorf("set(%#v, %#v): %v", key, value, err)
 	}
 	return nil
 }
 
 // SetGlobal sets the global option, overwriting the existing value if one exists.
 func SetGlobal(key string, value string) error {
-	//const { status } = silentRun(`git config ${key} "${value}"`);
-	_, err := silentRun("git", "config", "--global", key, value)
+	//const { status } = SilentRun(`git config ${key} "${value}"`);
+	_, _, err := shell.SilentRun("git", "config", "--global", key, value)
 	if err != nil {
 		return fmt.Errorf("option '%s' has multiple values. Cannot overwrite multiple values for option '%s' with a single value", key, key)
 	}
@@ -51,60 +50,32 @@ func SetGlobal(key string, value string) error {
 
 // Add adds a new line to the option without altering any existing values.
 func Add(key string, value string) error {
-	_, err := silentRun("git", "config", "--add", key, value)
+	_, _, err := shell.SilentRun("git", "config", "--add", key, value)
 	return err
 }
 
 // AddGlobal adds a new line to the global option without altering any existing values.
 func AddGlobal(key string, value string) error {
-	_, err := silentRun("git", "config", "--global", "--add", key, value)
+	_, _, err := shell.SilentRun("git", "config", "--global", "--add", key, value)
 	return err
-}
-
-// silentRun runs the given command in a shell.
-func silentRun(name string, arg ...string) (string, error) {
-	c := exec.Command(name, arg...)
-	//c.Stdin = strings.NewReader("and old falcon")
-
-	if env.GetValueOrDefaultBool("GITMOB_DEBUG", false) {
-		fmt.Printf("silentRun: %s %s\n", name, strings.Join(arg, " "))
-	}
-
-	var out bytes.Buffer
-	c.Stdout = &out
-	var stdErr bytes.Buffer
-	c.Stderr = &stdErr
-
-	if err := c.Run(); err != nil {
-		if exitError, ok := err.(*exec.ExitError); ok {
-			return "", fmt.Errorf("nonzero exit code: %d: %s %s", exitError.ExitCode(), out.String(), stdErr.String())
-		}
-		return "", err
-	}
-
-	if env.GetValueOrDefaultBool("GITMOB_DEBUG", false) {
-		fmt.Println(out.String())
-	}
-
-	return strings.TrimSpace(out.String()), nil
 }
 
 // Has checks if the given option exists in the configuration.
 func Has(key string) bool {
-	_, err := silentRun("git", "config", key)
+	_, _, err := shell.SilentRun("git", "config", key)
 	return err == nil
 }
 
 // HasGlobal checks if the given option exists in the global configuration.
 func HasGlobal(key string) bool {
-	_, err := silentRun("git", "config", "--global", key)
+	_, _, err := shell.SilentRun("git", "config", "--global", key)
 	return err == nil
 }
 
 // RemoveSection removes the given section from the configuration.
 func RemoveSection(key string) error {
 	if Has(key) {
-		_, err := silentRun("git", "config", "--remove-section", key)
+		_, _, err := shell.SilentRun("git", "config", "--remove-section", key)
 		return err
 	}
 	return nil
@@ -113,7 +84,7 @@ func RemoveSection(key string) error {
 // RemoveSectionGlobal removes the given section from the global configuration.
 func RemoveSectionGlobal(key string) error {
 	if HasGlobal(key) {
-		_, err := silentRun("git", "config", "--global", "--remove-section", key)
+		_, _, err := shell.SilentRun("git", "config", "--global", "--remove-section", key)
 		return err
 	}
 	return nil
@@ -122,7 +93,7 @@ func RemoveSectionGlobal(key string) error {
 // Remove removes the given key from the configuration.
 func Remove(key string) error {
 	if Has(key) {
-		_, err := silentRun("git", "config", "--unset", key)
+		_, _, err := shell.SilentRun("git", "config", "--unset", key)
 		return err
 	}
 	return nil
@@ -131,7 +102,7 @@ func Remove(key string) error {
 // RemoveAll removes all the given keys from the configuration.
 func RemoveAll(key string) error {
 	if Has(key) {
-		_, err := silentRun("git", "config", "--unset-all", key)
+		_, _, err := shell.SilentRun("git", "config", "--unset-all", key)
 		return err
 	}
 	return nil
@@ -140,7 +111,7 @@ func RemoveAll(key string) error {
 // RemoveGlobal removes the given key from the configuration.
 func RemoveGlobal(key string) error {
 	if HasGlobal(key) {
-		_, err := silentRun("git", "config", "--global", "--unset", key)
+		_, _, err := shell.SilentRun("git", "config", "--global", "--unset", key)
 		return err
 	}
 	return nil
@@ -149,7 +120,7 @@ func RemoveGlobal(key string) error {
 // RemoveAllGlobal removes all the given keys from the configuration.
 func RemoveAllGlobal(key string) error {
 	if HasGlobal(key) {
-		_, err := silentRun("git", "config", "--global", "--unset-all", key)
+		_, _, err := shell.SilentRun("git", "config", "--global", "--unset-all", key)
 		return err
 	}
 	return nil
@@ -168,8 +139,8 @@ func AddCoAuthors(aa ...authors.Author) error {
 // GetUser builds an authors.Author from the current configured user
 func GetUser() (*authors.Author, error) {
 	errMsg := "warning: Missing information for the primary author. Set with:\n"
-	name, nameErr := silentRun("git", "config", "user.name")
-	email, emailErr := silentRun("git", "config", "user.email")
+	name, _, nameErr := shell.SilentRun("git", "config", "user.name")
+	email, _, emailErr := shell.SilentRun("git", "config", "user.email")
 
 	if nameErr != nil {
 		errMsg = errMsg + "\n$ git config --global user.name \"Jane Doe\""
@@ -229,7 +200,7 @@ func ReadAllCoAuthorsFromFile() (map[string]authors.Author, error) {
 
 func ShortLogAuthorSummary() (map[string]authors.Author, error) {
 	// git shortlog --summary --email --number HEAD'
-	o, err := silentRun("git", "shortlog", "--summary", "--email", "--number", "HEAD")
+	o, _, err := shell.SilentRun("git", "shortlog", "--summary", "--email", "--number", "HEAD")
 	if err != nil {
 		return nil, fmt.Errorf("error reading git shortlog: %v", err)
 	}

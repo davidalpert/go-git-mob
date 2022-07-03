@@ -1,39 +1,30 @@
 package revParse
 
 import (
-	"github.com/go-git/go-git/v5"
+	"fmt"
+	"github.com/davidalpert/go-git-mob/internal/shell"
 	"path"
+	"strings"
 )
 
 // InsideWorkTree checks if the current working directory is inside the working tree of a git repository.
 // returns true if the cwd in a git repository.
 func InsideWorkTree() bool {
-	_, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{
-		DetectDotGit:          true,
-		EnableDotGitCommonDir: false,
-	})
-	if err == git.ErrRepositoryNotExists {
-		return false
-	}
-	return true
+	_, exitCode, err := shell.SilentRun("git", "rev-parse", "--is-inside-work-tree")
+
+	return err == nil && exitCode == 0
 }
 
 // TopLevelDirectory computes the path to the top-level directory of the git repository.
 func TopLevelDirectory() (string, error) {
-	r, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{
-		DetectDotGit:          true,
-		EnableDotGitCommonDir: false,
-	})
+	output, statusCode, err := shell.SilentRun("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return "", err
 	}
-
-	w, err := r.Worktree()
-	if err != nil {
-		return "", err
+	if statusCode != 0 {
+		return "", fmt.Errorf("TopLevelDirectory: expected 0 but got %d", statusCode)
 	}
-
-	return w.Filesystem.Root(), nil
+	return strings.TrimSpace(output), nil
 }
 
 // GitPath resolves the given path to the .git directory (GIT_DIR).

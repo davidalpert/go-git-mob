@@ -28,7 +28,11 @@ clean: ## clean build output
 
 .PHONY: vale
 vale: ## run linting rules against markdown files
+ifeq ("$(GITHUB_ACTIONS)","true")
+	echo "GITHUB_ACTIONS is true; assuming vale has been run by a previous step"
+else
 	vale README.md CONTRIBUTING.md # we don't valedate CHANGELOG.md as that reflects historical commit summaries
+endif
 
 ./internal/version/detail.go:
 	$(MAKE) gen
