@@ -2,7 +2,8 @@
 <!--
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![License: GPL v3][license-shield]][license-url]
+[![License: MIT v3][license-shield]][license-url]
+
 <!-- [![Issues][issues-shield]][issues-url] -->
 <!-- [![Forks][forks-shield]][forks-url] -->
 <!-- ![GitHub Contributors][contributors-shield] -->
@@ -177,5 +178,6 @@ Project Link: [https://github.com/davidalpert/go-git-mob](https://github.com/dav
 [forks-url]: https://github.com/davidalpert/go-git-mob/network/members
 [issues-shield]: https://img.shields.io/github/issues/davidalpert/go-git-mob
 [issues-url]: https://github.com/davidalpert/go-git-mob/issues
-[license-shield]: https://img.shields.io/badge/License-GPLv3-blue.svg
-[license-url]: https://www.gnu.org/licenses/gpl-3.0
+[license-shield]: https://img.shields.io/badge/License-MIT-yellow.svg
+[license-url]: https://opensource.org/licenses/MIT
+
