@@ -112,21 +112,8 @@ import (
 	"strings"
 )
 
-// DetailStruct provides an easy way to grab all the govvv version details together
-type DetailStruct struct {
-	AppName              string ` + "`json:\"app_name\"`" + `
-	BuildDate            string ` + "`json:\"build_date\"`" + `
-	GitBranch            string ` + "`json:\"branch\"`" + `
-	GitCommit            string ` + "`json:\"commit\"`" + `
-	GitDirty             bool ` + "`json:\"dirty\"`" + `
-	GitDirtyHasModified  bool ` + "`json:\"dirty_modified\"`" + `
-	GitDirtyHasStaged    bool ` + "`json:\"dirty_staged\"`" + `
-	GitDirtyHasUntracked bool ` + "`json:\"dirty_untracked\"`" + `
-	GitWorkingState      string ` + "`json:\"working_state\"`" + `
-	GitSummary           string ` + "`json:\"summary\"`" + `
-	UserAgentString      string ` + "`json:\"user_agent\"`" + `
-	Version              string ` + "`json:\"version\"`" + `
-}
+// Detail provides an easy global way to
+var Detail = NewVersionDetail()
 
 // NewVersionDetail builds a new version DetailStruct
 func NewVersionDetail() DetailStruct {
@@ -150,8 +137,46 @@ func NewVersionDetail() DetailStruct {
 	return s
 }
 
-// Detail provides an easy global way to
-var Detail = NewVersionDetail()
+// DetailStruct provides an easy way to grab all the govvv version details together
+type DetailStruct struct {
+	AppName              string ` + "`json:\"app_name\"`" + `
+	BuildDate            string ` + "`json:\"build_date\"`" + `
+	GitBranch            string ` + "`json:\"branch\"`" + `
+	GitCommit            string ` + "`json:\"commit\"`" + `
+	GitDirty             bool ` + "`json:\"dirty\"`" + `
+	GitDirtyHasModified  bool ` + "`json:\"dirty_modified\"`" + `
+	GitDirtyHasStaged    bool ` + "`json:\"dirty_staged\"`" + `
+	GitDirtyHasUntracked bool ` + "`json:\"dirty_untracked\"`" + `
+	GitWorkingState      string ` + "`json:\"working_state\"`" + `
+	GitSummary           string ` + "`json:\"summary\"`" + `
+	UserAgentString      string ` + "`json:\"user_agent\"`" + `
+	Version              string ` + "`json:\"version\"`" + `
+}
+
+// String implements Stringer
+func (d *DetailStruct) String() string {
+	if d == nil {
+		return "n/a"
+	}
+
+	v := fmt.Sprintf("%s", d.Version)
+	if !strings.EqualFold(d.GitBranch, "main") {
+		if strings.HasPrefix(d.GitBranch,"release-") {
+			preReleaseTag := branchNameToBuildMetadataSegment(d.GitBranch[len("release-"):])
+			v = fmt.Sprintf("%s-%s+%s", v, preReleaseTag, d.GitCommit)
+		} else {
+			v = fmt.Sprintf("%s-alpha+%s.%s", v, d.GitCommit, branchNameToBuildMetadataSegment(d.GitBranch))
+		}
+	}
+	if d.GitDirty {
+		v += ".dirty"
+	}
+	return v
+}
+
+func branchNameToBuildMetadataSegment(name string) string {
+	return strings.Replace(name, "_", "-", -1)
+}
 
 // ToUserAgentString formats a DetailStruct as a User-Agent string
 func (s DetailStruct) ToUserAgentString() string {

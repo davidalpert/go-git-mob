@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
@@ -57,20 +56,15 @@ func (o *VersionOptions) Validate() error {
 // Run the command
 func (o *VersionOptions) Run() error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
-		s := fmt.Sprintf("%s %s - %s", o.VersionDetails.AppName, o.VersionDetails.Version, o.VersionDetails.GitCommit)
-		if o.VersionDetails.GitDirty {
-			s = fmt.Sprintf("%s [dirty]", s)
+		if s, _, err := o.FormatOutput(o.VersionDetails); err != nil {
+			return err
+		} else {
+			return o.WriteStringf("%s %s\n", o.VersionDetails.AppName, s)
 		}
-		o.WriteStringln(s)
-	} else {
-		if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
-			o.OutputFormat = utils.StringPointer("json")
-		}
-
-		s, _, err := o.PrinterOptions.FormatOutput(o.VersionDetails)
-		utils.ExitIfErr(err)
-		o.WriteStringln(s)
+	}
+	if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
+		o.OutputFormat = utils.StringPointer("json")
 	}
 
-	return nil
+	return o.IOStreams.WriteOutput(o.VersionDetails, o.PrinterOptions)
 }
