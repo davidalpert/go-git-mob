@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 // This program generates version.go. It can be invoked by running invoking go:generate
@@ -13,9 +14,19 @@ import (
 )
 
 func main() {
-	versionStem, err := exec.Command("sbot", "get", "version").Output()
+	bumpType := os.Getenv("BUMP_TYPE")
+	versionStem := []byte(os.Getenv("VERSION"))
+	var err error
+	if bumpType != "" {
+		fmt.Println("predicting the next version; mode=", bumpType)
+		versionStem, err = exec.Command("sbot", "predict", "version", "--mode", bumpType).Output()
+	} else if len(versionStem) > 0 {
+		fmt.Println("using provided version:", versionStem)
+	} else {
+		versionStem, err = exec.Command("sbot", "get", "version").Output()
+	}
 	if err != nil {
-		fmt.Printf("can't read version from git tags: %s", err)
+		fmt.Printf("can't read version: %s", err)
 		fmt.Printf("defaulting to 0.0.1")
 		versionStem = []byte("0.0.1")
 	}
