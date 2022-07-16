@@ -125,7 +125,11 @@ tag-release:
 	$(eval next_version := $(shell sbot predict version --mode ${BUMP_TYPE}))
 	# echo "Current Version: ${VERSION}"
 	# echo "   Next Version: ${next_version}"
+ifdef FAST
+	$(MAKE) test-unit VERSION=$(next_version)
+else
 	$(MAKE) cit VERSION=$(next_version)
+endif
 	git add -f internal/version/detail.go
 	git-chglog --next-tag v$(next_version) --output CHANGELOG.md
 	git add -f CHANGELOG.md
