@@ -177,7 +177,7 @@ if [ ! -f .semverbot.toml ]; then
   sbot init
 fi
 
-findCmd conform "go install github.com/talos-systems/conform/cmd/conform@latest"
+findCmd conform "go install github.com/siderolabs/conform/cmd/conform@latest"
 if [ ! -f .conform.yaml ]; then
   note "initializing conform"
   cat << EOD > .conform.yaml
