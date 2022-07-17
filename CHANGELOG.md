@@ -34,6 +34,57 @@
 ## Changelog
 
 
+<a name="v0.4.0"></a>
+## [v0.4.0] - 2022-07-16
+### Bug Fixes
+- generate release notes before running goreleaser
+- build before releasing to update the version number
+- update url for the conform tool
+- git mob outside a working tree should fail
+
+### Build
+- enable preview of release notes
+- tune goreleaser workflow
+- add goreleaser github action
+- tune .goreleaser configuration
+- goreleaser init
+- commit generated version detail when tagging releases
+- enhance version_gen.go to accept version params
+- add PR workflow
+- feature-flag vale validation
+- format bundle install output
+- show output when installing the bundle
+- disable tput and colors in GITHUB_ACTIONS
+
+### Chore
+- go mod tidy
+
+### Code Refactoring
+- calculate semantic version at generate, not runtime
+- use git CLI instead of go-git for revParse commands
+- show better errors when executing setMob
+- move SilentRun into a new shell package
+- import git step defs from my blog post sample
+
+### Docs
+- update installation instructions
+- update license to match original MIT
+
+### Features
+- update version command to print semver format
+- allow FAST=1 releases
+
+### Test Coverage
+- fix up failing features
+- set GIT_CEILING_DIRECTORIES before all features
+
+### Pull Requests
+- Merge pull request [#36](https://github.com/davidalpert/go-git-mob/issues/36) from davidalpert/32-improve-install-story
+- Merge pull request [#34](https://github.com/davidalpert/go-git-mob/issues/34) from davidalpert/32-improve-install-story
+- Merge pull request [#35](https://github.com/davidalpert/go-git-mob/issues/35) from davidalpert/add-license-1
+- Merge pull request [#33](https://github.com/davidalpert/go-git-mob/issues/33) from davidalpert/4-add-pull-request-validation-and-feedback
+
+
 <a name="v0.3.0"></a>
 ## [v0.3.0] - 2022-06-14
 ### Bug Fixes
@@ -48,7 +99,6 @@
 - remove the test .gitmessage path from the version command
 - match subcommands on aliases as well as names
 - start mob with coauthor who didn't exist would work
-- doctor would constantly regenerate chglog config
 
 ### Build
 - ignore the actual deploy scripts
@@ -63,13 +113,6 @@
 - add vale config and a set of initial .styles
 - add vale as a build requirement
 - remove irrelevant scopes
-- go mod tidy
-- add depgraph target
-- ignore doctor.sh fixes
-- add a makefile to tie it all together
-- add baseline tool config
-- add initial doctor.sh script
-- add vscode workspace
 
 ### Code Refactoring
 - don't need to load the primary user more than once
@@ -79,12 +122,9 @@
 - collect git paths into a revParse module
 - remove duplication in explode.feature
 - rearrange suggest subcommand as a coauthors subcommand
-- replicate git-authors specs from git-mob
-- replace firefly names with git-mob examples
-- move Author into the cfg package
-- extract env helpers to an env package
 
 ### Docs
+- release notes for v0.3.0
 - add reference for BDD via cucumber/aruba
 - explain the install/uninstall story
 - correct the vale target's help text
@@ -95,9 +135,6 @@
 - resolve vale warnings in CONTRIBUTING.md
 - add link to github project v1.0
 - improve setup and contributing guidance
-- release notes for v0.2.0
-- release notes for v0.1.0
-- add initial project README
 
 ### Features
 - set .git/.gitmessage only when inside a working tree
@@ -112,12 +149,6 @@
 - explode/rehash
 - suggest co-authors from git history
 - list all coauthors
-- update .git/.gitmessage when the mob changes
-- mob solo
-- git mob
-- git mob print -i
-- mob print
-- add basic CLI framework
 
 ### Test Coverage
 - add/delete/edit-coauthors.spec
@@ -146,8 +177,6 @@
 - git-mob.spec -h prints help
 - prove that amending commits adds coauthors
 - ignore featues with an [@ignore](https://github.com/ignore) flag
-- add step def to create a git repo
-- add aruba/cucumber specs
 
 ### Pull Requests
 - Merge pull request [#31](https://github.com/davidalpert/go-git-mob/issues/31) from HugeIRL/29-fix-initials-flag
@@ -166,7 +195,7 @@
 
 
 <a name="v0.2.0"></a>
-## [v0.2.0] - 2022-05-30
+## [v0.2.0] - 2022-05-31
 ### Bug Fixes
 - doctor would constantly regenerate chglog config
 
@@ -197,7 +226,7 @@
 
 
 <a name="v0.1.0"></a>
-## v0.1.0 - 2022-05-30
+## v0.1.0 - 2022-05-31
 ### Build
 - add a makefile to tie it all together
 - add baseline tool config
@@ -212,6 +241,7 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.4.0...HEAD
+[v0.4.0]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/davidalpert/go-git-mob/compare/v0.1.0...v0.2.0
