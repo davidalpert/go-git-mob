@@ -42,4 +42,6 @@ internal/version/detail.go
 dependencygraph.svg
 deploy.sh
 deploy-local.sh
+RELEASE_NOTES.md
 
+dist/

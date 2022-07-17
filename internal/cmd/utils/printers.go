@@ -83,16 +83,17 @@ var supportedObjectPrinterFormatMap = map[string]string{
 	"j":    "json",
 	"js":   "json",
 	"json": "json",
+	"t":    "text",
+	"txt":  "text",
+	"text": "text",
 	"y":    "yaml",
 	"yml":  "yaml",
 	"yaml": "yaml",
-	"text": "text",
 }
 
 var supportedListPrinterFormatMap = map[string]string{
 	"c":     "csv",
 	"csv":   "csv",
-	"t":     "table",
 	"table": "table",
 	"x":     "xml",
 	"xml":   "xml",
@@ -107,7 +108,7 @@ var supportedListPrinterCategories = []string{}
 func (o *PrinterOptions) marshalObjectToString(v interface{}, formatCategory string) (string, string, error) {
 	output := ""
 	if formatCategory == "text" {
-		output = v.(string)
+		output = fmt.Sprintf("%v", v)
 	} else if formatCategory == "yaml" {
 		oB, _ := yaml.Marshal(v)
 		output = string(oB)
