@@ -92,6 +92,10 @@ test-features-wip: Gemfile.lock build ## Run cucumber/aruba backend features
 list-ignored: ## list ignored specs
 	bundle exec cucumber --publish-quiet --tags '@ignore' --dry-run
 
+test-action-push: ## Test github actions with event 'push'
+	# https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#webhook-payload-example-37
+	act push --container-architecture linux/amd64 --eventpath .local/push-tags-payload.json
+
 .PHONY: depgraph
 depgraph: ## create a dotgraph visualizing package dependencies
 	 godepgraph -s -novendor -p github.com/go-git/go-git,github.com/spf13,github.com/go-xmlfmt,github.com/gocarina/gocsv,github.com/olekukonko/tablewriter,golang.org,gopkg.in $(shell cat go.mod | grep module | sed -E 's/module //') | dot -T svg > dependencygraph.svg
