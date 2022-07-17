@@ -43,6 +43,15 @@ func main() {
 		panic(err)
 	}
 
+	commitsBetweenHeadAndMain, err := exec.Command("git", "rev-list", "origin/main...HEAD").Output()
+	if err != nil {
+		panic(err)
+	}
+	if len(commitsBetweenHeadAndMain) == 0 {
+		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'", string(gitBranch))
+		gitBranch = []byte("main")
+	}
+
 	gitSHA, err := exec.Command("git", "rev-parse", "--short", "HEAD").Output()
 	//fmt.Printf("sha: >%s< (err: %#v)\n", string(gitSHA), err)
 	if err != nil {
