@@ -98,7 +98,7 @@ mkdir -p ~/bin/go-git-mob/v${VERSION}
 mv ~/Downloads/go-git-mob_${VERSION}_Darwin_arm64.tar.gz ~/bin/go-git-mob/v${VERSION}/
 cd ~/bin/go-git-mob/v${VERSION}
 gunzip -c go-git-mob_${VERSION}_Darwin_arm64.tar.gz | tar xopf -
-ln -s ~/bin/go-git-mob/v${VERSION}/go-git-mob ~/bin/git-mob
+ln -f -s ~/bin/go-git-mob/v${VERSION}/go-git-mob ~/bin/git-mob
 git mob version
 ```
 
