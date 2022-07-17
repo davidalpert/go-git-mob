@@ -12,6 +12,57 @@ permissions:
   # issues: write
 
 jobs:
+  printJob:
+    name: Print event
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all tags
+        run: git fetch --force --tags
+
+      - name: Show git details
+        run: |
+          git fetch origin main:main
+          echo ---
+          git log --oneline -4
+          echo --
+          echo gitBranch:
+          git rev-parse --abbrev-ref HEAD
+          echo ---
+          echo gitSHA:
+          git rev-parse --short HEAD
+          echo ---
+          echo tag --contains:
+          git tag --contains
+          echo ---
+          echo branch --contains:
+          git branch --all --contains ${{ github.ref_name }}
+          echo ---
+          echo local branches:
+          git branch -v
+          echo ---
+          echo remote branches:
+          git branch -v -r
+          echo ---
+          echo "git rev-list origin/main...HEAD | wc -l"
+          export N=$(git rev-list origin/main...HEAD | wc -l)
+          echo ">>$N<<"
+          echo ---
+          echo "tag --contains origin/main":
+          git tag --contains origin/main
+          echo ---
+          git tag --contains origin/main | grep "${{ github.ref_name }}"
+
   goreleaser:
     runs-on: ubuntu-latest
     steps:
