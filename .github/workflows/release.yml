@@ -1,4 +1,4 @@
-name: goreleaser
+name: Publish Tagged Release
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   printJob:
-    name: Print event
+    name: Show Release Context
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
@@ -64,6 +64,7 @@ jobs:
           git tag --contains origin/main | grep "${{ github.ref_name }}"
 
   goreleaser:
+    name: Package and Publish Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
