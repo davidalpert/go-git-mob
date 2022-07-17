@@ -42,13 +42,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	gitBranch = bytes.Trim(gitBranch, "\r\n")
 
 	commitsBetweenHeadAndMain, err := exec.Command("git", "rev-list", "origin/main...HEAD").Output()
 	if err != nil {
 		panic(err)
 	}
-	if len(commitsBetweenHeadAndMain) == 0 {
-		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'", string(gitBranch))
+	if !strings.EqualFold(string(gitBranch), "main") && len(commitsBetweenHeadAndMain) == 0 {
+		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'\n", string(gitBranch), string(gitBranch))
 		gitBranch = []byte("main")
 	}
 
