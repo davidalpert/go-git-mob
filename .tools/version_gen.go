@@ -22,7 +22,7 @@ func main() {
 		fmt.Println("predicting the next version; mode=", bumpType)
 		versionStem, err = exec.Command("sbot", "predict", "version", "--mode", bumpType).Output()
 	} else if len(versionStem) > 0 {
-		fmt.Println("using provided version:", versionStem)
+		fmt.Println("using provided version:", string(versionStem))
 	} else {
 		versionStem, err = exec.Command("sbot", "get", "version").Output()
 	}
