@@ -129,7 +129,9 @@ func generateSemanticVersion(coreVersion string, branchName string, gitSHA strin
 	usedBranchName := false
 
 	// append preReleaseIdentifier if needed
-	if !strings.EqualFold(branchName, "main") {
+	if strings.EqualFold(branchName, "main") {
+		usedBranchName = true
+	} else {
 		preReleaseIdentifier := "alpha"
 		if strings.HasPrefix(branchName, "release-") {
 			preReleaseIdentifier = branchNameToBuildMetadataSegment(branchName[len("release-"):])
