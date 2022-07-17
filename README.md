@@ -86,7 +86,21 @@ To get a local copy up and running follow these simple steps.
 
 #### Install a binary release
 
-- Binary releases coming soon; see https://github.com/davidalpert/go-git-mob/issues/32
+- Download an appropriate package for your `GOOS` and `GOARCH` from the [Releases](https://github.com/davidalpert/go-git-mob/releases) tab;
+- Uncompress it and put the binary in your path;
+- Optionally, review [Post-install steps](#post-install-steps) to explode the convenience methods;
+
+For example:
+
+```
+export VERSION=0.4.0
+mkdir -p ~/bin/go-git-mob/v${VERSION}
+mv ~/Downloads/go-git-mob_${VERSION}_Darwin_arm64.tar.gz ~/bin/go-git-mob/v${VERSION}/
+cd ~/bin/go-git-mob/v${VERSION}
+gunzip -c go-git-mob_${VERSION}_Darwin_arm64.tar.gz | tar xopf -
+ln -s ~/bin/go-git-mob/v${VERSION}/go-git-mob ~/bin/git-mob
+git mob version
+```
 
 #### Install using go install
 
@@ -94,6 +108,14 @@ With a working golang setup at version >= 1.18 you can use `go install`:
 
 ```
 go install github.com/davidalpert/go-git-mob@latest
+```
+
+Unfortunately, due to a naming conflict with the original `git-mob` repo, this one installs as `$($GOBIN || $GOPATH/bin/)/go-git-mob` and goes unrecognized as a git plugin.
+
+To enable it you can symlink `git-mob` to it like this:
+
+```
+ln -s "$(which go-git-mob)" "$(dirname $(which go-git-mob))/git-mob"
 ```
 
 ### Post-install steps
