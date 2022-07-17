@@ -146,7 +146,7 @@ endif
 	git add -f internal/version/detail.go
 	git-chglog --next-tag v$(next_version) --output CHANGELOG.md
 	git add -f CHANGELOG.md
-	git commit --message "docs: release notes for v$(next_version)"
+	git commit --message "release notes for v$(next_version)"
 	sbot release version --mode ${BUMP_TYPE}
 	git show --no-patch --format=short v$(next_version)
 
