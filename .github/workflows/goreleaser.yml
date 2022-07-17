@@ -74,6 +74,9 @@ jobs:
       - name: Fetch all tags
         run: git fetch --force --tags
 
+      - name: Fetch origin/main for comparisons
+        run: git fetch origin main:main
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
