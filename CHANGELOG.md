@@ -34,6 +34,24 @@
 ## Changelog
 
 
+<a name="v0.4.1"></a>
+## [v0.4.1] - 2022-07-17
+### Build
+- don't need to use branchName when it's 'main'
+- assume 'main' branch when rev-list bewteen origin/main and HEAD is 0
+- ensure that local main tracks origin/main in a tag build
+- dump job context (with event) when building a release
+- move version_gen.go into .tools
+- simplify release notes commit message
+- add test target to document testing push events with act
+
+### Code Refactoring
+- rename github action workflows
+
+### Docs
+- update installation instructions
+
+
 <a name="v0.4.0"></a>
 ## [v0.4.0] - 2022-07-16
 ### Bug Fixes
@@ -67,6 +85,7 @@
 - import git step defs from my blog post sample
 
 ### Docs
+- release notes for v0.4.0
 - update installation instructions
 - update license to match original MIT
 
@@ -241,7 +260,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.4.1...HEAD
+[v0.4.1]: https://github.com/davidalpert/go-git-mob/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/davidalpert/go-git-mob/compare/v0.1.0...v0.2.0
