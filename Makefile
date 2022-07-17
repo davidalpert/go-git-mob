@@ -112,6 +112,14 @@ doctor: ## run doctor.sh to sort out development dependencies
 changelog: ## Generate/update CHANGELOG.md
 	git-chglog --output CHANGELOG.md
 
+.PHONY: preview-release-notes
+preview-release-notes: ## preview release notes (generates RELEASE_NOTES.md)
+	git-chglog --output RELEASE_NOTES.md --template .chglog/RELEASE_NOTES.tpl.md "v$(shell sbot get version)"
+
+.PHONY: preview-release
+preview-release: preview-release-notes ## preview release (using goreleaser --snapshot)
+	goreleaser release --snapshot --rm-dist --release-notes RELEASE_NOTES.md
+
 eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 
 .PHONY: tag-release
