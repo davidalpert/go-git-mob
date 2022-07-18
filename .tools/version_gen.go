@@ -22,7 +22,7 @@ func main() {
 		fmt.Println("predicting the next version; mode=", bumpType)
 		versionStem, err = exec.Command("sbot", "predict", "version", "--mode", bumpType).Output()
 	} else if len(versionStem) > 0 {
-		fmt.Println("using provided version:", versionStem)
+		fmt.Println("using provided version:", string(versionStem))
 	} else {
 		versionStem, err = exec.Command("sbot", "get", "version").Output()
 	}
@@ -42,13 +42,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	gitBranch = bytes.Trim(gitBranch, "\r\n")
 
 	commitsBetweenHeadAndMain, err := exec.Command("git", "rev-list", "origin/main...HEAD").Output()
 	if err != nil {
 		panic(err)
 	}
-	if len(commitsBetweenHeadAndMain) == 0 {
-		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'", string(gitBranch))
+	if !strings.EqualFold(string(gitBranch), "main") && len(commitsBetweenHeadAndMain) == 0 {
+		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'\n", string(gitBranch), string(gitBranch))
 		gitBranch = []byte("main")
 	}
 
