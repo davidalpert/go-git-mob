@@ -2,25 +2,25 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"os"
 	"path"
 )
 
 type ImplodeOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 }
 
-func NewImplodeOptions(ioStreams utils.IOStreams) *ImplodeOptions {
+func NewImplodeOptions(ioStreams printers.IOStreams) *ImplodeOptions {
 	return &ImplodeOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdImplode(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdImplode(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewImplodeOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:     "implode",
@@ -38,7 +38,7 @@ func NewCmdImplode(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }

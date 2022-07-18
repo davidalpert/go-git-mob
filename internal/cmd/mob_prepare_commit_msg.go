@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/apex/log"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/spf13/cobra"
@@ -12,8 +12,8 @@ import (
 )
 
 type MobPrepareCommitMsgOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 
 	// 1-3 positional args provided by git
 	CommitMessageFile string
@@ -23,14 +23,14 @@ type MobPrepareCommitMsgOptions struct {
 	RawArgs []string
 }
 
-func NewMobPrepareCommitMsgOptions(ioStreams utils.IOStreams) *MobPrepareCommitMsgOptions {
+func NewMobPrepareCommitMsgOptions(ioStreams printers.IOStreams) *MobPrepareCommitMsgOptions {
 	return &MobPrepareCommitMsgOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdMobPrepareCommitMsg(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdMobPrepareCommitMsg(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewMobPrepareCommitMsgOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:     "prepare-commit-msg",
@@ -48,7 +48,7 @@ func NewCmdMobPrepareCommitMsg(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
