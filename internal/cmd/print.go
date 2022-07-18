@@ -5,29 +5,29 @@ import (
 
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
 )
 
 type PrintOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 	VersionDetails *version.DetailStruct
 	InitialsOnly   bool
 }
 
-func NewPrintOptions(ioStreams utils.IOStreams) *PrintOptions {
+func NewPrintOptions(ioStreams printers.IOStreams) *PrintOptions {
 	return &PrintOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 		VersionDetails: &version.Detail,
 		InitialsOnly:   false,
 	}
 }
 
-func NewCmdPrint(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdPrint(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewPrintOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "print",
@@ -44,7 +44,7 @@ func NewCmdPrint(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	cmd.Flags().BoolVarP(&o.InitialsOnly, "initials", "i", false, "show initials only")
 
@@ -103,7 +103,7 @@ func (o *PrintOptions) printFullMarkup(aa []authors.Author) error {
 	}
 
 	if o.FormatCategory() == "table" {
-		o.OutputFormat = utils.StringPointer("json")
+		o.OutputFormat = printers.StringPointer("json")
 	}
 
 	if s, _, err := o.PrinterOptions.FormatOutput(aa); err != nil {

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/spf13/cobra"
 	"os"
@@ -10,18 +10,18 @@ import (
 )
 
 type MobInitOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 }
 
-func NewMobInitOptions(ioStreams utils.IOStreams) *MobInitOptions {
+func NewMobInitOptions(ioStreams printers.IOStreams) *MobInitOptions {
 	return &MobInitOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdMobInit(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdMobInit(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewMobInitOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:     "init",
@@ -39,7 +39,7 @@ func NewCmdMobInit(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }

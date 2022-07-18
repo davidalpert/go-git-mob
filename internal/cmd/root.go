@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"github.com/spf13/cobra"
 	"os"
@@ -13,7 +13,7 @@ var cfgFile string
 
 // Execute builds the default root command and invokes it with os.Args
 func Execute() {
-	streams := utils.DefaultOSStreams()
+	streams := printers.DefaultOSStreams()
 	// configure the logger here in the outer scope so that we can defer
 	// any cleanup such as writing/flushing the stream
 	logCleanupFn := diagnostics.ConfigureLogger(streams)
@@ -53,7 +53,7 @@ func Execute() {
 }
 
 // NewRootCmd creates the 'root' command and configures it's nested children
-func NewRootCmd(ioStreams utils.IOStreams) *cobra.Command {
+func NewRootCmd(ioStreams printers.IOStreams) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:           "git",
 		Short:         "A git plugin to help manage git coauthors.",

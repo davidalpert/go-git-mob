@@ -1,27 +1,27 @@
 package cmd
 
 import (
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/spf13/cobra"
 	"strings"
 )
 
 type VersionOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 	VersionDetails *version.DetailStruct
 }
 
-func NewVersionOptions(ioStreams utils.IOStreams) *VersionOptions {
+func NewVersionOptions(ioStreams printers.IOStreams) *VersionOptions {
 	return &VersionOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 		VersionDetails: &version.Detail,
 	}
 }
 
-func NewCmdVersion(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdVersion(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewVersionOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "version",
@@ -38,7 +38,7 @@ func NewCmdVersion(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
@@ -63,7 +63,7 @@ func (o *VersionOptions) Run() error {
 		}
 	}
 	if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
-		o.OutputFormat = utils.StringPointer("json")
+		o.OutputFormat = printers.StringPointer("json")
 	}
 
 	return o.IOStreams.WriteOutput(o.VersionDetails, o.PrinterOptions)

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/json"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics/plaintext"
 	"github.com/davidalpert/go-git-mob/internal/env"
 	"github.com/davidalpert/go-git-mob/internal/version"
@@ -31,7 +31,7 @@ func init() {
 
 }
 
-func ConfigureLogger(streams utils.IOStreams) (cleanupFn func()) {
+func ConfigureLogger(streams printers.IOStreams) (cleanupFn func()) {
 	// default cleanup: nothing to do
 	cleanupFn = func() {}
 
