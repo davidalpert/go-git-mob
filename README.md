@@ -2,7 +2,9 @@
 <!--
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+<!-- vale Google.Acronyms = NO -->
 [![License: MIT v3][license-shield]][license-url]
+<!-- vale Google.Acronyms = YES -->
 
 <!-- [![Issues][issues-shield]][issues-url] -->
 <!-- [![Forks][forks-shield]][forks-url] -->
@@ -87,7 +89,7 @@ To get a local copy up and running follow these simple steps.
 #### Install a binary release
 
 - Download an appropriate package for your `GOOS` and `GOARCH` from the [Releases](https://github.com/davidalpert/go-git-mob/releases) tab;
-- Uncompress it and put the binary in your path;
+- Unzip it and put the binary in your path;
 - Optionally, review [Post-install steps](#post-install-steps) to explode the convenience methods;
 
 For example:
@@ -110,7 +112,7 @@ With a working golang setup at version >= 1.18 you can use `go install`:
 go install github.com/davidalpert/go-git-mob@latest
 ```
 
-Unfortunately, due to a naming conflict with the original `git-mob` repo, this one installs as `$($GOBIN || $GOPATH/bin/)/go-git-mob` and goes unrecognized as a git plugin.
+Due to a naming conflict with the original `git-mob` repository, this one installs as `$($GOBIN || $GOPATH/bin/)/go-git-mob` and goes unrecognized as a git plugin.
 
 To enable it you can symlink `git-mob` to it like this:
 
