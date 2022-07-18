@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 )
 
-func NewCmdMobHooks(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdMobHooks(ioStreams printers.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "hooks",
 		Aliases: []string{"hook"},
@@ -22,7 +22,7 @@ func NewCmdMobHooks(ioStreams utils.IOStreams) *cobra.Command {
 		//},
 	}
 
-	//o.PrinterOptions.AddPrinterFlags(cmd)
+	//o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	//cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
 

@@ -4,26 +4,26 @@ import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"sort"
 )
 
 type CoauthorsSuggestOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 }
 
-func NewCoauthorsSuggestOptions(ioStreams utils.IOStreams) *CoauthorsSuggestOptions {
+func NewCoauthorsSuggestOptions(ioStreams printers.IOStreams) *CoauthorsSuggestOptions {
 	return &CoauthorsSuggestOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdCoauthorsSuggest(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdCoauthorsSuggest(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewCoauthorsSuggestOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "suggest",
@@ -40,7 +40,7 @@ func NewCmdCoauthorsSuggest(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }

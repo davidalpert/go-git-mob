@@ -3,24 +3,24 @@ package cmd
 import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"strings"
 )
 
 type SoloOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 }
 
-func NewSoloOptions(ioStreams utils.IOStreams) *SoloOptions {
+func NewSoloOptions(ioStreams printers.IOStreams) *SoloOptions {
 	return &SoloOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdSolo(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdSolo(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewSoloOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "solo",
@@ -37,7 +37,7 @@ func NewCmdSolo(ioStreams utils.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
