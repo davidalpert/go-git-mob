@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/cmd/utils"
 	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-git-mob/internal/version"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"sort"
@@ -15,8 +15,8 @@ import (
 )
 
 type MobOptions struct {
-	*utils.PrinterOptions
-	utils.IOStreams
+	*printers.PrinterOptions
+	printers.IOStreams
 	Initials               []string
 	ListOnly               bool
 	PrintVersion           bool
@@ -24,14 +24,14 @@ type MobOptions struct {
 	AllCoAuthorsByInitials map[string]authors.Author
 }
 
-func NewMobOptions(ioStreams utils.IOStreams) *MobOptions {
+func NewMobOptions(ioStreams printers.IOStreams) *MobOptions {
 	return &MobOptions{
 		IOStreams:      ioStreams,
-		PrinterOptions: utils.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdMob(ioStreams utils.IOStreams) *cobra.Command {
+func NewCmdMob(ioStreams printers.IOStreams) *cobra.Command {
 	o := NewMobOptions(ioStreams)
 	var cmd = &cobra.Command{
 		Use:   "mob",
@@ -57,7 +57,7 @@ Examples:
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd)
+	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
 	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
