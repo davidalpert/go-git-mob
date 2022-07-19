@@ -34,7 +34,9 @@ else
 	vale README.md CONTRIBUTING.md # we don't valedate CHANGELOG.md as that reflects historical commit summaries
 endif
 
-./internal/version/detail.go:
+SRC_FILES = $(shell find . -type f -name '*.go' -not -path "./internal/version/detail.go")
+
+./internal/version/detail.go: $(SRC_FILES)
 	$(MAKE) gen
 
 .PHONY: gen
