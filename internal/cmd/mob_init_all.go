@@ -15,7 +15,7 @@ type MobInitAllOptions struct {
 	*printers.PrinterOptions
 	printers.IOStreams
 	BasePath string
-	WhatIf   bool
+	DryRun   bool
 }
 
 func NewMobInitAllOptions(ioStreams printers.IOStreams) *MobInitAllOptions {
@@ -45,7 +45,7 @@ func NewCmdMobInitAll(ioStreams printers.IOStreams) *cobra.Command {
 	}
 
 	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
-	cmd.Flags().BoolVar(&o.WhatIf, "what-if", false, "what-if will show you what will be done without doing it")
+	cmd.Flags().BoolVar(&o.DryRun, "dry-run", false, "dry-run will show you what will be done without doing it")
 
 	return cmd
 }
@@ -109,6 +109,8 @@ git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
 		if _, err := os.Stat(hooksFolder); os.IsNotExist(err) {
 			r.Error = fmt.Errorf("'%s' does not appear to be a valid git repo", repoRoot)
 			errors = append(errors, r)
+		} else if o.DryRun {
+			result = append(result, r)
 		} else if err := os.WriteFile(fileName, []byte(fileContents), 0755); err != nil {
 			r.Error = fmt.Errorf("writing git hook: %v", err)
 			errors = append(errors, r)
@@ -118,18 +120,21 @@ git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
 	}
 
 	if o.FormatCategory() == "text" {
-		printInitAllResult(o.Out, result, errors)
+		printInitAllResult(o.Out, result, errors, o.DryRun)
 		return nil
 	}
 
-	return o.IOStreams.WriteOutput(result, o.PrinterOptions.WithTableWriter("processed folders", formatInitAllResultsAsTable(result, errors)))
+	return o.IOStreams.WriteOutput(result, o.PrinterOptions.WithTableWriter("processed folders", formatInitAllResultsAsTable(result, errors, o.DryRun)))
 }
 
-func formatInitAllResultsAsTable(result []InitOneResult, errors []InitOneResult) func(t *tablewriter.Table) {
+func formatInitAllResultsAsTable(result []InitOneResult, errors []InitOneResult, dryRun bool) func(t *tablewriter.Table) {
 	return func(t *tablewriter.Table) {
 		t.SetHeader([]string{"Folder Considered", "Result"})
 		for _, r := range append(result, errors...) {
 			resultText := "initialized"
+			if dryRun {
+				resultText = "would have initialized"
+			}
 			if r.Error != nil {
 				resultText = r.Error.Error()
 			}
@@ -138,12 +143,20 @@ func formatInitAllResultsAsTable(result []InitOneResult, errors []InitOneResult)
 	}
 }
 
-func printInitAllResult(w io.Writer, result []InitOneResult, errors []InitOneResult) {
-	fmt.Fprintf(w, "initialized prepare-commit-msg git hooks in:\n")
+func printInitAllResult(w io.Writer, result []InitOneResult, errors []InitOneResult, dryRun bool) {
+	if dryRun {
+		fmt.Fprintf(w, "[whatif] would initialize prepare-commit-msg git hooks in:\n")
+	} else {
+		fmt.Fprintf(w, "initialized prepare-commit-msg git hooks in:\n")
+	}
 	for _, r := range result {
 		fmt.Fprintf(w, "- '%s%c'\n", r.FolderPath, os.PathSeparator)
 	}
-	fmt.Fprintf(w, "git-mob will now append coauthor annotations to commit messages in those repos\n\nthe following folders were not initialized:\n")
+	if dryRun {
+		fmt.Fprintf(w, "\nthe following folders would not be not initialized:\n")
+	} else {
+		fmt.Fprintf(w, "git-mob will now append coauthor annotations to commit messages in those repos\n\nthe following folders were not initialized:\n")
+	}
 	for _, r := range errors {
 		fmt.Fprintf(w, "- '%s%c' (%v)\n", r.FolderPath, os.PathSeparator, r.Error)
 	}
