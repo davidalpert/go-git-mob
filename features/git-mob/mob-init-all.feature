@@ -1,4 +1,4 @@
-Feature: mob-init-all
+Feature: mob init-all
 
   Background:
     Given I have installed go-git-mob into "local_bin" within the current directory
@@ -47,3 +47,19 @@ Feature: mob-init-all
       happy mobbing!
       """
 
+  # @announce-stdout
+  Scenario: --dry-run
+    When I successfully run `git mob init-all . --dry-run`
+    Then the file "example/.git/hooks/prepare-commit-msg" should not exist
+    And the file "example2/.git/hooks/prepare-commit-msg" should not exist
+    And the file "example3/.git/hooks/prepare-commit-msg" should not exist
+    And the output should contain:
+      """
+      [whatif] would initialize prepare-commit-msg git hooks in:
+      - './example/'
+      - './example2/'
+      - './example3/'
+
+      the following folders would not be not initialized:
+      - './local_bin/' ('./local_bin' does not appear to be a valid git repo)
+      """
