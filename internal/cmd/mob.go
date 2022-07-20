@@ -63,6 +63,7 @@ Examples:
 	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
 
 	cmd.AddCommand(NewCmdMobInit(ioStreams))
+	cmd.AddCommand(NewCmdMobInitAll(ioStreams))
 	cmd.AddCommand(NewCmdMobHooks(ioStreams))
 	cmd.AddCommand(NewCmdSolo(ioStreams))
 	cmd.AddCommand(NewCmdCoauthors(ioStreams))
