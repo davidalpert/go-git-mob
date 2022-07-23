@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdMobHooks(ioStreams printers.IOStreams) *cobra.Command {
+func NewCmdMobHooks(s printers.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "hooks",
 		Aliases: []string{"hook"},
@@ -26,7 +26,7 @@ func NewCmdMobHooks(ioStreams printers.IOStreams) *cobra.Command {
 
 	//cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
 
-	cmd.AddCommand(NewCmdMobPrepareCommitMsg(ioStreams))
+	cmd.AddCommand(NewCmdMobPrepareCommitMsg(s))
 
 	return cmd
 }

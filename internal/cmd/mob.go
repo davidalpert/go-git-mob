@@ -16,7 +16,6 @@ import (
 
 type MobOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 	Initials               []string
 	ListOnly               bool
 	PrintVersion           bool
@@ -24,15 +23,14 @@ type MobOptions struct {
 	AllCoAuthorsByInitials map[string]authors.Author
 }
 
-func NewMobOptions(ioStreams printers.IOStreams) *MobOptions {
+func NewMobOptions(s printers.IOStreams) *MobOptions {
 	return &MobOptions{
-		IOStreams:      ioStreams,
 		PrinterOptions: printers.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdMob(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewMobOptions(ioStreams)
+func NewCmdMob(s printers.IOStreams) *cobra.Command {
+	o := NewMobOptions(s)
 	var cmd = &cobra.Command{
 		Use:   "mob",
 		Short: "configure co-authors",
@@ -57,20 +55,20 @@ Examples:
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
 	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
 
-	cmd.AddCommand(NewCmdMobInit(ioStreams))
-	cmd.AddCommand(NewCmdMobInitAll(ioStreams))
-	cmd.AddCommand(NewCmdMobHooks(ioStreams))
-	cmd.AddCommand(NewCmdSolo(ioStreams))
-	cmd.AddCommand(NewCmdCoauthors(ioStreams))
-	cmd.AddCommand(NewCmdExplode(ioStreams))
-	cmd.AddCommand(NewCmdImplode(ioStreams))
-	cmd.AddCommand(NewCmdVersion(ioStreams))
-	cmd.AddCommand(NewCmdPrint(ioStreams))
+	cmd.AddCommand(NewCmdMobInit(s))
+	cmd.AddCommand(NewCmdMobInitAll(s))
+	cmd.AddCommand(NewCmdMobHooks(s))
+	cmd.AddCommand(NewCmdSolo(s))
+	cmd.AddCommand(NewCmdCoauthors(s))
+	cmd.AddCommand(NewCmdExplode(s))
+	cmd.AddCommand(NewCmdImplode(s))
+	cmd.AddCommand(NewCmdVersion(s))
+	cmd.AddCommand(NewCmdPrint(s))
 
 	return cmd
 }
@@ -135,7 +133,7 @@ func (o *MobOptions) listCoAuthors() error {
 	if o.FormatCategory() == "text" {
 		for _, ii := range initials {
 			a := o.AllCoAuthorsByInitials[ii]
-			fmt.Printf("%s %s %s\n", ii, a.Name, a.Email)
+			fmt.Fprintf(o.Out, "%s %s %s\n", ii, a.Name, a.Email)
 		}
 		return nil
 	}
@@ -198,7 +196,8 @@ func (o *MobOptions) setMob() error {
 		}
 	}
 
-	return o.WriteStringln(strings.Join(append([]string{meTag}, parts...), "\n"))
+	_, err := fmt.Fprintln(o.Out, strings.Join(append([]string{meTag}, parts...), "\n"))
+	return err
 }
 
 // resetMob clears out the co-authors from global git config

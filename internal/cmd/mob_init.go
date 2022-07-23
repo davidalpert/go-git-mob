@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
@@ -11,13 +11,11 @@ import (
 
 type MobInitOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 }
 
-func NewMobInitOptions(ioStreams printers.IOStreams) *MobInitOptions {
+func NewMobInitOptions(s printers.IOStreams) *MobInitOptions {
 	return &MobInitOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 	}
 }
 
@@ -39,7 +37,7 @@ func NewCmdMobInit(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
@@ -79,5 +77,6 @@ git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
 	if err := os.WriteFile(fileName, []byte(fileContents), 0755); err != nil {
 		return fmt.Errorf("writing git hook: %v", err)
 	}
-	return o.IOStreams.WriteOutput(fmt.Sprintf("initialized local git hook: '%s'\ngit-mob will now help prepare commit messages in this repo\n", fileNameRel), o.PrinterOptions)
+	_, err = fmt.Fprintf(o.Out, "initialized local git hook: '%s'\ngit-mob will now help prepare commit messages in this repo\n", fileNameRel)
+	return err
 }

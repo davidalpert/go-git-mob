@@ -21,7 +21,7 @@ Feature: check-author.spec
     And I run `git config --global --unset user.email`
     When I run `git mob`
     Then the exit status should be 1
-    And the stdout from "git mob" should contain:
+    And the stderr from "git mob" should contain:
       """
       warning: Missing information for the primary author. Set with:
 
@@ -34,7 +34,7 @@ Feature: check-author.spec
     And I run `git config --global --unset user.email`
     When I run `git mob`
     Then the exit status should be 1
-    And the stdout from "git mob" should contain:
+    And the stderr from "git mob" should contain:
       """
       warning: Missing information for the primary author. Set with:
 

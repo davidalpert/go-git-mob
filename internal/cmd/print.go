@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/msg"
 	"github.com/davidalpert/go-git-mob/internal/version"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -18,17 +19,17 @@ type PrintOptions struct {
 	InitialsOnly   bool
 }
 
-func NewPrintOptions(ioStreams printers.IOStreams) *PrintOptions {
+func NewPrintOptions(s printers.IOStreams) *PrintOptions {
 	return &PrintOptions{
-		IOStreams:      ioStreams,
+		IOStreams:      s,
 		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
 		VersionDetails: &version.Detail,
 		InitialsOnly:   false,
 	}
 }
 
-func NewCmdPrint(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewPrintOptions(ioStreams)
+func NewCmdPrint(s printers.IOStreams) *cobra.Command {
+	o := NewPrintOptions(s)
 	var cmd = &cobra.Command{
 		Use:   "print",
 		Short: "show current co-authors",
@@ -44,7 +45,7 @@ func NewCmdPrint(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	cmd.Flags().BoolVarP(&o.InitialsOnly, "initials", "i", false, "show initials only")
 
@@ -91,26 +92,19 @@ func (o *PrintOptions) printInitialsOnly(aa []authors.Author) error {
 		}
 	}
 
-	o.WriteStringln(strings.Join(parts, " "))
-
-	return nil
+	_, err = fmt.Fprintln(o.Out, strings.Join(parts, " "))
+	return err
 }
 
 func (o *PrintOptions) printFullMarkup(aa []authors.Author) error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
-		return o.WriteStringln(msg.FormatCoAuthorList(aa))
-		return nil
+		_, err := fmt.Fprintln(o.Out, msg.FormatCoAuthorList(aa))
+		return err
 	}
 
 	if o.FormatCategory() == "table" {
-		o.OutputFormat = printers.StringPointer("json")
+		o.PrinterOptions.WithDefaultOutput("json")
 	}
 
-	if s, _, err := o.PrinterOptions.FormatOutput(aa); err != nil {
-		return err
-	} else {
-		o.WriteStringln(s)
-	}
-
-	return nil
+	return o.WriteOutput(aa)
 }
