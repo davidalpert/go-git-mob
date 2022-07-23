@@ -10,18 +10,16 @@ import (
 
 type ImplodeOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 }
 
-func NewImplodeOptions(ioStreams printers.IOStreams) *ImplodeOptions {
+func NewImplodeOptions(s printers.IOStreams) *ImplodeOptions {
 	return &ImplodeOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdImplode(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewImplodeOptions(ioStreams)
+func NewCmdImplode(s printers.IOStreams) *cobra.Command {
+	o := NewImplodeOptions(s)
 	var cmd = &cobra.Command{
 		Use:     "implode",
 		Short:   "uninstall git-mob (removes helper git plugin scripts and deletes the git-mob binary)",
@@ -38,7 +36,7 @@ func NewCmdImplode(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
@@ -65,13 +63,13 @@ func (o *ImplodeOptions) Run() error {
 		p := fmt.Sprintf("%s", path.Join(eDir, plugin))
 
 		if _, err = os.Stat(p); err == nil {
-			fmt.Println("removing:", p)
+			fmt.Fprintln(o.Out, "removing:", p)
 			if err := os.Remove(p); err != nil {
 				return fmt.Errorf("removing '%s': %v", p, err)
 			}
 		}
 	}
 
-	fmt.Println("removing:", e)
+	fmt.Fprintln(o.Out, "removing:", e)
 	return os.Remove(e)
 }

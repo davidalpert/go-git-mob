@@ -1,28 +1,25 @@
 package cmd
 
 import (
-	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/version"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 type VersionOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 	VersionDetails *version.DetailStruct
 }
 
-func NewVersionOptions(ioStreams printers.IOStreams) *VersionOptions {
+func NewVersionOptions(s printers.IOStreams) *VersionOptions {
 	return &VersionOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 		VersionDetails: &version.Detail,
 	}
 }
 
-func NewCmdVersion(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewVersionOptions(ioStreams)
+func NewCmdVersion(s printers.IOStreams) *cobra.Command {
+	o := NewVersionOptions(s)
 	var cmd = &cobra.Command{
 		Use:   "version",
 		Short: "show version information",
@@ -38,7 +35,7 @@ func NewCmdVersion(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
@@ -55,16 +52,9 @@ func (o *VersionOptions) Validate() error {
 
 // Run the command
 func (o *VersionOptions) Run() error {
-	if strings.EqualFold(*o.OutputFormat, "text") {
-		if s, _, err := o.FormatOutput(o.VersionDetails); err != nil {
-			return err
-		} else {
-			return o.WriteStringf("%s %s\n", o.VersionDetails.AppName, s)
-		}
-	}
 	if o.FormatCategory() == "table" || o.FormatCategory() == "csv" {
-		o.OutputFormat = printers.StringPointer("json")
+		o.WithDefaultOutput("json")
 	}
 
-	return o.IOStreams.WriteOutput(o.VersionDetails, o.PrinterOptions)
+	return o.WriteOutput(o.VersionDetails)
 }

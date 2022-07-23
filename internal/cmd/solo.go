@@ -10,18 +10,16 @@ import (
 
 type SoloOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 }
 
-func NewSoloOptions(ioStreams printers.IOStreams) *SoloOptions {
+func NewSoloOptions(s printers.IOStreams) *SoloOptions {
 	return &SoloOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdSolo(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewSoloOptions(ioStreams)
+func NewCmdSolo(s printers.IOStreams) *cobra.Command {
+	o := NewSoloOptions(s)
 	var cmd = &cobra.Command{
 		Use:   "solo",
 		Short: "return to solo work (remove co-authors)",
@@ -37,7 +35,7 @@ func NewCmdSolo(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
@@ -65,7 +63,6 @@ func (o *SoloOptions) Run() error {
 
 	meTag := fmt.Sprintf("%s <%s>", me.Name, me.Email)
 
-	o.WriteStringln(strings.Join(append([]string{meTag}), "\n"))
-
-	return nil
+	_, err = fmt.Fprintln(o.Out, strings.Join(append([]string{meTag}), "\n"))
+	return err
 }
