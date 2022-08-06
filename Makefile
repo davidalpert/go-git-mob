@@ -4,7 +4,9 @@ PROJECTNAME=go-git-mob
 MAKEFLAGS += --silent
 
 # go versioning flags
-VERSION=$(shell sbot get version)
+ifndef VERSION
+	VERSION=$(shell sbot get version)
+endif
 
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
@@ -34,14 +36,18 @@ else
 	vale README.md CONTRIBUTING.md # we don't valedate CHANGELOG.md as that reflects historical commit summaries
 endif
 
-SRC_FILES = $(shell find . -type f -name '*.go' -not -path "./internal/version/detail.go")
+# SRC_FILES = $(shell find . -type f -name '*.go' -not -path "./internal/version/detail.go")
+# SRC_FILES += Makefile
 
-./internal/version/detail.go: $(SRC_FILES)
-	$(MAKE) gen
+# this needs to be a PHONY target so that it runs all the time, otherwise changing the VERSION is not enough to trigger an update to the version detail
+.PHONY: ./internal/version/detail.go
+./internal/version/detail.go:
+	VERSION=$(VERSION) go run ./.tools/version_gen.go $(PROJECTNAME)
 
 .PHONY: gen
 gen: ## invoke go generate
-	@CGO_ENABLED=1 go generate ./...
+	echo "invoking go generate (with VERSION=$(VERSION))"
+	@CGO_ENABLED=1 VERSION=$(VERSION) go generate ./...
 
 .PHONY: build
 build: clean ./internal/version/detail.go ## build for current platform
