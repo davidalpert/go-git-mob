@@ -145,7 +145,7 @@ tag-release:
 	$(eval next_version := $(shell sbot predict version --mode ${BUMP_TYPE}))
 	# echo "Current Version: ${VERSION}"
 	# echo "   Next Version: ${next_version}"
-	make build
+	# make build
 ifdef FAST
 	$(MAKE) test-unit VERSION=$(next_version)
 else
