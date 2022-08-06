@@ -1,4 +1,4 @@
-PROJECTNAME=go-git-mob
+PROJECTNAME=git-mob
 
 # Make is verbose in Linux. Make it silent.
 MAKEFLAGS += --silent
