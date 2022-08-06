@@ -34,6 +34,38 @@
 ## Changelog
 
 
+<a name="v0.5.0"></a>
+## [v0.5.0] - 2022-08-06
+### Build
+- ensure that version tags are available for PR builds
+- use git-mob as the project name
+- allow makefile to override VERSION
+- make version detail dependent on source files
+- update PR workflow to fail on valedation failures
+- clean up diagnostic output when overriding the branch name
+- print provided version as a string, not a byte array
+
+### Code Refactoring
+- update go-printers and streamline printing
+- factor out go-printers
+
+### Docs
+- clean up RELEASE_NOTES
+- clean up language to vale standards
+- update binary install instructions
+
+### Features
+- git mob init-all --dry-run
+- git mob init-all [base-path]
+
+### Pull Requests
+- Merge pull request [#48](https://github.com/davidalpert/go-git-mob/issues/48) from davidalpert/[GH-43](https://github.com/davidalpert/go-git-mob/issues/43)-fix-packaged-version
+- Merge pull request [#49](https://github.com/davidalpert/go-git-mob/issues/49) from davidalpert/refactor-to-use-go-printers
+- Merge pull request [#40](https://github.com/davidalpert/go-git-mob/issues/40) from davidalpert/init-all
+- Merge pull request [#38](https://github.com/davidalpert/go-git-mob/issues/38) from davidalpert/use-go-printers
+- Merge pull request [#37](https://github.com/davidalpert/go-git-mob/issues/37) from davidalpert/errata
+
+
 <a name="v0.4.1"></a>
 ## [v0.4.1] - 2022-07-17
 ### Build
@@ -260,7 +292,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.5.0...HEAD
+[v0.5.0]: https://github.com/davidalpert/go-git-mob/compare/v0.4.1...v0.5.0
 [v0.4.1]: https://github.com/davidalpert/go-git-mob/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...v0.3.0
