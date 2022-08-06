@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -13,13 +13,13 @@ var cfgFile string
 
 // Execute builds the default root command and invokes it with os.Args
 func Execute() {
-	streams := printers.DefaultOSStreams()
+	s := printers.DefaultOSStreams()
 	// configure the logger here in the outer scope so that we can defer
 	// any cleanup such as writing/flushing the stream
-	logCleanupFn := diagnostics.ConfigureLogger(streams)
+	logCleanupFn := diagnostics.ConfigureLogger(s)
 	defer logCleanupFn()
 
-	rootCmd := NewRootCmd(streams)
+	rootCmd := NewRootCmd(s)
 
 	rootCmd.SetArgs(os.Args[1:]) // without program
 
@@ -47,13 +47,13 @@ func Execute() {
 	}
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(s.ErrOut, err)
 		os.Exit(1)
 	}
 }
 
 // NewRootCmd creates the 'root' command and configures it's nested children
-func NewRootCmd(ioStreams printers.IOStreams) *cobra.Command {
+func NewRootCmd(s printers.IOStreams) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:           "git",
 		Short:         "A git plugin to help manage git coauthors.",
@@ -74,7 +74,7 @@ func NewRootCmd(ioStreams printers.IOStreams) *cobra.Command {
 	}
 
 	// Register subcommands
-	rootCmd.AddCommand(NewCmdMob(ioStreams))
+	rootCmd.AddCommand(NewCmdMob(s))
 
 	//rootCmd.PersistentFlags().BoolP("verbose", "vv", false, "enable verbose output")
 

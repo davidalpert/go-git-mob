@@ -13,18 +13,16 @@ import (
 
 type CoauthorsSuggestOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 }
 
-func NewCoauthorsSuggestOptions(ioStreams printers.IOStreams) *CoauthorsSuggestOptions {
+func NewCoauthorsSuggestOptions(s printers.IOStreams) *CoauthorsSuggestOptions {
 	return &CoauthorsSuggestOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultTableWriter().WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdCoauthorsSuggest(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewCoauthorsSuggestOptions(ioStreams)
+func NewCmdCoauthorsSuggest(s printers.IOStreams) *cobra.Command {
+	o := NewCoauthorsSuggestOptions(s)
 	var cmd = &cobra.Command{
 		Use:   "suggest",
 		Short: "suggest some co-authors to add based on existing committers to your current repo",
@@ -40,7 +38,7 @@ func NewCmdCoauthorsSuggest(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }
@@ -77,12 +75,12 @@ func (o *CoauthorsSuggestOptions) Run() error {
 
 	if o.FormatCategory() == "text" {
 		if len(initials) > 0 {
-			fmt.Printf("Here are some suggestions for coauthors based on existing authors of this repository:\n\n")
+			fmt.Fprintf(o.Out, "Here are some suggestions for coauthors based on existing authors of this repository:\n\n")
 			for _, ii := range initials {
 				a := aa[ii]
-				fmt.Printf("git mob add-coauthor %s %s %s\n", ii, a.Name, a.Email)
+				fmt.Fprintf(o.Out, "git mob add-coauthor %s %s %s\n", ii, a.Name, a.Email)
 			}
-			fmt.Println("\nPaste any line above.")
+			fmt.Fprintln(o.Out, "\nPaste any line above.")
 		}
 		return nil
 	}

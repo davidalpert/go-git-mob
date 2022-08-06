@@ -2,9 +2,11 @@ module github.com/davidalpert/go-git-mob
 
 go 1.18
 
+//replace github.com/davidalpert/go-printers => ../go-printers
+
 require (
 	github.com/apex/log v1.9.0
-	github.com/davidalpert/go-printers v0.1.0
+	github.com/davidalpert/go-printers v0.3.0
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.5

@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdCoauthors(ioStreams printers.IOStreams) *cobra.Command {
+func NewCmdCoauthors(s printers.IOStreams) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "coauthors",
 		Short:   "co-author related subcommands",
@@ -13,7 +13,7 @@ func NewCmdCoauthors(ioStreams printers.IOStreams) *cobra.Command {
 		Args:    cobra.NoArgs,
 	}
 
-	cmd.AddCommand(NewCmdCoauthorsSuggest(ioStreams))
+	cmd.AddCommand(NewCmdCoauthorsSuggest(s))
 
 	return cmd
 }

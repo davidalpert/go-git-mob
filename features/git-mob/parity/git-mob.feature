@@ -33,7 +33,7 @@ Feature: git-mob.spec
   Scenario: --help prints help
     # --help is intercepted by the git plugin launcher which returns a 404 (help not found)
     When I run `git mob --help`
-    Then the output should contain "No manual entry for git-mob"
+    Then the stderr should contain "No manual entry for git-mob"
 
   Scenario: -v prints version
     When I successfully run `git mob -v`
