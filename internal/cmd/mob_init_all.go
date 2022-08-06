@@ -13,15 +13,13 @@ import (
 
 type MobInitAllOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 	BasePath string
 	DryRun   bool
 }
 
-func NewMobInitAllOptions(ioStreams printers.IOStreams) *MobInitAllOptions {
+func NewMobInitAllOptions(s printers.IOStreams) *MobInitAllOptions {
 	return &MobInitAllOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultTableWriter().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultTableWriter().WithDefaultOutput("text"),
 		BasePath:       ".",
 	}
 }
@@ -44,7 +42,7 @@ func NewCmdMobInitAll(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 	cmd.Flags().BoolVar(&o.DryRun, "dry-run", false, "dry-run will show you what will be done without doing it")
 
 	return cmd
@@ -124,7 +122,7 @@ git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
 		return nil
 	}
 
-	return o.IOStreams.WriteOutput(result, o.PrinterOptions.WithTableWriter("processed folders", formatInitAllResultsAsTable(result, errors, o.DryRun)))
+	return o.WithTableWriter("processed folders", formatInitAllResultsAsTable(result, errors, o.DryRun)).WriteOutput(result)
 }
 
 func formatInitAllResultsAsTable(result []InitOneResult, errors []InitOneResult, dryRun bool) func(t *tablewriter.Table) {

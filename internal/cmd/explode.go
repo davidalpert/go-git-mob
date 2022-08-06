@@ -10,18 +10,16 @@ import (
 
 type ExplodeOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 }
 
-func NewExplodeOptions(ioStreams printers.IOStreams) *ExplodeOptions {
+func NewExplodeOptions(s printers.IOStreams) *ExplodeOptions {
 	return &ExplodeOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdExplode(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewExplodeOptions(ioStreams)
+func NewCmdExplode(s printers.IOStreams) *cobra.Command {
+	o := NewExplodeOptions(s)
 	var cmd = &cobra.Command{
 		Use:     "explode",
 		Short:   "creates helper git plugin scripts",
@@ -38,7 +36,7 @@ func NewCmdExplode(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }

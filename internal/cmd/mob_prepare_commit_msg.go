@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"github.com/apex/log"
 	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"os"
 )
 
 type MobPrepareCommitMsgOptions struct {
 	*printers.PrinterOptions
-	printers.IOStreams
 
 	// 1-3 positional args provided by git
 	CommitMessageFile string
@@ -23,15 +22,14 @@ type MobPrepareCommitMsgOptions struct {
 	RawArgs []string
 }
 
-func NewMobPrepareCommitMsgOptions(ioStreams printers.IOStreams) *MobPrepareCommitMsgOptions {
+func NewMobPrepareCommitMsgOptions(s printers.IOStreams) *MobPrepareCommitMsgOptions {
 	return &MobPrepareCommitMsgOptions{
-		IOStreams:      ioStreams,
-		PrinterOptions: printers.NewPrinterOptions().WithDefaultOutput("text"),
+		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdMobPrepareCommitMsg(ioStreams printers.IOStreams) *cobra.Command {
-	o := NewMobPrepareCommitMsgOptions(ioStreams)
+func NewCmdMobPrepareCommitMsg(s printers.IOStreams) *cobra.Command {
+	o := NewMobPrepareCommitMsgOptions(s)
 	var cmd = &cobra.Command{
 		Use:     "prepare-commit-msg",
 		Short:   "edits a message file to include current co-authors",
@@ -48,7 +46,7 @@ func NewCmdMobPrepareCommitMsg(ioStreams printers.IOStreams) *cobra.Command {
 		},
 	}
 
-	o.PrinterOptions.AddPrinterFlags(cmd.Flags())
+	o.AddPrinterFlags(cmd.Flags())
 
 	return cmd
 }

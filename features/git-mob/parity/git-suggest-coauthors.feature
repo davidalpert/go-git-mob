@@ -29,7 +29,7 @@ Feature: git-suggest-coauthors.spec
     When I cd to "example"
     And I run `git suggest-coauthors`
     Then the exit status should be 1
-    Then the stdout from "git suggest-coauthors" should contain:
+    Then the stderr from "git suggest-coauthors" should contain:
       """
       unable to find existing authors
       """

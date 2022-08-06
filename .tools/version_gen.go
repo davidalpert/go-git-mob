@@ -224,8 +224,7 @@ func (d *DetailStruct) String() string {
 	if d == nil {
 		return "n/a"
 	}
-	return d.Version
-
+	return fmt.Sprintf("%s %s", d.AppName, d.Version)
 }
 
 // ToUserAgentString formats a DetailStruct as a User-Agent string
