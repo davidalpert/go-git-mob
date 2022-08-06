@@ -34,6 +34,12 @@
 ## Changelog
 
 
+<a name="v0.5.1"></a>
+## [v0.5.1] - 2022-08-06
+### Build
+- build only once
+
+
 <a name="v0.5.0"></a>
 ## [v0.5.0] - 2022-08-06
 ### Build
@@ -292,7 +298,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.5.1...HEAD
+[v0.5.1]: https://github.com/davidalpert/go-git-mob/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/davidalpert/go-git-mob/compare/v0.4.1...v0.5.0
 [v0.4.1]: https://github.com/davidalpert/go-git-mob/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...v0.4.0
