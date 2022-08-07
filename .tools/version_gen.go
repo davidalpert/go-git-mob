@@ -76,9 +76,12 @@ func main() {
 
 	var isDirty = hasStaged || hasModified || hasUntracked
 
-	summary, err := exec.Command("git", "log", "-1", "--pretty=%s").Output()
-	if err != nil {
-		panic(err)
+	summary := []byte(os.Getenv("RELEASE_COMMIT_MESSAGE"))
+	if len(summary) == 0 {
+		summary, err = exec.Command("git", "log", "-1", "--pretty=%s").Output()
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	_, err = exec.Command("mkdir", "-p", "./internal/version").Output()
