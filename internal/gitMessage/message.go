@@ -1,11 +1,9 @@
-package msg
+// Package gitMessage
+package gitMessage
 
 import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/env"
-	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -21,37 +19,11 @@ func FormatCoAuthorList(coAuthorList []authors.Author) string {
 	return strings.Join(tags, "\n")
 }
 
-const (
-	EnvKeyGitMessagePath = "GITMOB_MESSAGE_PATH"
-)
-
-func GitMessagePath() (string, error) {
-	p, err := revParse.GitPath(".gitmessage")
-	if err != nil {
-		return "", err
-	}
-
-	return env.GetValueOrDefault(EnvKeyGitMessagePath, p), nil
-}
-
-func CommitTemplatePath() (string, error) {
-	s := env.GetValueOrDefaultString(EnvKeyGitMessagePath, cfg.Get("commit.template"))
-	if s == "" {
-		ss, err := GitMessagePath()
-		if err != nil {
-			return "", err
-		}
-		return ss, nil
-	}
-	return s, nil
-}
-
 func WriteGitMessage(coAuthorList ...authors.Author) error {
-	p, err := GitMessagePath()
-	if err != nil {
-		return err
-	}
+	return Write(Path(), coAuthorList...)
+}
 
+func Write(p string, coAuthorList ...authors.Author) error {
 	content := "\n" + "\n" + FormatCoAuthorList(coAuthorList)
 
 	if _, err := os.Stat(p); err == nil {

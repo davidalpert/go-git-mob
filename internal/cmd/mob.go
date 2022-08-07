@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-git-mob/internal/gitCommands"
+	"github.com/davidalpert/go-git-mob/internal/gitConfig"
+	"github.com/davidalpert/go-git-mob/internal/gitMessage"
+	"github.com/davidalpert/go-git-mob/internal/gitMobCommands"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/davidalpert/go-printers/v1"
@@ -18,6 +20,7 @@ type MobOptions struct {
 	*printers.PrinterOptions
 	Initials               []string
 	ListOnly               bool
+	PrintMob               bool
 	PrintVersion           bool
 	CurrentGitUser         *authors.Author
 	AllCoAuthorsByInitials map[string]authors.Author
@@ -77,10 +80,14 @@ Examples:
 func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.Initials = args
 
-	if allCoAuthorsByInitials, err := cfg.ReadAllCoAuthorsFromFile(); err != nil {
+	if allCoAuthorsByInitials, err := gitConfig.ReadAllCoAuthorsFromFile(); err != nil {
 		return err
 	} else {
 		o.AllCoAuthorsByInitials = allCoAuthorsByInitials
+	}
+
+	if len(args) == 0 {
+		o.PrintMob = true
 	}
 
 	return nil
@@ -96,8 +103,8 @@ func (o *MobOptions) Validate() error {
 		if !revParse.InsideWorkTree() {
 			return fmt.Errorf("not inside a git repository working tree")
 		}
-		if a, err := cfg.GetUser(); err != nil {
-			return err
+		if a, err := gitMobCommands.GetGitAuthor(); err != nil {
+			return err // includes configWarning
 		} else {
 			o.CurrentGitUser = a
 		}
@@ -108,9 +115,7 @@ func (o *MobOptions) Validate() error {
 
 // Run the command
 func (o *MobOptions) Run() error {
-	if o.ListOnly {
-		return o.listCoAuthors()
-	}
+	// Help is handled by cobra.Command infrastructure
 
 	if o.PrintVersion {
 		versionCmd := NewCmdVersion(o.IOStreams)
@@ -118,11 +123,68 @@ func (o *MobOptions) Run() error {
 		return versionCmd.Execute()
 	}
 
+	if o.ListOnly {
+		return o.listCoAuthors()
+	}
+
+	// TODO: setAuthor on o.Override
+	return o.runMob()
+}
+
+func (o *MobOptions) runMob() error {
+	if o.PrintMob {
+		if err := o.printMob(); err != nil {
+			return err
+		}
+		if gitCommands.UsingLocalTemplate() && gitMobCommands.IsCoAuthorsSet() {
+			if coauthors, err := gitMobCommands.GetCoAuthors(); err != nil {
+				return err
+			} else {
+				return gitMessage.Write(gitMessage.Path(), coauthors...)
+			}
+		}
+		return nil
+	}
+
 	return o.setMob()
 }
 
-func (o *MobOptions) listCoAuthors() error {
+func (o *MobOptions) printMob() error {
+	primaryGitAuthor := o.CurrentGitUser
 
+	currentMob := authors.AuthorList{
+		Members: []*authors.Author{primaryGitAuthor},
+	}
+
+	if gitMobCommands.IsCoAuthorsSet() {
+		aa, err := gitMobCommands.GetCoAuthors()
+		if err != nil {
+			return err
+		}
+		for _, a := range aa {
+			b := a // allocate a local copy so that we don't take the pointer of the iterator
+			currentMob.Members = append(currentMob.Members, &b)
+		}
+	}
+
+	// sort mob members but keep the primary author at the top
+	currentMob.SortBy(func(left, right *authors.Author) bool {
+		if left.Email == primaryGitAuthor.Email {
+			return true
+		}
+		if right.Email == primaryGitAuthor.Email {
+			return false
+		}
+		return left.Name < right.Name
+	})
+
+	if (o.FormatCategory() == "text" || o.FormatCategory() == "table") && !gitMobCommands.UseLocalTemplate() && gitCommands.UsingLocalTemplate() {
+		fmt.Fprintf(o.IOStreams.Out, "Warning: git-mob uses global git config.\nUsing local commit.template could mean your template does not have selected co-authors appended after switching projects.\n")
+	}
+	return o.WithTableWriter("current mob", currentMob.WriteToTable).WriteOutput(currentMob)
+}
+
+func (o *MobOptions) listCoAuthors() error {
 	initials := make([]string, 0)
 	for ii, _ := range o.AllCoAuthorsByInitials {
 		initials = append(initials, ii)
@@ -159,6 +221,7 @@ func (o *MobOptions) listCoAuthors() error {
 }
 
 func (o *MobOptions) setMob() error {
+	// authorList is preloaded as o.AllCoauthorsByInitial
 	coauthors := make([]authors.Author, len(o.Initials))
 	for i, initial := range o.Initials {
 		for ii, a := range o.AllCoAuthorsByInitials {
@@ -175,44 +238,27 @@ func (o *MobOptions) setMob() error {
 	if err := setCommitTemplate(); err != nil {
 		return fmt.Errorf("setCommitTemplate: %v", err)
 	}
-	if err := resetMob(); err != nil {
-		return fmt.Errorf("resetMob: %v", err)
+	if err := gitMobCommands.ResetMob(); err != nil {
+		return fmt.Errorf("ResetMob: %v", err)
 	}
-	if err := cfg.AddCoAuthors(coauthors...); err != nil {
+	if err := gitMobCommands.AddCoAuthors(coauthors...); err != nil {
 		return fmt.Errorf("AddCoAuthors: %v", err)
 	}
-	if err := msg.WriteGitMessage(coauthors...); err != nil {
+	if err := gitMessage.Write(gitMessage.Path(), coauthors...); err != nil {
 		return fmt.Errorf("WriteGitMessage: %v", err)
 	}
 
-	parts := make([]string, len(o.Initials))
-	meTag := o.CurrentGitUser.String()
-	for i, initial := range o.Initials {
-		for ii, a := range o.AllCoAuthorsByInitials {
-			if strings.EqualFold(initial, ii) {
-				parts[i] = a.String()
-				break
-			}
-		}
+	if gitCommands.UsingLocalTemplate() && gitCommands.UsingGlobalTemplate() {
+		gitMessage.Write(gitCommands.GetGlobalTemplate(), coauthors...)
 	}
 
-	_, err := fmt.Fprintln(o.Out, strings.Join(append([]string{meTag}, parts...), "\n"))
-	return err
-}
-
-// resetMob clears out the co-authors from global git config
-func resetMob() error {
-	return cfg.RemoveAllGlobal("git-mob.co-author")
+	return o.printMob()
 }
 
 // setCommitTemplate sets the local commit.template config setting to take advantage of `.gitmessage`
 func setCommitTemplate() error {
-	p, err := msg.CommitTemplatePath()
-	if err != nil {
-		return err
-	}
-	if !cfg.Has("commit.template") {
-		return cfg.Set("commit.template", p)
+	if !gitCommands.HasTemplatePath() {
+		return gitCommands.SetTemplatePath(gitMessage.CommitTemplatePath())
 	}
 	return nil
 }
