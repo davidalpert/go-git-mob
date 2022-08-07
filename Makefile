@@ -42,7 +42,7 @@ endif
 # this needs to be a PHONY target so that it runs all the time, otherwise changing the VERSION is not enough to trigger an update to the version detail
 .PHONY: ./internal/version/detail.go
 ./internal/version/detail.go:
-	VERSION=$(VERSION) go run ./.tools/version_gen.go $(PROJECTNAME)
+	VERSION=$(VERSION) RELEASE_COMMIT_MESSAGE="$(RELEASE_COMMIT_MESSAGE)" go run ./.tools/version_gen.go $(PROJECTNAME)
 
 .PHONY: gen
 gen: ## invoke go generate
@@ -53,15 +53,6 @@ gen: ## invoke go generate
 build: clean ./internal/version/detail.go ## build for current platform
 	mkdir -p ./bin
 	go build -o ./bin/git-mob main.go
-
-.PHONY: build-all
-build-all: clean ./internal/version/detail.go gen ## build for all platforms
-	GOOS=darwin GOARCH=arm64 mkdir -p bin/darwin-arm64
-	GOOS=darwin GOARCH=arm64 go build -o bin/darwin-arm64/git-mob main.go
-	GOOS=darwin GOARCH=amd64 mkdir -p bin/darwin-amd64
-	GOOS=darwin GOARCH=amd64 go build -o bin/darwin-amd64/git-mob main.go
-	GOOS=linux GOARCH=amd64 mkdir -p bin/linux-amd64
-	GOOS=linux GOARCH=amd64 go build -o bin/linux-amd64/git-mob main.go
 
 .PHONY: install
 install: build ## build and install locally into GOPATH
@@ -143,13 +134,14 @@ tag-release:
 		$(error There are uncomitted changes; clean your working directory before releasing.) \
 	)
 	$(eval next_version := $(shell sbot predict version --mode ${BUMP_TYPE}))
+	$(eval RELEASE_COMMIT_MESSAGE = "release notes for v$(next_version)")
 	# echo "Current Version: ${VERSION}"
 	# echo "   Next Version: ${next_version}"
-	# make build
+	# echo " Commit Message: ${RELEASE_COMMIT_MESSAGE}"
 ifdef FAST
-	$(MAKE) test-unit VERSION=$(next_version)
+	$(MAKE) test-unit VERSION=$(next_version) RELEASE_COMMIT_MESSAGE='"$(RELEASE_COMMIT_MESSAGE)"'
 else
-	$(MAKE) cit VERSION=$(next_version)
+	$(MAKE) cit VERSION=$(next_version) RELEASE_COMMIT_MESSAGE='"$(RELEASE_COMMIT_MESSAGE)"'
 endif
 	git add -f internal/version/detail.go
 	git-chglog --next-tag v$(next_version) --output CHANGELOG.md
