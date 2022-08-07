@@ -38,15 +38,18 @@
   <summary><h2 style="display: inline-block">Table of contents</h2></summary>
 
 - [About the project](#about-the-project)
+  - [Why port the nodejs version to Golang?](#why-port-the-nodejs-version-to-golang)
+  - [What about mob.sh?](#what-about-mobsh)
   - [Built with](#built-with)
 - [Getting started](#getting-started)
-  - [Installation](#installation)
-    - [Install a binary release](#install-a-binary-release)
-    - [Install using go install](#install-using-go-install)
+  - [Install](#install)
+    - [`go install`](#go-install)
+    - [Pre-compiled binaries](#pre-compiled-binaries)
+  - [Verify your installation](#verify-your-installation)
   - [Post-install steps](#post-install-steps)
   - [Uninstall](#uninstall)
 - [Usage](#usage)
-  - [Utility commands](#utility-commands)
+  - [Sub-command help](#sub-command-help)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -58,11 +61,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About the project
 
-`go-git-mob` helps manage git co-authors when collaborating in real-time.
-
-Like the original nodejs `git-mob` plugin, this golang port tool differs from and complements [`mob.sh`](https://mob.sh/) in two key ways:
-- whereas `mob.sh` detects co-authors from commit messages alone, `git-mob` and `go-git-mob` understand that not all co-authors have their hands on the keyboard each session.
-- whereas `mob.sh` squashes each feature branch into a single commit, `git-mob` and `go-git-mob` leave this decision up to you, complimenting your workflow by injecting conventional `Co-authored-by:` comments into each commit message through the use of a git `prepare-commit-message` hook.
+`git-mob` helps manage git co-authors when collaborating in real-time.
 
 As the original authors of the node `git-mob` tool wrote:
 
@@ -72,114 +71,118 @@ As the original authors of the node `git-mob` tool wrote:
 > When we work together, we should document that. It’s more than just giving credit to others, it’s also informing everyone about who was responsible for introducing changes to a codebase. Keeping a clear record of your work has lasting value - ever stumbled on an old commit only to be left with unanswered questions? In addition to explaining in your commits why a change was introduced, it also helps to document who implemented the change in case there needs to be a follow up.
 <!-- vale on -->
 
-`go-git-mob` provides a single-file binary version of the node `git-mob` tool which installs globally and operates independent of any specific nodejs version in use for a given git repository.
+### Why port the nodejs version to Golang?
+
+People working with nodejs commonly use a version manager like [`nodenv`](https://github.com/nodenv/nodenv), [`nvm`](https://github.com/nvm-sh/nvm), or [`asdf`](https://asdf-vm.com/) to manage several versions of nodejs side-by-side.
+
+These tools install global packages per node version which means you have to install the node `git-mob` plugin once per node version.
+
+In contrast Golang offers the ability to build source code into single-file executables which truly install globally, independent of any versioning tools.
+
+A Golang version of `git-mob` simplifies the install and update story making this plugin more manageable.
+
+### What about mob.sh?
+
+Like the original nodejs `git-mob` plugin, this golang port tool differs from and complements [`mob.sh`](https://mob.sh/) in two key ways:
+- whereas `mob.sh` detects co-authors from commit messages alone, `git-mob` and `go-git-mob` understand that not all co-authors have their hands on the keyboard each session.
+- whereas `mob.sh` squashes each feature branch into a single commit, `git-mob` and `go-git-mob` leave this decision up to you, complimenting your workflow by injecting conventional `Co-authored-by:` comments into each commit message through the use of a git `prepare-commit-message` hook.
 
 ### Built with
 
 * [Golang 1.18](https://golang.org/)
-* [go-git](https://github.com/go-git/go-git)
+* [go-releaser](https://goreleaser.com/)
 
 <!-- GETTING STARTED -->
 ## Getting started
 
-To get a local copy up and running follow these simple steps.
+### Install
 
-### Installation
+> :warning: The install process changed in `v0.6.0` If you have a version of `go-git-mob` older to `v0.6.0` you must first uninstall the current version. See [Uninstall](#uninstall) for instructions.
 
-#### Install a binary release
+#### `go install`
 
-- Download an appropriate package for your `GOOS` and `GOARCH` from the [Releases](https://github.com/davidalpert/go-git-mob/releases) tab;
-- Unzip it and put the binary in your path;
-- Optionally, review [Post-install steps](#post-install-steps) to explode the convenience methods;
-
-For example:
+With a working golang installation at version >= 1.18 you can install or update with:
 
 ```
-export VERSION=0.4.0
-mkdir -p ~/bin/go-git-mob/v${VERSION}
-mv ~/Downloads/go-git-mob_${VERSION}_Darwin_arm64.tar.gz ~/bin/go-git-mob/v${VERSION}/
-cd ~/bin/go-git-mob/v${VERSION}
-gunzip -c go-git-mob_${VERSION}_Darwin_arm64.tar.gz | tar xopf -
-ln -f -s ~/bin/go-git-mob/v${VERSION}/go-git-mob ~/bin/git-mob
-git mob version
+go install github.com/davidalpert/go-git-mob/cmd/git-mob@latest
 ```
 
-#### Install using go install
+#### Pre-compiled binaries
 
-With a working golang setup at version >= 1.18 you can use `go install`:
+Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to find binary packages pre-compiled for a variety of `GOOS` and `GOARCH` combinations:
+1. Download an appropriate package for your `GOOS` and `GOARCH`;
+1. Unzip it and put the binary in your path;
 
-```
-go install github.com/davidalpert/go-git-mob@latest
-```
+### Verify your installation
 
-Due to a naming conflict with the original `git-mob` repository, this one installs as `$($GOBIN || $GOPATH/bin/)/go-git-mob` and goes unrecognized as a git plugin.
+1. Confirm that git recognizes the `git-mob` plugin:
+    ```
+    git mob version
+    ```
 
-To enable it you can symlink `git-mob` to it like this:
-
-```
-ln -s "$(which go-git-mob)" "$(dirname $(which go-git-mob))/git-mob"
-```
+    With `git-mob` installed that command displays the plugin version:
+    ```
+    git-mob 0.5.1+f5536c2
+    ```
 
 ### Post-install steps
 
-As a single file executable `go-git-mob` ships with one git plugin:
-```
-git mob
-```
-which offers several sub-commands:
-```
-git mob coauthors suggest
-git mob print
-git mob solo
-git mob version
-```
+1. Install helper plugins [once per machine]:
+    ```
+    git mob install
+    ```
 
-For easier use and compatibility with `git-mob`, `go-git-mob` includes an `install` sub-command:
-```
-git mob install
-```
- which sets up the following top-level git plugins as aliases to the matching `git mob` sub-commands:
-```
-git mob-print
-git mob-version
-git solo
-git suggest-coauthors
-```
+    `git-mob` ships as a single-file executable. The `install` sub-command generates simple shell scripts to make the following helper plugins available:
+    ```
+    git mob-print
+    git mob-version
+    git solo
+    git suggest-coauthors
+    ```
+
+1. Initialize `prepare-commit-msg` hook script [once per repository]:
+
+    ```
+    git mob init
+    ```
 
 ### Uninstall
 
-`go-git-mob` ships with an `implode` sub-command:
+- `git-mob` ships with an `implode` sub-command which cleans up and removes the top-level mob plugins and deletes itself:
 
-```
-git mob implode
-```
-
-which cleans up and removes the top-level mob plugins and deletes itself.
+    ```
+    git mob implode
+    ```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 - TODO; coming as the project nears v1.0
 
-### Utility commands
+### Sub-command help
 
-The `git-mob` binary also ships with several utility commands which you can explore using the `--help` flag:
+`git-mob` contains help for the various sub-commands:
 
 ```
-$: git mob -h
-A tool for managing git coauthors.
+git mob -h
+```
+
+> :warning: When requesting help make sure to use the short `-h` flag as `git` may intercept the full `--help` flag 
+
+```
+$ git mob -h
+A git plugin to help manage git coauthors.
+
+Examples:
+   $ git mob jd                                      # Set John as co-authors
+   $ git solo                                        # Return to working by yourself (i.e. unset all co-authors)
+   $ git mob -l                                      # Show a list of all co-authors, John Doe should be there
 
 Usage:
-  git-mob [command]
+  git mob [flags]
+  git mob [command]
 
-Available Commands:
-  help        Help about any command
-  version     Show version information
-
-Flags:
-  -h, --help   help for git-mob
-
-Use "git-mob [command] --help" for more information about a command.
+Use "git-mob [command] -h" for more information about a command.
 ```
 
 <!-- ROADMAP -->
