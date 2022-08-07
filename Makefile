@@ -54,15 +54,6 @@ build: clean ./internal/version/detail.go ## build for current platform
 	mkdir -p ./bin
 	go build -o ./bin/git-mob main.go
 
-.PHONY: build-all
-build-all: clean ./internal/version/detail.go gen ## build for all platforms
-	GOOS=darwin GOARCH=arm64 mkdir -p bin/darwin-arm64
-	GOOS=darwin GOARCH=arm64 go build -o bin/darwin-arm64/git-mob main.go
-	GOOS=darwin GOARCH=amd64 mkdir -p bin/darwin-amd64
-	GOOS=darwin GOARCH=amd64 go build -o bin/darwin-amd64/git-mob main.go
-	GOOS=linux GOARCH=amd64 mkdir -p bin/linux-amd64
-	GOOS=linux GOARCH=amd64 go build -o bin/linux-amd64/git-mob main.go
-
 .PHONY: install
 install: build ## build and install locally into GOPATH
 	echo "writing: ${GOPATH}/bin/git-mob"
