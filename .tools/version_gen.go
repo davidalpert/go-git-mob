@@ -187,7 +187,7 @@ func NewVersionDetail() DetailStruct {
 	s := DetailStruct{
 		AppName:              "{{ .AppName }}",
 		BuildDate:            "{{ .Timestamp }}",
-        CoreVersion:          "{{ .CoreVersion }}",
+		CoreVersion:          "{{ .CoreVersion }}",
 		GitBranch:            "{{ .BranchName }}",
 		GitCommit:            "{{ .SHA }}",
 		GitCommitSummary:     "{{ .CommitSummary }}",
