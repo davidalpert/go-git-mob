@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/davidalpert/go-git-mob/internal/authors"
+	"github.com/davidalpert/go-git-mob/internal/gitMobCommands"
 	"strings"
 
-	"github.com/davidalpert/go-git-mob/internal/authors"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
-	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-git-mob/internal/gitConfig"
+	"github.com/davidalpert/go-git-mob/internal/gitMessage"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
@@ -64,7 +65,7 @@ func (o *PrintOptions) Validate() error {
 
 // Run the command
 func (o *PrintOptions) Run() error {
-	aa, err := cfg.GetCoAuthors()
+	aa, err := gitMobCommands.GetCoAuthors()
 	if err != nil {
 		return err
 	}
@@ -77,7 +78,7 @@ func (o *PrintOptions) Run() error {
 }
 
 func (o *PrintOptions) printInitialsOnly(aa []authors.Author) error {
-	aaByInitial, err := cfg.ReadAllCoAuthorsFromFile()
+	aaByInitial, err := gitConfig.ReadAllCoAuthorsFromFile()
 	if err != nil {
 		return err
 	}
@@ -98,7 +99,7 @@ func (o *PrintOptions) printInitialsOnly(aa []authors.Author) error {
 
 func (o *PrintOptions) printFullMarkup(aa []authors.Author) error {
 	if strings.EqualFold(*o.OutputFormat, "text") {
-		_, err := fmt.Fprintln(o.Out, msg.FormatCoAuthorList(aa))
+		_, err := fmt.Fprintln(o.Out, gitMessage.FormatCoAuthorList(aa))
 		return err
 	}
 

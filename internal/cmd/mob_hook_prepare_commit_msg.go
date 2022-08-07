@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 	"github.com/apex/log"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics"
-	"github.com/davidalpert/go-git-mob/internal/msg"
+	"github.com/davidalpert/go-git-mob/internal/gitMessage"
+	"github.com/davidalpert/go-git-mob/internal/gitMobCommands"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"os"
@@ -16,8 +16,8 @@ type MobPrepareCommitMsgOptions struct {
 
 	// 1-3 positional args provided by git
 	CommitMessageFile string
-	Source            msg.Source // optional
-	CommitObject      string     // optional (required when Source is CommitSource)
+	Source            gitMessage.Source // optional
+	CommitObject      string            // optional (required when Source is CommitSource)
 
 	RawArgs []string
 }
@@ -55,9 +55,9 @@ func NewCmdMobPrepareCommitMsg(s printers.IOStreams) *cobra.Command {
 func (o *MobPrepareCommitMsgOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.CommitMessageFile = args[0]
 	if len(args) > 1 {
-		o.Source = msg.CommitMsgSourceFromString(args[1])
+		o.Source = gitMessage.CommitMsgSourceFromString(args[1])
 	} else {
-		o.Source = msg.EmptySource
+		o.Source = gitMessage.EmptySource
 	}
 	if len(args) > 2 {
 		o.CommitObject = args[2]
@@ -68,11 +68,11 @@ func (o *MobPrepareCommitMsgOptions) Complete(cmd *cobra.Command, args []string)
 
 // Validate the options
 func (o *MobPrepareCommitMsgOptions) Validate() error {
-	if o.Source == msg.UnknownSource {
+	if o.Source == gitMessage.UnknownSource {
 		return fmt.Errorf("'%s' is not a recognized message source", o.RawArgs[1])
 	}
-	if o.Source == msg.CommitSource && o.CommitObject == "" {
-		return fmt.Errorf("must provide a commit SHA with a message source of '%s'", msg.CommitSource.String())
+	if o.Source == gitMessage.CommitSource && o.CommitObject == "" {
+		return fmt.Errorf("must provide a commit SHA with a message source of '%s'", gitMessage.CommitSource.String())
 	}
 	return o.PrinterOptions.Validate()
 }
@@ -93,7 +93,7 @@ func (o *MobPrepareCommitMsgOptions) Run() error {
 	}
 	lg = lg.WithField("COMMIT_MSG", string(fileBytes))
 
-	aa, err := cfg.GetCoAuthors()
+	aa, err := gitMobCommands.GetCoAuthors()
 	if err != nil {
 		wrapper := fmt.Errorf("reading co-authors: %v", err)
 		lg.WithError(wrapper).Error("prepare-commit-msg")
@@ -106,7 +106,7 @@ func (o *MobPrepareCommitMsgOptions) Run() error {
 	}
 	lg = lg.WithField("co-authors", aa)
 
-	updated, err := msg.AppendCoauthorMarkup(aa, fileBytes)
+	updated, err := gitMessage.AppendCoauthorMarkup(aa, fileBytes)
 	if err != nil {
 		lg.WithError(err).Error("prepare-commit-msg")
 		return err
