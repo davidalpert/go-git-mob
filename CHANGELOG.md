@@ -34,6 +34,22 @@
 ## Changelog
 
 
+<a name="v0.6.0"></a>
+## [v0.6.0] - 2022-08-07
+### Build
+- add a git-mob cmd wrapper
+- remove build-all target
+- align formatting
+- inject release notes commit summary into version details
+
+### Docs
+- update readme to simplify install instructions
+
+### Pull Requests
+- Merge pull request [#51](https://github.com/davidalpert/go-git-mob/issues/51) from davidalpert/rename-installed-cmd
+- Merge pull request [#50](https://github.com/davidalpert/go-git-mob/issues/50) from davidalpert/commit-version
+
+
 <a name="v0.5.1"></a>
 ## [v0.5.1] - 2022-08-06
 ### Build
@@ -298,7 +314,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.6.0...HEAD
+[v0.6.0]: https://github.com/davidalpert/go-git-mob/compare/v0.5.1...v0.6.0
 [v0.5.1]: https://github.com/davidalpert/go-git-mob/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/davidalpert/go-git-mob/compare/v0.4.1...v0.5.0
 [v0.4.1]: https://github.com/davidalpert/go-git-mob/compare/v0.4.0...v0.4.1
