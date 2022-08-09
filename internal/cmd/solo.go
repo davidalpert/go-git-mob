@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
+	"github.com/davidalpert/go-git-mob/internal/gitMobCommands"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"strings"
@@ -52,11 +52,11 @@ func (o *SoloOptions) Validate() error {
 
 // Run the command
 func (o *SoloOptions) Run() error {
-	if err := resetMob(); err != nil {
+	if err := gitMobCommands.ResetMob(); err != nil {
 		return err
 	}
 
-	me, err := cfg.GetUser()
+	me, err := gitMobCommands.GetGitAuthor()
 	if err != nil {
 		return err
 	}

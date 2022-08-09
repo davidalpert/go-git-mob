@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
-	"github.com/davidalpert/go-git-mob/internal/cfg"
+	"github.com/davidalpert/go-git-mob/internal/gitCommands"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/olekukonko/tablewriter"
@@ -59,7 +59,7 @@ func (o *CoauthorsSuggestOptions) Validate() error {
 
 // Run the command
 func (o *CoauthorsSuggestOptions) Run() error {
-	aa, err := cfg.ShortLogAuthorSummary()
+	aa, err := gitCommands.ShortLogAuthorSummary()
 	if err != nil || len(aa) == 0 {
 		return fmt.Errorf("unable to find existing authors in this repository")
 	}
