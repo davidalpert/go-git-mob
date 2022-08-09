@@ -62,6 +62,12 @@ Feature: git-mob.spec
   Scenario: prints current mob
     Given I cd to "example"
     And I successfully run `git mob ad bd`
+    And a file named "~/.gitconfig" should contain:
+      """
+      [git-mob]
+      \tco-author = Amy Doe <amy@example.com>
+      \tco-author = Bob Doe <bob@example.com>
+      """
     When I successfully run `git mob`
     Then the output should contain:
       """
@@ -105,7 +111,7 @@ Feature: git-mob.spec
   Scenario: overwrites old mob when setting a new mob
     Given a simple git repo at "example"
     And I cd to "example"
-    And a file named ".git/.gitmessage" with:
+    And a file named "~/.gitmessage" with:
       """
       A commit title
 
@@ -118,7 +124,7 @@ Feature: git-mob.spec
       Jane Doe <jane@example.com>
       Bob Doe <bob@example.com>
       """
-    And a file named ".git/.gitmessage" should contain:
+    And a file named "~/.gitmessage" should contain:
       """
       A commit title
 
@@ -130,14 +136,14 @@ Feature: git-mob.spec
   Scenario: appends co-authors to an existing commit template
     Given a simple git repo at "example"
     And I cd to "example"
-    And a file named ".git/.gitmessage" with:
+    And a file named "~/.gitmessage" with:
       """
       A commit title
 
       A commit body that goes into more detail.
       """
     When I successfully run `git mob ad bd`
-    And a file named ".git/.gitmessage" should contain:
+    And a file named "~/.gitmessage" should contain:
       """
       A commit title
 
@@ -150,9 +156,9 @@ Feature: git-mob.spec
   Scenario: appends co-authors to a new commit template
     Given a simple git repo at "example"
     And I cd to "example"
-    And a file named ".git/.gitmessage" does not exist
+    And a file named "~/.gitmessage" does not exist
     When I successfully run `git mob ad bd`
-    And a file named ".git/.gitmessage" should contain:
+    And a file named "~/.gitmessage" should contain:
       """
 
       Co-authored-by: Amy Doe <amy@example.com>

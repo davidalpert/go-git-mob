@@ -1,4 +1,4 @@
-package msg
+package gitMessage
 
 type Source int
 

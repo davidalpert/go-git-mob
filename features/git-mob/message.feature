@@ -29,8 +29,8 @@ Feature: message
     Jane Doe <jane@example.com>
     Amy Doe <amy@findmypast.com>
     """
-        And the file ".git/.gitmessage" should exist
-        And the file ".git/.gitmessage" should contain:
+        And the file "~/.gitmessage" should exist
+        And the file "~/.gitmessage" should contain:
     """
 
     Co-authored-by: Amy Doe <amy@findmypast.com>

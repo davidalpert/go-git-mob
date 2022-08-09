@@ -1,4 +1,4 @@
-package msg
+package gitMessage
 
 import (
 	"github.com/davidalpert/go-git-mob/internal/authors"

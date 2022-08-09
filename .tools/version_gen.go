@@ -37,22 +37,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	gitBranch, err := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
-	//fmt.Printf("branch: >%s< (err: %#v)\n", string(gitBranch), err)
-	if err != nil {
-		panic(err)
-	}
-	gitBranch = bytes.Trim(gitBranch, "\r\n")
-
-	commitsBetweenHeadAndMain, err := exec.Command("git", "rev-list", "origin/main...HEAD").Output()
-	if err != nil {
-		panic(err)
-	}
-	if !strings.EqualFold(string(gitBranch), "main") && len(commitsBetweenHeadAndMain) == 0 {
-		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'\n", string(gitBranch), string(gitBranch))
-		gitBranch = []byte("main")
-	}
-
 	gitSHA, err := exec.Command("git", "rev-parse", "--short", "HEAD").Output()
 	//fmt.Printf("sha: >%s< (err: %#v)\n", string(gitSHA), err)
 	if err != nil {
@@ -76,6 +60,21 @@ func main() {
 
 	var isDirty = hasStaged || hasModified || hasUntracked
 
+	gitBranch, err := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+	//fmt.Printf("branch: >%s< (err: %#v)\n", string(gitBranch), err)
+	if err != nil {
+		panic(err)
+	}
+	gitBranch = bytes.Trim(gitBranch, "\r\n")
+
+	commitsBetweenHeadAndMain, err := exec.Command("git", "rev-list", "origin/main...HEAD").Output()
+	if err != nil {
+		panic(err)
+	}
+	if !isDirty && !strings.EqualFold(string(gitBranch), "main") && len(commitsBetweenHeadAndMain) == 0 {
+		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'\n", string(gitBranch), string(gitBranch))
+		gitBranch = []byte("main")
+	}
 	summary := []byte(os.Getenv("RELEASE_COMMIT_MESSAGE"))
 	if len(summary) == 0 {
 		summary, err = exec.Command("git", "log", "-1", "--pretty=%s").Output()
