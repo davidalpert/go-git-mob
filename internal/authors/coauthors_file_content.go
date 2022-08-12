@@ -76,7 +76,7 @@ func EnsureCoauthorsFileExists(path string) error {
 		cc := CoAuthorsFileContent{
 			CoAuthorsByInitial: make(map[string]Author, 0),
 		}
-		b, err := json.Marshal(cc)
+		b, err := json.MarshalIndent(cc, "", "\t")
 		if err != nil {
 			return err
 		}
