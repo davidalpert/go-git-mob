@@ -34,6 +34,30 @@
 ## Changelog
 
 
+<a name="v0.6.1"></a>
+## [v0.6.1] - 2022-08-12
+### Bug Fixes
+- commit templates are stored globally
+- git mob with no args should print mob
+
+### Build
+- don't remove branchName when workspace is dirty
+
+### Chore
+- go mod tidy with go1.18 found the missing dependencies
+
+### Code Refactoring
+- format .git-coauthors file
+- reorganize code to better match latest git-mob src
+
+### Test Coverage
+- ensure that git mob with no args prints the mob
+- ensure that coauthors file exists
+
+### Pull Requests
+- Merge pull request [#52](https://github.com/davidalpert/go-git-mob/issues/52) from davidalpert/update-parity
+
+
 <a name="v0.6.0"></a>
 ## [v0.6.0] - 2022-08-07
 ### Build
@@ -314,7 +338,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.6.1...HEAD
+[v0.6.1]: https://github.com/davidalpert/go-git-mob/compare/v0.6.0...v0.6.1
 [v0.6.0]: https://github.com/davidalpert/go-git-mob/compare/v0.5.1...v0.6.0
 [v0.5.1]: https://github.com/davidalpert/go-git-mob/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/davidalpert/go-git-mob/compare/v0.4.1...v0.5.0
