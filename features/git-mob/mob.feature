@@ -81,3 +81,4 @@ Feature: mob
     """
     author with initials 'ad' not found; run 'git mob --list' to see a list of available co-authors
     """
+    And the file "~/.git-coauthors" should exist
