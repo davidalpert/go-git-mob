@@ -73,6 +73,16 @@ Feature: mob
     \tco-author = Bob Doe <bob@findmypast.com>
     """
 
+  Scenario: mob with no args prints the current mob
+    Given I cd to "example"
+    And I run git mob `bd`
+    When I run `git mob`
+    Then the stdout from "git mob" should contain:
+    """
+    Jane Doe <jane@example.com>
+    Bob Doe <bob@findmypast.com>
+    """
+
   Scenario: no git-coauthors file
     Given I remove the file "~/.git-coauthors"
     And I cd to "example"
