@@ -1,8 +1,9 @@
 Feature: check-author.spec
 
   Background:
-    Given I have installed go-git-mob into "local_bin" within the current directory
+    Given I have installed git-mob into "local_bin" within the current directory
     And I look for executables in "local_bin" within the current directory
+
     Given a simple git repo at "example"
 
   Scenario: does not print warning when config present

@@ -21,13 +21,13 @@ module Command
     def run_command_and_validate_channel(cmd: '', fail_on_error: true, channel: 'stdout', negated: false, match_as_regex: false, content: '')
       run_command_and_stop(cmd, fail_on_error: fail_on_error)
 
+      command = aruba.command_monitor.find(Aruba.platform.detect_ruby(cmd))
+
       matcher = case channel
                 when 'output'; then :have_output
                 when 'stderr'; then :have_output_on_stderr
                 when 'stdout'; then :have_output_on_stdout
                 end
-
-      command = aruba.command_monitor.find(Aruba.platform.detect_ruby(cmd))
 
       output_string_matcher = if match_as_regex
                                 :an_output_string_matching
@@ -39,6 +39,28 @@ module Command
         expect(command).not_to send(matcher, send(output_string_matcher, content))
       else
         expect(command).to send(matcher, send(output_string_matcher, content))
+      end
+    end
+
+    def validate_channel(channel: 'stdout', negated: false, match_as_regex: false, content: '')
+      output = send("all_#{channel}")
+
+      matcher = case channel
+                when 'output'; then :have_output
+                when 'stderr'; then :have_output_on_stderr
+                when 'stdout'; then :have_output_on_stdout
+                end
+
+      output_string_matcher = if match_as_regex
+                                :match_output_string
+                              else
+                                :include_output_string
+                              end
+
+      if negated
+        expect(output).not_to send(output_string_matcher, content)
+      else
+        expect(output).to send(output_string_matcher, content)
       end
     end
   end

@@ -2,7 +2,7 @@
 Feature: logging support
 
   Background:
-    Given I have installed go-git-mob into "local_bin" within the current directory
+    Given I have installed git-mob into "local_bin" within the current directory
     And I look for executables in "local_bin" within the current directory
 
     Given a file named "~/.gitconfig" with:
@@ -14,7 +14,6 @@ Feature: logging support
       [git-mob]
       co-author = Amy Doe <amy@findmypast.com>
       """
-
     And a simple git repo at "example"
 
     Given I set the environment variables to:
