@@ -1,9 +1,10 @@
 Feature: git-mob.spec
 
   Background:
-    Given I have installed go-git-mob into "local_bin" within the current directory
+    Given I have installed git-mob into "local_bin" within the current directory
     And I look for executables in "local_bin" within the current directory
-    And I successfully run `git config --global user.name "Jane Doe"`
+
+    Given I successfully run `git config --global user.name "Jane Doe"`
     And I successfully run `git config --global user.email "jane@example.com"`
     And a file named "~/.git-coauthors" with:
       """

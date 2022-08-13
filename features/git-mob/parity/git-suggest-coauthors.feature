@@ -1,9 +1,10 @@
 Feature: git-suggest-coauthors.spec
 
   Background:
-    Given I have installed go-git-mob into "local_bin" within the current directory
+    Given I have installed git-mob into "local_bin" within the current directory
     And I look for executables in "local_bin" within the current directory
-    And I successfully run `git config --global user.name "Jane Doe"`
+
+    Given I successfully run `git config --global user.name "Jane Doe"`
     And I successfully run `git config --global user.email "jane@example.com"`
 
   Scenario: suggests potential coauthors
@@ -25,7 +26,7 @@ Feature: git-suggest-coauthors.spec
 
   Scenario: shows error when there are no commits found
     Given a simple git repo at "example" with the following empty commits:
-      | Name    | Email              | Commit_Message     |
+      | Name | Email | Commit_Message |
     When I cd to "example"
     And I run `git suggest-coauthors`
     Then the exit status should be 1

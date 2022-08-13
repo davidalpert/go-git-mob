@@ -4,19 +4,15 @@ Given('I clear the screen') do
   aruba.command_monitor.clear
 end
 
-When(/^I run git mob `(.*?)`(?: for up to ([\d.]+) seconds)?$/) do |cmd, secs|
-  cmd = "#{git_mob_bin} #{sanitize_text(cmd)}"
-  run_command_and_stop(cmd, fail_on_error: false, exit_timeout: secs && secs.to_f)
-end
-
-When(/^I successfully run git mob `(.*?)`(?: for up to ([\d.]+) seconds)?$/) do |cmd, secs|
-  cmd = "#{git_mob_bin} #{sanitize_text(cmd)}"
-  run_command_and_stop(cmd, fail_on_error: true, exit_timeout: secs && secs.to_f)
-end
-
-Then('the {channel} should show usage') do |_channel|
-  # pending # Write code here that turns the phrase above into concrete actions
-  all_output_includes('Usage:')
+# Then(/(the )?(\w+) should (not )?show usage/) do |_, channel, negated|
+Then(/the (\w+) should show usage/) do |channel|
+  negated = false
+  validate_channel(
+    channel: channel,
+    negated: negated,
+    match_as_regex: false,
+    content: "Usage:"
+  )
 end
 
 When('I sleep for {int} seconds') do |n_seconds|

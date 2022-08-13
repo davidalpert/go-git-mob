@@ -1,6 +1,6 @@
 require 'fileutils'
 
-Given('I have installed go-git-mob into {string} within the current directory') do |path|
+Given('I have installed git-mob into {string} within the current directory') do |path|
   exe = File.join(aruba.root_directory, 'bin', 'git-mob')
   raise "'#{exe}' not found; did you run 'make build'?" unless File.exist?(exe)
 
