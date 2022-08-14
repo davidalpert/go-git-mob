@@ -1,4 +1,3 @@
-@pending
 # issue #8 https://github.com/davidalpert/go-git-mob/issues/8
 Feature: git-add-coauthor.spec
 
@@ -25,6 +24,8 @@ Feature: git-add-coauthor.spec
         }
       }
       """
+    And a simple git repo at "example"
+    And I cd to "example"
 
   Scenario: adds coauthor to coauthors file
     When I successfully run `git add-coauthor tb "Barry Butterworth" barry@butterworth.org`
