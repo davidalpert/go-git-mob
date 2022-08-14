@@ -4,6 +4,7 @@ package cmd
 // mapping is used to auto-generate shim scripts and enable simpler syntax for calling these subcommands
 // as if they were their own git plugins
 var ShimMap = map[string]string{
+	"git-add-coauthor":      "git-mob coauthors add",
 	"git-mob-print":         "git-mob print",
 	"git-mob-version":       "git-mob version",
 	"git-solo":              "git-mob solo",
