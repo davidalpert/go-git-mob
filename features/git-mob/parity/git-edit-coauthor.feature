@@ -1,4 +1,3 @@
-@pending
 # issue #10 https://github.com/davidalpert/go-git-mob/issues/10
 Feature: git-edit-coauthor.spec
 
@@ -25,6 +24,8 @@ Feature: git-edit-coauthor.spec
         }
       }
       """
+    And a simple git repo at "example"
+    And I cd to "example"
 
   Scenario: edits coauthors name in coauthors file
     When I successfully run `git edit-coauthor ea --name="emily aldershot"`
