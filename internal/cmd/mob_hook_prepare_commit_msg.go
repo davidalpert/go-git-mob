@@ -106,7 +106,7 @@ func (o *MobPrepareCommitMsgOptions) Run() error {
 	}
 	lg = lg.WithField("co-authors", aa)
 
-	updated, err := gitMessage.AppendCoauthorMarkup(aa, fileBytes)
+	updated, coauthoredTags, err := gitMessage.AppendCoauthorMarkup(aa, fileBytes)
 	if err != nil {
 		lg.WithError(err).Error("prepare-commit-msg")
 		return err
@@ -114,6 +114,10 @@ func (o *MobPrepareCommitMsgOptions) Run() error {
 
 	lg = lg.WithField("COMMIT_MSG_AFTER", string(updated))
 	lg.Debug("prepare-commit-msg")
+
+	if o.FormatCategory() == "text" || o.FormatCategory() == "table" && len(coauthoredTags) > 0 {
+		fmt.Fprintln(o.Out, string(coauthoredTags))
+	}
 
 	return os.WriteFile(o.CommitMessageFile, updated, os.ModePerm)
 }
