@@ -22,6 +22,10 @@ Feature: mob prepare-commit-msg
 
       Co-Authored-By: Amy Doe <amy@findmypast.com>
       """
+    And the stdout from "git mob hooks prepare-commit-msg .git/COMMIT_EDITMSG message" should contain:
+      """
+      Co-Authored-By: Amy Doe <amy@findmypast.com>
+      """
 
   Scenario: one coauthor - message - message with comments
     Given a file named ".git/COMMIT_EDITMSG" with:
@@ -48,4 +52,8 @@ Feature: mob prepare-commit-msg
       # On branch 23-feat-append-to-commit-message
       # Your branch is up to date with 'origin/23-feat-append-to-commit-message'.
       #
+      """
+    And the stdout from "git mob hooks prepare-commit-msg .git/COMMIT_EDITMSG message" should contain:
+      """
+      Co-Authored-By: Amy Doe <amy@findmypast.com>
       """
