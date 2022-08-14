@@ -76,12 +76,20 @@ func EnsureCoauthorsFileExists(path string) error {
 		cc := CoAuthorsFileContent{
 			CoAuthorsByInitial: make(map[string]Author, 0),
 		}
-		b, err := json.MarshalIndent(cc, "", "\t")
-		if err != nil {
-			return err
-		}
-
-		return os.WriteFile(path, b, os.ModePerm)
+		return WriteCoauthorsContent(cc)
 	}
 	return nil
+}
+
+func WriteCoauthorsContent(cc CoAuthorsFileContent) error {
+	return WriteCoauthorsContentToFilePath(CoAuthorsFilePath, cc)
+}
+
+func WriteCoauthorsContentToFilePath(path string, cc CoAuthorsFileContent) error {
+	b, err := json.MarshalIndent(cc, "", "\t")
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(path, b, os.ModePerm)
 }
