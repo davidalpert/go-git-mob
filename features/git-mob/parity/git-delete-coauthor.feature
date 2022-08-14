@@ -1,4 +1,3 @@
-@pending
 # issue #9 https://github.com/davidalpert/go-git-mob/issues/9
 Feature: git-delete-coauthor.spec
 
@@ -25,6 +24,8 @@ Feature: git-delete-coauthor.spec
         }
       }
       """
+    And a simple git repo at "example"
+    And I cd to "example"
 
   Scenario: deletes coauthor from coauthors file
     When I successfully run `git delete-coauthor ea`
