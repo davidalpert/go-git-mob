@@ -94,7 +94,6 @@ func (o *CoauthorsAddOptions) Validate() error {
 
 // Run the command
 func (o *CoauthorsAddOptions) Run() error {
-	//fmt.Fprintf(o.Out, "%#v\n", o.Author)
 	o.AllCoAuthorsByInitials[o.AuthorInitials] = o.Author
 
 	return authors.WriteCoauthorsContent(authors.CoAuthorsFileContent{
