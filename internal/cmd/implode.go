@@ -59,7 +59,7 @@ func (o *ImplodeOptions) Run() error {
 	}
 	eDir := path.Dir(e)
 
-	for plugin, _ := range GitMobPluginMap {
+	for plugin, _ := range ShimMap {
 		p := fmt.Sprintf("%s", path.Join(eDir, plugin))
 
 		if _, err = os.Stat(p); err == nil {
