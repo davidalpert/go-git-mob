@@ -59,7 +59,7 @@ func (o *ExplodeOptions) Run() error {
 	}
 	eDir := path.Dir(e)
 
-	for plugin, cmd := range GitMobPluginMap {
+	for plugin, cmd := range ShimMap {
 		p := fmt.Sprintf("%s", path.Join(eDir, plugin))
 		c := fmt.Sprintf(`
 #!/bin/sh
@@ -73,11 +73,4 @@ func (o *ExplodeOptions) Run() error {
 	}
 
 	return nil
-}
-
-var GitMobPluginMap = map[string]string{
-	"git-mob-print":         "git-mob print",
-	"git-mob-version":       "git-mob version",
-	"git-solo":              "git-mob solo",
-	"git-suggest-coauthors": "git-mob coauthors suggest",
 }
