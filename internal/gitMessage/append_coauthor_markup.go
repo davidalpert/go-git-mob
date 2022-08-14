@@ -15,7 +15,7 @@ var (
 )
 
 // AppendCoauthorMarkup appends Co-Authored-By markup to a commit message
-func AppendCoauthorMarkup(newCoauthors []authors.Author, msgBytes []byte) ([]byte, error) {
+func AppendCoauthorMarkup(newCoauthors []authors.Author, msgBytes []byte) ([]byte, []byte, error) {
 	re := regexp.MustCompile(`(?im)^co-authored-by: ([^<]+?)\s+<([^>]+)>`)
 	existingCoauthorTags := re.FindAllStringSubmatch(string(msgBytes), -1)
 	coauthorsByEmail := make(map[string]authors.Author, 0)
@@ -62,7 +62,7 @@ func AppendCoauthorMarkup(newCoauthors []authors.Author, msgBytes []byte) ([]byt
 			gitComments, nl,
 		}, empty)...)
 	} else if len(coauthorsB) == 0 {
-		return msgBytes, nil
+		return msgBytes, coauthorsB, nil
 	} else {
 		updated = append(updated, bytes.Join([][]byte{
 			cleanedB, nl,
@@ -71,5 +71,5 @@ func AppendCoauthorMarkup(newCoauthors []authors.Author, msgBytes []byte) ([]byt
 			nl,
 		}, empty)...)
 	}
-	return updated, nil
+	return updated, coauthorsB, nil
 }

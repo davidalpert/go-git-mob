@@ -174,7 +174,7 @@ Co-Authored-By: Bob Doe <bob@findmypast.com>
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := AppendCoauthorMarkup(tt.haveAuthors, []byte(tt.haveMsg))
+			got, _, err := AppendCoauthorMarkup(tt.haveAuthors, []byte(tt.haveMsg))
 			if (err != nil) != tt.wantErr {
 				t.Errorf("AppendCoauthorMarkup() error = %v, wantErr %v", err, tt.wantErr)
 				return
