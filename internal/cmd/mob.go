@@ -179,10 +179,28 @@ func (o *MobOptions) printMob() error {
 	})
 
 	if (o.FormatCategory() == "text" || o.FormatCategory() == "table") && !gitMobCommands.UseLocalTemplate() && gitCommands.UsingLocalTemplate() {
-		fmt.Fprintf(o.IOStreams.Out, "Warning: git-mob uses global git config.\nUsing local commit.template could mean your template does not have selected co-authors appended after switching projects.\n")
+		fmt.Fprintf(o.IOStreams.Out, CommitTemplateWorningMessage)
 	}
+
 	return o.WithTableWriter("current mob", currentMob.WriteToTable).WriteOutput(currentMob)
 }
+
+const CommitTemplateWorningMessage = `
+Warning: local commit.template value detected
+
+Using local commit.template could mean your template does not have selected co-authors appended after switching projects.
+
+If you do not use commit.template (e.g. it was added by an earlier version of go-git-mob) you can safely remove it:
+
+    git config --local --unset commit.template
+
+If your team or project uses a local commit.template value you can silence this warning for this repo with:
+
+    git config --local git-mob.use-local-template true
+
+Happy Mobbing!
+
+`
 
 func (o *MobOptions) listCoAuthors() error {
 	initials := make([]string, 0)
