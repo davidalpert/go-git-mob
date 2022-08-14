@@ -85,8 +85,8 @@ func (o *CoauthorsAddOptions) Validate() error {
 		}
 	}
 
-	if foundAs != "" {
-		return fmt.Errorf("coauthor '%s' already exists in '~/.git-coauthors' as '%s'", foundAs, foundExisting)
+	if foundExisting != "" {
+		return fmt.Errorf("coauthor '%s' already exists in '~/.git-coauthors' as '%s'", foundExisting, foundAs)
 	}
 
 	return o.PrinterOptions.Validate()
