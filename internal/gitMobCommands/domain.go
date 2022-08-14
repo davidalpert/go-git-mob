@@ -69,12 +69,23 @@ func GetGitAuthor() (*authors.Author, error) {
 	}, err
 }
 
-// SetGitAuthor sets the primary git author from the given authors.Author
+// SetGitAuthor sets the primary git author locally from the given authors.Author
 func SetGitAuthor(a *authors.Author) error {
 	if err := gitConfig.Set("user.name", a.Name); err != nil {
 		return err
 	}
 	if err := gitConfig.Set("user.email", a.Email); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SetGitAuthorGlobal sets the primary git author globally from the given authors.Author
+func SetGitAuthorGlobal(a *authors.Author) error {
+	if err := gitConfig.SetGlobal("user.name", a.Name); err != nil {
+		return err
+	}
+	if err := gitConfig.SetGlobal("user.email", a.Email); err != nil {
 		return err
 	}
 	return nil
