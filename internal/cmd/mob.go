@@ -18,12 +18,13 @@ import (
 
 type MobOptions struct {
 	*printers.PrinterOptions
-	Initials               []string
-	ListOnly               bool
-	PrintMob               bool
-	PrintVersion           bool
-	CurrentGitUser         *authors.Author
-	AllCoAuthorsByInitials map[string]authors.Author
+	Initials                 []string
+	ListOnly                 bool
+	PrintMob                 bool
+	PrintVersion             bool
+	OverrideAuthorByInitials string
+	CurrentGitUser           *authors.Author
+	AllCoAuthorsByInitials   map[string]authors.Author
 }
 
 func NewMobOptions(s printers.IOStreams) *MobOptions {
@@ -62,6 +63,7 @@ Examples:
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
 	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
+	cmd.Flags().StringVarP(&o.OverrideAuthorByInitials, "override-author", "a", "", "replace the current author with the co-author matching these initials")
 
 	cmd.AddCommand(NewCmdMobInit(s))
 	cmd.AddCommand(NewCmdMobInitAll(s))
@@ -110,6 +112,12 @@ func (o *MobOptions) Validate() error {
 		}
 	}
 
+	if o.OverrideAuthorByInitials != "" {
+		if _, found := o.AllCoAuthorsByInitials[o.OverrideAuthorByInitials]; !found {
+			return fmt.Errorf("cannot find coauthor '%s' to use as an override, to list available coauthors use: git mob --list", o.OverrideAuthorByInitials)
+		}
+	}
+
 	return o.PrinterOptions.Validate()
 }
 
@@ -127,7 +135,16 @@ func (o *MobOptions) Run() error {
 		return o.listCoAuthors()
 	}
 
-	// TODO: setAuthor on o.Override
+	if o.OverrideAuthorByInitials != "" {
+		a := o.AllCoAuthorsByInitials[o.OverrideAuthorByInitials]
+		// override in memory for this command
+		o.CurrentGitUser = &a
+
+		// override in git config for other commands
+		if err := gitMobCommands.SetGitAuthorGlobal(&a); err != nil {
+			return err
+		}
+	}
 	return o.runMob()
 }
 
