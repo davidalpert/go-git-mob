@@ -86,16 +86,23 @@ Feature: git-mob.spec
       Amy Doe <amy@example.com>
       """
 
-  @pending
   # issue #7 https://github.com/davidalpert/go-git-mob/issues/7
-  # NOTE: the -o flag is already in use for --output; will need
-  #       to either pick a different shortcut for the override
-  #       command or disable output formatting; I would prefer
-  #       to use a different flag peraps even --o
   Scenario: sets mob and override coauthor
     Given I cd to "example"
-    When I successfully run `git mob -o ad bd`
-    Then the output should contain:
+    When I successfully run `git mob --override-author ad bd`
+    Then the current git author should be "Amy Doe" "amy@example.com"
+    And the output should contain:
+      """
+      Amy Doe <amy@example.com>
+      Bob Doe <bob@example.com>
+      """
+
+  # issue #7 https://github.com/davidalpert/go-git-mob/issues/7
+  Scenario: sets mob and override coauthor
+    Given I cd to "example"
+    When I successfully run `git mob -a ad bd`
+    Then the current git author should be "Amy Doe" "amy@example.com"
+    And the output should contain:
       """
       Amy Doe <amy@example.com>
       Bob Doe <bob@example.com>

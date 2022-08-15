@@ -16,3 +16,23 @@ Then(/^(?:a|the) file(?: named)? "([^"]*)" should (not )?include these coauthors
     expect(@actual["coauthors"]).to include(@expected)
   end
 end
+
+Then('the current git author should be {string} {string}') do |name, email|
+  run_command_and_validate_channel(
+    cmd: 'git config user.name',
+    fail_on_error: true,
+    channel: 'stdout',
+    negated: false,
+    match_as_regex: false,
+    content: name
+  )
+
+  run_command_and_validate_channel(
+    cmd: 'git config user.email',
+    fail_on_error: true,
+    channel: 'stdout',
+    negated: false,
+    match_as_regex: false,
+    content: email
+  )
+end
