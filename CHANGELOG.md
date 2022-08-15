@@ -34,6 +34,38 @@
 ## Changelog
 
 
+<a name="v0.7.0"></a>
+## [v0.7.0] - 2022-08-14
+### Bug Fixes
+- error message reversed when adding a coauthor
+
+### Build
+- improve release notes content
+
+### Code Refactoring
+- remove commented code
+- extract the map of shims to it's own file
+- standardize feature specs
+
+### Docs
+- improve warning message around commit.template
+
+### Features
+- --override-author overrides git author for current and future commands
+- edit-coauthor lets you edit an existing coauthor
+- delete-coauthor removes an existing coauthor by initials
+- add-coauthor adds a new coauthor to ~/.git-coauthors
+- print added co-authors to the terminal
+
+### Pull Requests
+- Merge pull request [#58](https://github.com/davidalpert/go-git-mob/issues/58) from davidalpert/improve-release-notes
+- Merge pull request [#57](https://github.com/davidalpert/go-git-mob/issues/57) from davidalpert/7-feature-overwrite-the-main-author
+- Merge pull request [#56](https://github.com/davidalpert/go-git-mob/issues/56) from davidalpert/10-feature-edit-co-author
+- Merge pull request [#55](https://github.com/davidalpert/go-git-mob/issues/55) from davidalpert/9-feature-delete-co-author
+- Merge pull request [#54](https://github.com/davidalpert/go-git-mob/issues/54) from davidalpert/[GH-8](https://github.com/davidalpert/go-git-mob/issues/8)-add-co-author
+- Merge pull request [#53](https://github.com/davidalpert/go-git-mob/issues/53) from davidalpert/[GH-47](https://github.com/davidalpert/go-git-mob/issues/47)
+
+
 <a name="v0.6.1"></a>
 ## [v0.6.1] - 2022-08-12
 ### Bug Fixes
@@ -338,7 +370,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.0...HEAD
+[v0.7.0]: https://github.com/davidalpert/go-git-mob/compare/v0.6.1...v0.7.0
 [v0.6.1]: https://github.com/davidalpert/go-git-mob/compare/v0.6.0...v0.6.1
 [v0.6.0]: https://github.com/davidalpert/go-git-mob/compare/v0.5.1...v0.6.0
 [v0.5.1]: https://github.com/davidalpert/go-git-mob/compare/v0.5.0...v0.5.1
