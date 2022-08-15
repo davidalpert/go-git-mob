@@ -15,6 +15,7 @@ func NewCmdCoauthors(s printers.IOStreams) *cobra.Command {
 
 	cmd.AddCommand(NewCmdCoauthorsAdd(s))
 	cmd.AddCommand(NewCmdCoauthorsDelete(s))
+	cmd.AddCommand(NewCmdCoauthorsEdit(s))
 	cmd.AddCommand(NewCmdCoauthorsSuggest(s))
 
 	return cmd

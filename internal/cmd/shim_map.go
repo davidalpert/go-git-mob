@@ -6,6 +6,7 @@ package cmd
 var ShimMap = map[string]string{
 	"git-add-coauthor":      "git-mob coauthors add",
 	"git-delete-coauthor":   "git-mob coauthors delete",
+	"git-edit-coauthor":     "git-mob coauthors edit",
 	"git-mob-print":         "git-mob print",
 	"git-mob-version":       "git-mob version",
 	"git-solo":              "git-mob solo",
