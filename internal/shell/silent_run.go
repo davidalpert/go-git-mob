@@ -34,10 +34,10 @@ func SilentRun(name string, arg ...string) (string, int, error) {
 				"exit.error":  exitError.Error(),
 				"exit.stderr": string(exitError.Stderr),
 			}).WithError(err).Error("command failed")
-			return "", 0, fmt.Errorf("nonzero exit code: %d: %s\nexitError.Stderr: %s\ncmd.Stderr: %s\ncmd.Stdout: %s", exitError.ExitCode(), exitError.Error(), string(exitError.Stderr), stdErr.String(), out.String())
+			return "", exitError.ExitCode(), fmt.Errorf("nonzero exit code: %d: %s", exitError.ExitCode(), exitError.Error())
 		}
-		lg.WithError(err).Error("command failed")
-		return "", 0, fmt.Errorf("%s;%s", stdErr.String(), out.String())
+		lg.WithError(err).Error("command failed without exitError")
+		return "", -1, fmt.Errorf("%s;%s", stdErr.String(), out.String())
 	}
 
 	lg.WithFields(log.Fields{
