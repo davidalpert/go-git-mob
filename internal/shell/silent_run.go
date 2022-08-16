@@ -13,21 +13,30 @@ import (
 func SilentRun(name string, arg ...string) (string, int, error) {
 	c := exec.Command(name, arg...)
 
-	lg := diagnostics.Log.WithFields(log.Fields{
-		"method": "SilentRun",
-		"cmd":    fmt.Sprintf("%s %s", name, strings.Join(arg, " ")),
-	})
-
 	var out bytes.Buffer
 	c.Stdout = &out
 	var stdErr bytes.Buffer
 	c.Stderr = &stdErr
 
+	lg := diagnostics.Log.WithFields(log.Fields{
+		"method": "SilentRun",
+		"cmd":    fmt.Sprintf("%s %s", name, strings.Join(arg, " ")),
+	})
+
 	if err := c.Run(); err != nil {
-		lg.WithError(err).Error("command failed")
+		lg = lg.WithFields(log.Fields{
+			"stdout": out.String(),
+			"stderr": stdErr.String(),
+		})
 		if exitError, ok := err.(*exec.ExitError); ok {
+			lg.WithFields(log.Fields{
+				"exit.code":   exitError.ExitCode(),
+				"exit.error":  exitError.Error(),
+				"exit.stderr": string(exitError.Stderr),
+			}).WithError(err).Error("command failed")
 			return "", 0, fmt.Errorf("nonzero exit code: %d: %s\nexitError.Stderr: %s\ncmd.Stderr: %s\ncmd.Stdout: %s", exitError.ExitCode(), exitError.Error(), string(exitError.Stderr), stdErr.String(), out.String())
 		}
+		lg.WithError(err).Error("command failed")
 		return "", 0, fmt.Errorf("%s;%s", stdErr.String(), out.String())
 	}
 
