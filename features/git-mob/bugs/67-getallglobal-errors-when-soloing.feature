@@ -1,6 +1,5 @@
-@wip
-@announce-gitmob-log
-@announce-stdout @announce-stderr
+#@announce-gitmob-log
+#@announce-stdout @announce-stderr
 Feature: 🐛 GetAllGlobal(git-mob.co-author): nonzero exit code: 1: (when soloing)
 
   Background:
