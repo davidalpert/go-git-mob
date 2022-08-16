@@ -24,7 +24,7 @@ Feature: git mob appends coauthors to commits
       """
     And a simple git repo at "example"
 
-  # @announce-git-log
+  # @announce-gitmob-log
   Scenario: append coauthor to a commit with the message flag
     Given I cd to "example"
     And I successfully run `git mob init`

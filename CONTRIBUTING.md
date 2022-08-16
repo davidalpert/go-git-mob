@@ -274,5 +274,5 @@ the previous git commit (at `HEAD~1`) and compare it to the provided string.
 
 When feature specs using this step misbehave, decorate your features or scenarios with following custom [announcer](https://relishapp.com/cucumber/aruba/v/0-11-0/docs/core/announce-output-during-test-run) to print the full log message to STDOUT while running the tests:
 
-    @announce-git-log
+    @announce-gitmob-log
 

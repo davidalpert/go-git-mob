@@ -4,8 +4,8 @@ Before('@announce-paths') do
   aruba.announcer.activate :paths
 end
 
-Before('@announce-git-log') do
-  aruba.announcer.activate :git_log
+Before('@announce-gitmob-log') do
+  aruba.announcer.activate :gitmob_log
 end
 
 Before('@windows-only') do
@@ -34,4 +34,11 @@ Before do
 end
 
 After do
+  aruba.announcer.announce(:gitmob_log, '<<-GITMOB_LOG')
+  if aruba.environment['GITMOB_LOG_FILE']
+    aruba.announcer.announce(:gitmob_log, File.read(expand_path(aruba.environment['GITMOB_LOG_FILE'])))
+  else
+    aruba.announcer.announce(:gitmob_log, "git-mob logs are available as STDOUT; use @announce-stdout")
+  end
+  aruba.announcer.announce(:gitmob_log, 'GITMOB_LOG')
 end
