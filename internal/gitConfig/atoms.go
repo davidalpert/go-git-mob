@@ -38,7 +38,9 @@ func GetGlobal(key string) string {
 // GetAll gets all values for a multi-valued option key.
 func GetAll(key string) ([]string, error) {
 	o, exitCode, err := shell.SilentRun("git", "config", "--get-all", key)
-	if err != nil {
+	if ExitCode(exitCode) == SectionOrKeyIsInvalid {
+		return make([]string, 0), nil
+	} else if err != nil {
 		return make([]string, 0), ExitCode(exitCode).Errorf(err)
 	}
 	return strings.Split(o, "\n"), nil
@@ -47,7 +49,9 @@ func GetAll(key string) ([]string, error) {
 // GetAllGlobal gets all values for a multi-valued option key.
 func GetAllGlobal(key string) ([]string, error) {
 	o, exitCode, err := shell.SilentRun("git", "config", "--global", "--get-all", key)
-	if err != nil {
+	if ExitCode(exitCode) == SectionOrKeyIsInvalid {
+		return make([]string, 0), nil
+	} else if err != nil {
 		return make([]string, 0), ExitCode(exitCode).Errorf(err)
 	}
 	return strings.Split(o, "\n"), nil
