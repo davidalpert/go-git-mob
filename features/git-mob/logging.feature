@@ -1,4 +1,5 @@
-# @wip @announce-stdout @announce-git-log
+# @announce-stdout
+@announce-gitmob-log
 Feature: logging support
 
   Background:
