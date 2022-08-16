@@ -34,6 +34,35 @@
 ## Changelog
 
 
+<a name="v0.7.1"></a>
+## [v0.7.1] - 2022-08-15
+### Bug Fixes
+- log better error detail when SilentRun fails
+- print log destination to diagnostics.Log instead of STDOUT
+- expose missing output when subprocess exit code is non-zero
+
+### Build
+- configure dependabot.yml
+- **deps:** bump actions/setup-go from 2 to 3
+- **deps:** bump github.com/stretchr/testify from 1.7.1 to 1.8.0
+- **deps:** bump github.com/spf13/cobra from 1.4.0 to 1.5.0
+- **deps:** bump ruby/setup-ruby from 1.110.0 to 1.114.0
+- **deps:** bump actions/checkout from 2 to 3
+- **deps:** bump goreleaser/goreleaser-action from 2 to 3
+- **deps:** bump github.com/onsi/gomega from 1.10.1 to 1.20.0
+
+### Docs
+- fix broken license badges
+- add troubleshooting guidance
+
+### Test Coverage
+- enable [@announce](https://github.com/announce)-gitmob-log
+
+### Pull Requests
+- Merge pull request [#61](https://github.com/davidalpert/go-git-mob/issues/61) from davidalpert/dependabot/github_actions/actions/checkout-3
+- Merge pull request [#60](https://github.com/davidalpert/go-git-mob/issues/60) from davidalpert/dependabot/github_actions/goreleaser/goreleaser-action-3
+
+
 <a name="v0.7.0"></a>
 ## [v0.7.0] - 2022-08-14
 ### Bug Fixes
@@ -370,7 +399,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.1...HEAD
+[v0.7.1]: https://github.com/davidalpert/go-git-mob/compare/v0.7.0...v0.7.1
 [v0.7.0]: https://github.com/davidalpert/go-git-mob/compare/v0.6.1...v0.7.0
 [v0.6.1]: https://github.com/davidalpert/go-git-mob/compare/v0.6.0...v0.6.1
 [v0.6.0]: https://github.com/davidalpert/go-git-mob/compare/v0.5.1...v0.6.0
@@ -380,3 +410,5 @@
 [v0.4.0]: https://github.com/davidalpert/go-git-mob/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/davidalpert/go-git-mob/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/davidalpert/go-git-mob/compare/v0.1.0...v0.2.0
+[license-shield]: https://img.shields.io/badge/License-MIT-yellow.svg
+[license-url]: https://opensource.org/licenses/MIT
