@@ -50,6 +50,7 @@
   - [Uninstall](#uninstall)
 - [Usage](#usage)
   - [Sub-command help](#sub-command-help)
+- [Troubleshooting](#troubleshooting)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -183,6 +184,27 @@ Usage:
   git mob [command]
 
 Use "git-mob [command] -h" for more information about a command.
+```
+
+<!-- Troubleshooting -->
+## Troubleshooting
+
+If you run into trouble you can ask `go-git-mob` to write some diagnostics to a log file by setting the following environment variables:
+
+| Variable          | Default   | Description                                                      |
+| ----------------- | --------- | ---------------------------------------------------------------- |
+| GITMOB_LOG_LEVEL  | `"fatal"` | `"fatal"`, `"error"`, `"warning"`, `"warn"`, `"info"`, `"debug"` |
+| GITMOB_LOG_FORMAT | `"text"`  | `"text"` or `"json"`                                             |
+| GITMOB_LOG_FILE   | `""`      | path to a log file; when empty logs go to STDOUT                 |
+
+Dial up log levels to show more detail:
+```
+GITMOB_LOG_LEVEL=debug git commit -m "my log message"
+```
+
+Capture log messages to a file:
+```
+GITMOB_LOG_FILE=./mob.log GITMOB_LOG_LEVEL=debug git commit -m "my log message"
 ```
 
 <!-- ROADMAP -->
