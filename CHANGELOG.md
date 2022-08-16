@@ -34,6 +34,23 @@
 ## Changelog
 
 
+<a name="v0.7.2"></a>
+## [v0.7.2] - 2022-08-16
+### Bug Fixes
+- ignore missing config keys when getting the current mob
+- expose better error detail from underlying git config calls
+- return the actual exit code from utils.SilentRun
+
+### Docs
+- add issue templates
+
+### Test Coverage
+- reproduce [#67](https://github.com/davidalpert/go-git-mob/issues/67) and [#68](https://github.com/davidalpert/go-git-mob/issues/68)
+
+### Pull Requests
+- Merge pull request [#69](https://github.com/davidalpert/go-git-mob/issues/69) from davidalpert/67-getallglobalgit-mobco-author-nonzero-exit-code-1-when-soloing
+
+
 <a name="v0.7.1"></a>
 ## [v0.7.1] - 2022-08-15
 ### Bug Fixes
@@ -399,7 +416,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.2...HEAD
+[v0.7.2]: https://github.com/davidalpert/go-git-mob/compare/v0.7.1...v0.7.2
 [v0.7.1]: https://github.com/davidalpert/go-git-mob/compare/v0.7.0...v0.7.1
 [v0.7.0]: https://github.com/davidalpert/go-git-mob/compare/v0.6.1...v0.7.0
 [v0.6.1]: https://github.com/davidalpert/go-git-mob/compare/v0.6.0...v0.6.1
