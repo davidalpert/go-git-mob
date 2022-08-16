@@ -276,3 +276,5 @@ When feature specs using this step misbehave, decorate your features or scenario
 
     @announce-gitmob-log
 
+[license-shield]: https://img.shields.io/badge/License-MIT-yellow.svg
+[license-url]: https://opensource.org/licenses/MIT

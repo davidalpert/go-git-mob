@@ -88,3 +88,6 @@
 {{ end -}}
 {{ end -}}
 {{ end -}}
+
+[license-shield]: https://img.shields.io/badge/License-MIT-yellow.svg
+[license-url]: https://opensource.org/licenses/MIT
