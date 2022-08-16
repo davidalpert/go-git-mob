@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/json"
-	"github.com/davidalpert/go-printers/v1"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics/plaintext"
 	"github.com/davidalpert/go-git-mob/internal/env"
 	"github.com/davidalpert/go-git-mob/internal/version"
+	"github.com/davidalpert/go-printers/v1"
 	"io"
 	"os"
 	"path/filepath"
@@ -20,7 +20,6 @@ const (
 	ENVKEY_LOG_LEVEL  = "GITMOB_LOG_LEVEL"
 	ENVKEY_LOG_FORMAT = "GITMOB_LOG_FORMAT"
 	ENVKEY_LOG_FILE   = "GITMOB_LOG_FILE"
-	ENVKEY_DEBUG      = "GITMOB_DEBUG"
 )
 
 func init() {
@@ -36,7 +35,8 @@ func ConfigureLogger(streams printers.IOStreams) (cleanupFn func()) {
 	cleanupFn = func() {}
 
 	// configure logging
-	log.SetLevel(env.GetValueOrDefaultLogLevel(ENVKEY_LOG_LEVEL, log.FatalLevel))
+	logLevel := env.GetValueOrDefaultLogLevel(ENVKEY_LOG_LEVEL, log.FatalLevel)
+	log.SetLevel(logLevel)
 	// log sink
 	var sink io.Writer
 	var logFile = env.GetValueOrDefaultString(ENVKEY_LOG_FILE, "")
@@ -52,8 +52,8 @@ func ConfigureLogger(streams printers.IOStreams) (cleanupFn func()) {
 			log.Fatal(err.Error())
 		}
 		cleanupFn = func() { logFile.Close() }
-		if env.GetValueOrDefaultBool(ENVKEY_DEBUG, false) {
-			fmt.Println("logging to:", fullPath)
+		if logLevel == log.DebugLevel {
+			fmt.Fprintln(streams.Out, "logging to:", fullPath)
 		}
 		sink = logFile
 	}
