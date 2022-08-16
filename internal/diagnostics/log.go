@@ -1,7 +1,6 @@
 package diagnostics
 
 import (
-	"fmt"
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/json"
 	"github.com/davidalpert/go-git-mob/internal/diagnostics/plaintext"
@@ -40,6 +39,7 @@ func ConfigureLogger(streams printers.IOStreams) (cleanupFn func()) {
 	// log sink
 	var sink io.Writer
 	var logFile = env.GetValueOrDefaultString(ENVKEY_LOG_FILE, "")
+	var logDestination = "stdout"
 	if logFile == "" {
 		sink = streams.Out
 	} else {
@@ -52,9 +52,7 @@ func ConfigureLogger(streams printers.IOStreams) (cleanupFn func()) {
 			log.Fatal(err.Error())
 		}
 		cleanupFn = func() { logFile.Close() }
-		if logLevel == log.DebugLevel {
-			fmt.Fprintln(streams.Out, "logging to:", fullPath)
-		}
+		logDestination = fullPath
 		sink = logFile
 	}
 
@@ -64,7 +62,7 @@ func ConfigureLogger(streams printers.IOStreams) (cleanupFn func()) {
 		log.SetHandler(plaintext.New(sink))
 	}
 
-	Log.Debug("logging initialized")
+	Log.WithField("destination", logDestination).Debug("logging initialized")
 
 	return
 }
