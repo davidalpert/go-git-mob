@@ -3,7 +3,8 @@ package shell
 import (
 	"bytes"
 	"fmt"
-	"github.com/davidalpert/go-git-mob/internal/env"
+	"github.com/apex/log"
+	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"os/exec"
 	"strings"
 )
@@ -11,11 +12,11 @@ import (
 // SilentRun runs the given command in a shell.
 func SilentRun(name string, arg ...string) (string, int, error) {
 	c := exec.Command(name, arg...)
-	//c.Stdin = strings.NewReader("and old falcon")
 
-	if env.GetValueOrDefaultBool("GITMOB_DEBUG", false) {
-		fmt.Printf("SilentRun: %s %s\n", name, strings.Join(arg, " "))
-	}
+	lg := diagnostics.Log.WithFields(log.Fields{
+		"method": "SilentRun",
+		"cmd":    fmt.Sprintf("%s %s", name, strings.Join(arg, " ")),
+	})
 
 	var out bytes.Buffer
 	c.Stdout = &out
@@ -23,15 +24,17 @@ func SilentRun(name string, arg ...string) (string, int, error) {
 	c.Stderr = &stdErr
 
 	if err := c.Run(); err != nil {
+		lg.WithError(err).Error("command failed")
 		if exitError, ok := err.(*exec.ExitError); ok {
-			return "", 0, fmt.Errorf("nonzero exit code: %d: %s %s", exitError.ExitCode(), out.String(), stdErr.String())
+			return "", 0, fmt.Errorf("nonzero exit code: %d: %s\nexitError.Stderr: %s\ncmd.Stderr: %s\ncmd.Stdout: %s", exitError.ExitCode(), exitError.Error(), string(exitError.Stderr), stdErr.String(), out.String())
 		}
-		return "", 0, err
+		return "", 0, fmt.Errorf("%s;%s", stdErr.String(), out.String())
 	}
 
-	if env.GetValueOrDefaultBool("GITMOB_DEBUG", false) {
-		fmt.Println(out.String())
-	}
+	lg.WithFields(log.Fields{
+		"stdout": out.String(),
+		"stderr": stdErr.String(),
+	}).Debug("command succeeded")
 
 	return strings.TrimSpace(out.String()), c.ProcessState.ExitCode(), nil
 }
