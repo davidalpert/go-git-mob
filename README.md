@@ -102,7 +102,7 @@ Like the original nodejs `git-mob` plugin, this golang port tool differs from an
 
 #### `go install`
 
-With a working golang installation at version >= 1.18 you can install or update with:
+With a working golang installation at version >= 1.16 you can install or update with:
 
 ```
 go install github.com/davidalpert/go-git-mob/cmd/git-mob@latest
