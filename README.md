@@ -130,10 +130,10 @@ Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to
 
 1. Install helper plugins [once per machine]:
     ```
-    git mob install
+    git mob rehash
     ```
 
-    `git-mob` ships as a single-file executable. The `install` sub-command generates simple shell scripts to make the following helper plugins available:
+    `git-mob` ships as a single-file executable. The `rehash` sub-command generates simple shell scripts to make the following helper plugins available:
     ```
     git mob-print
     git mob-version
@@ -149,10 +149,10 @@ Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to
 
 ### Uninstall
 
-- `git-mob` ships with an `implode` sub-command which cleans up and removes the top-level mob plugins and deletes itself:
+- `git-mob` ships with an `uninstall` sub-command which cleans up and removes the top-level mob plugins and deletes itself:
 
     ```
-    git mob implode
+    git mob uninstall
     ```
 
 <!-- USAGE EXAMPLES -->

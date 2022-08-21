@@ -8,22 +8,22 @@ import (
 	"path"
 )
 
-type ExplodeOptions struct {
+type MobRehashOptions struct {
 	*printers.PrinterOptions
 }
 
-func NewExplodeOptions(s printers.IOStreams) *ExplodeOptions {
-	return &ExplodeOptions{
+func NewMobRehashOptions(s printers.IOStreams) *MobRehashOptions {
+	return &MobRehashOptions{
 		PrinterOptions: printers.NewPrinterOptions().WithStreams(s).WithDefaultOutput("text"),
 	}
 }
 
-func NewCmdExplode(s printers.IOStreams) *cobra.Command {
-	o := NewExplodeOptions(s)
+func NewCmdMobRehash(s printers.IOStreams) *cobra.Command {
+	o := NewMobRehashOptions(s)
 	var cmd = &cobra.Command{
-		Use:     "explode",
+		Use:     "rehash",
 		Short:   "creates helper git plugin scripts",
-		Aliases: []string{"install", "rehash"},
+		Aliases: []string{"install", "explode"},
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
@@ -42,17 +42,17 @@ func NewCmdExplode(s printers.IOStreams) *cobra.Command {
 }
 
 // Complete the options
-func (o *ExplodeOptions) Complete(cmd *cobra.Command, args []string) error {
+func (o *MobRehashOptions) Complete(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
 // Validate the options
-func (o *ExplodeOptions) Validate() error {
+func (o *MobRehashOptions) Validate() error {
 	return o.PrinterOptions.Validate()
 }
 
 // Run the command
-func (o *ExplodeOptions) Run() error {
+func (o *MobRehashOptions) Run() error {
 	e, err := os.Executable()
 	if err != nil {
 		return err
