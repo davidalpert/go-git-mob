@@ -49,3 +49,25 @@ Feature: uninstall
     And a file named "local_bin/git-mob-version" should not exist
     And a file named "local_bin/git-solo" should not exist
     And a file named "local_bin/git-suggest-coauthors" should not exist
+
+  Scenario: uninstall can break hook scripts
+
+    `git mob` doesn't track the initialization of hook scripts
+    so it doesn't know what hook scripts to remove when it
+    is imploding.
+
+    if you see this error after uninstalling `go-git-mob`
+    check your `.git/hooks/prepare-commit-msg` hook script
+    and remove or comment out references to `git mob`
+
+    Given a simple git repo at "example"
+    And I cd to "example"
+    And I successfully run `git mob init`
+    And I successfully run `git commit --allow-empty -m "empty mobbed commit"`
+    When I successfully run `git mob uninstall`
+    And I run `git commit --allow-empty -m "empty mobbed commit"`
+    Then the exit status should be 1
+    And the output should contain:
+      """
+      git: 'mob' is not a git command. See 'git --help'.
+      """
