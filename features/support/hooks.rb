@@ -28,9 +28,8 @@ Before do
   # ensure that git, when run by aruba, does not accidentally discover
   # any of the parent repo's git config
   ceiling_dir = File.dirname(expand_path('.'))
-  aruba.announcer.announce(:paths, "git git ceiling set to:    #{ceiling_dir}         (git won't look for config or .git/ in this folder or above)")
-  # aruba.announcer.announce(:paths, "git won't look for config or .git/ folders in this folder or above")
   set_environment_variable('GIT_CEILING_DIRECTORIES', ceiling_dir)
+  aruba.announcer.announce(:paths, "git ceiling set to:    #{ceiling_dir}         (git won't look for config or .git/ in this folder or above)")
 end
 
 After do
