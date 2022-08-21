@@ -18,12 +18,12 @@ func NewImplodeOptions(s printers.IOStreams) *ImplodeOptions {
 	}
 }
 
-func NewCmdImplode(s printers.IOStreams) *cobra.Command {
+func NewCmdMobUninstall(s printers.IOStreams) *cobra.Command {
 	o := NewImplodeOptions(s)
 	var cmd = &cobra.Command{
-		Use:     "implode",
+		Use:     "uninstall",
 		Short:   "uninstall git-mob (removes helper git plugin scripts and deletes the git-mob binary)",
-		Aliases: []string{"uninstall"},
+		Aliases: []string{"implode"},
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
