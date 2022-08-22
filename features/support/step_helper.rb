@@ -12,6 +12,7 @@ require 'yaml'
 
 Aruba.configure do |config|
   config.exit_timeout = 1 # seconds
+  config.command_search_paths = [] # don't automatically include {project}/bin in the PATH during scenario runs
 end
 
 # Step Helpers -----------------------------------------------

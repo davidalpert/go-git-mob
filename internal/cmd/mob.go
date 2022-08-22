@@ -70,8 +70,8 @@ Examples:
 	cmd.AddCommand(NewCmdMobHooks(s))
 	cmd.AddCommand(NewCmdSolo(s))
 	cmd.AddCommand(NewCmdCoauthors(s))
-	cmd.AddCommand(NewCmdExplode(s))
-	cmd.AddCommand(NewCmdImplode(s))
+	cmd.AddCommand(NewCmdMobRehash(s))
+	cmd.AddCommand(NewCmdMobUninstall(s))
 	cmd.AddCommand(NewCmdVersion(s))
 	cmd.AddCommand(NewCmdPrint(s))
 
