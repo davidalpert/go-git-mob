@@ -47,6 +47,10 @@
     - [Pre-compiled binaries](#pre-compiled-binaries)
   - [Verify your installation](#verify-your-installation)
   - [Post-install steps](#post-install-steps)
+  - [Add initials of the current mob to your prompt](#add-initials-of-the-current-mob-to-your-prompt)
+    - [Zsh with `Powerlevel10k`](#zsh-with-powerlevel10k)
+    - [Bash](#bash)
+    - [Fish](#fish)
   - [Uninstall](#uninstall)
 - [Usage](#usage)
   - [Sub-command help](#sub-command-help)
@@ -146,6 +150,76 @@ Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to
     ```
     git mob init
     ```
+
+### Add initials of the current mob to your prompt
+
+#### Zsh with `Powerlevel10k`
+
+1. edit the p10k configuration file
+    ```sh
+    vi $POWERLEVEL9K_CONFIG_FILE
+    ```
+1. search for the example prompt function
+    ```
+    prompt_example()
+    ```
+1. create a similar custom p10k prompt function to generate a mob initials prompt segment
+    ```bash
+    # custom p10k prompt to print git mob member initials
+    function prompt_gitmob_members() {
+      initials=$(git mob-print --initials 2> /dev/null)
+      if [ ! -z "$initials" ]; then
+        p10k segment -f 208 -t "[$initials]"
+      fi
+    }
+    ```
+1. add the `gitmob_members` prompt segment to the `POWERLEVEL9K_LEFT_PROMPT_ELEMENTS` or `POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS` arrays
+    ```bash
+    # The list of segments shown on the left. Fill it with the most important segments.
+    typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+      # os_icon               # os identifier
+      dir                     # current directory
+      vcs                     # git status
+      gitmob_members          # git-mob members
+      prompt_char             # prompt symbol
+    )
+    ```
+1. reload `Powerlevel10K`
+    ```sh
+    . $POWERLEVEL9K_CONFIG_FILE
+    ```
+
+#### Bash
+
+Add the initials to PS1, in `~/.bashrc`
+
+```bash
+function git_initials {
+  local initials=$(git mob-print --initials)
+  if [[ -n "${initials}" ]]; then
+    echo " [${initials}]"
+  fi
+}
+
+export PS1="\$(pwd)\$(git_initials) -> "
+```
+
+#### Fish
+
+Add the following functions to `.config/fish/config.fish`
+
+```bash
+function git_initials --description 'Print the initials for who I am currently pairing with'
+  set -lx initials (git mob-print --initials)
+  if test -n "$initials"
+    printf ' [%s]' $initials
+  end
+end
+
+function fish_prompt
+  printf "%s%s ->" (pwd) (git_initials)
+end
+```
 
 ### Uninstall
 
