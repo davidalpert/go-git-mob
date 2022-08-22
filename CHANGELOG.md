@@ -34,6 +34,28 @@
 ## Changelog
 
 
+<a name="v0.7.3"></a>
+## [v0.7.3] - 2022-08-22
+### Build
+- ignore windows/arm64
+- downgrade dependencies to go1.16
+
+### Code Refactoring
+- replace explode/implode with rehash/uninstall
+
+### Docs
+- add how-to for showing mob in your shell prompt
+
+### Test Coverage
+- uninstall command can break hook scripts
+- fix typo in announced paths
+- remove {project}/bin from aruba command_search_paths
+
+### Pull Requests
+- Merge pull request [#75](https://github.com/davidalpert/go-git-mob/issues/75) from davidalpert/71-feat-add-more-documentation-to-feature-specs
+- Merge pull request [#72](https://github.com/davidalpert/go-git-mob/issues/72) from davidalpert/70-support-install-with-earlier-golang-versions-eg-117-or-116
+
+
 <a name="v0.7.2"></a>
 ## [v0.7.2] - 2022-08-16
 ### Bug Fixes
@@ -416,7 +438,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.3...HEAD
+[v0.7.3]: https://github.com/davidalpert/go-git-mob/compare/v0.7.2...v0.7.3
 [v0.7.2]: https://github.com/davidalpert/go-git-mob/compare/v0.7.1...v0.7.2
 [v0.7.1]: https://github.com/davidalpert/go-git-mob/compare/v0.7.0...v0.7.1
 [v0.7.0]: https://github.com/davidalpert/go-git-mob/compare/v0.6.1...v0.7.0
