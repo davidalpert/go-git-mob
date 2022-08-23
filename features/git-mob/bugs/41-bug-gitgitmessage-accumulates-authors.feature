@@ -1,12 +1,10 @@
-@wip
-  Feature: gitmessage accumulates authors over time
+Feature: gitmessage accumulates authors over time
 
+  Background:
+    Given I have installed git-mob into "local_bin" within the current directory
+    And I look for executables in "local_bin" within the current directory
 
-    Background:
-      Given I have installed git-mob into "local_bin" within the current directory
-      And I look for executables in "local_bin" within the current directory
-
-      Given a file named "~/.gitconfig" with:
+    Given a file named "~/.gitconfig" with:
       """
       [user]
       name = Jane Doe
@@ -16,7 +14,7 @@
       use-local-template = false
       """
 
-      And a file named "~/.git-coauthors" with:
+    And a file named "~/.git-coauthors" with:
       """
       {
         "coauthors": {
@@ -31,19 +29,19 @@
         }
       }
       """
-      And a simple git repo at "example"
+    And a simple git repo at "example"
 
-    @announce-gitmessage
-    Scenario: starting update ~/.gitmessage but does not configure commit.template
-      Given I cd to "example"
-      And I run `git mob ad`
-      And the file "~/.gitmessage" should contain:
+  # @announce-gitmessage
+  Scenario: starting update ~/.gitmessage but does not configure commit.template
+    Given I cd to "example"
+    And I run `git mob ad`
+    And the file "~/.gitmessage" should contain:
       """
 
       Co-authored-by: Amy Doe <amy@findmypast.com>
       """
-      When I successfully run `git mob bd`
-      Then the file "~/.gitmessage" should contain:
+    When I successfully run `git mob bd`
+    Then the file "~/.gitmessage" should contain:
       """
 
       Co-authored-by: Bob Doe <bob@findmypast.com>
