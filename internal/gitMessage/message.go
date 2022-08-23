@@ -40,10 +40,10 @@ func Write(p string, coAuthorList ...authors.Author) error {
 
 func replaceCoauthors(b []byte, content string) string {
 	i := strings.Index(string(b), "\n\nCo-authored-by:")
-	if i > 0 {
-		content = string(b[:i]) + content
-	} else {
+	if i < 0 {
 		content = string(b) + content
+	} else {
+		content = string(b[:i]) + content
 	}
 	return content
 }
