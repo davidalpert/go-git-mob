@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/gitCommands"
@@ -82,7 +83,20 @@ Examples:
 func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.Initials = args
 
-	if allCoAuthorsByInitials, err := gitConfig.ReadAllCoAuthorsFromFile(); err != nil {
+	allCoAuthorsByInitials, err := gitConfig.ReadAllCoAuthorsFromFile()
+	if err != nil {
+		var dupesErr authors.DuplicateInitialsError
+		switch {
+		case errors.As(err, &dupesErr):
+			fmt.Fprintf(o.ErrOut, "found in: %s\n\n", authors.CoAuthorsFilePath)
+			for ii, aa := range dupesErr.DuplicateAuthorsByInitial {
+				for _, a := range aa {
+					fmt.Fprintf(o.ErrOut, "%s %s %s\n", ii, a.Name, a.Email)
+				}
+			}
+			fmt.Fprintf(o.ErrOut, "\n")
+		default:
+		}
 		return err
 	} else {
 		o.AllCoAuthorsByInitials = allCoAuthorsByInitials
