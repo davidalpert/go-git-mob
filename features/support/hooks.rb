@@ -8,6 +8,10 @@ Before('@announce-gitmob-log') do
   aruba.announcer.activate :gitmob_log
 end
 
+Before('@announce-gitmessage') do
+  aruba.announcer.activate :gitmessage
+end
+
 Before('@windows-only') do
   pending unless GitMob::OS.windows?
 end
@@ -40,4 +44,13 @@ After do
     aruba.announcer.announce(:gitmob_log, "git-mob logs are available as STDOUT; use @announce-stdout")
   end
   aruba.announcer.announce(:gitmob_log, 'GITMOB_LOG')
+
+  aruba.announcer.announce(:gitmessage, '<<-GITMESSAGE')
+  gitmessage_file = expand_path('~/.gitmessage')
+  if File.exist?(gitmessage_file)
+    aruba.announcer.announce(:gitmessage, File.read(gitmessage_file))
+  else
+    aruba.announcer.announce(:gitmessage, "#{gitmessage_file} does not exist")
+  end
+  aruba.announcer.announce(:gitmessage, 'GITMESSAGE')
 end
