@@ -34,6 +34,32 @@
 ## Changelog
 
 
+<a name="v0.8.0"></a>
+## [v0.8.0] - 2022-08-23
+### Bug Fixes
+- [#41](https://github.com/davidalpert/go-git-mob/issues/41) coauthors accumulate in gitmessage
+
+### Chore
+- remove [@wip](https://github.com/wip) tag and clean up whitespace
+
+### Code Refactoring
+- extract method to put replaceCoauthors under test
+- sentinal error to custom error
+
+### Features
+- write duplicates initials to stderr
+- raise error on duplicate coauthors initials
+
+### Test Coverage
+- reproduce issue [#41](https://github.com/davidalpert/go-git-mob/issues/41)
+- add support for an [@announce](https://github.com/announce)-gitmessage tag
+- verify duplicate coauthor initials thows error
+
+### Pull Requests
+- Merge pull request [#77](https://github.com/davidalpert/go-git-mob/issues/77) from davidalpert/41-bug-gitgitmessage-accumulates-authors
+- Merge pull request [#76](https://github.com/davidalpert/go-git-mob/issues/76) from davidalpert/45-add-validation-to-git-coauthors-file-to-preventalert-on-duplicate-keys
+
+
 <a name="v0.7.3"></a>
 ## [v0.7.3] - 2022-08-22
 ### Build
@@ -438,7 +464,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.7.3...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.8.0...HEAD
+[v0.8.0]: https://github.com/davidalpert/go-git-mob/compare/v0.7.3...v0.8.0
 [v0.7.3]: https://github.com/davidalpert/go-git-mob/compare/v0.7.2...v0.7.3
 [v0.7.2]: https://github.com/davidalpert/go-git-mob/compare/v0.7.1...v0.7.2
 [v0.7.1]: https://github.com/davidalpert/go-git-mob/compare/v0.7.0...v0.7.1
