@@ -112,6 +112,12 @@ With a working golang installation at version >= 1.16 you can install or update 
 go install github.com/davidalpert/go-git-mob/cmd/git-mob@latest
 ```
 
+Ensure that your path contains the GOPATH bin folder:
+
+```
+if [[ ":$PATH:" == *":$(go env GOPATH)/bin:"* ]]; then echo "your path is correctly set"; else echo "your path is missing $(go env GOPATH)/bin; please add it"; fi
+```
+
 #### Pre-compiled binaries
 
 Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to find binary packages pre-compiled for a variety of `GOOS` and `GOARCH` combinations:
