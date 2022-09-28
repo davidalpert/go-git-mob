@@ -126,36 +126,49 @@ Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to
 
 ### Verify your installation
 
-1. Confirm that git recognizes the `git-mob` plugin:
-    ```
-    git mob version
-    ```
+Confirm that git recognizes the `git-mob` plugin:
 
-    With `git-mob` installed that command displays the plugin version:
-    ```
-    git-mob 0.5.1+f5536c2
-    ```
+```
+> git mob version
+git-mob 0.5.1+f5536c2
+```
 
 ### Post-install steps
 
-1. Install helper plugins [once per machine]:
+1. Install helper plugins [once per machine]
+
     ```
     git mob rehash
     ```
 
-    `git-mob` ships as a single-file executable. The `rehash` sub-command generates simple shell scripts to make the following helper plugins available:
+    - The `rehash` sub-command generates simple shell scripts to make the following git plugin helpers available:
+
+        ```
+        git mob-print
+        git mob-version
+        git solo
+        git suggest-coauthors
+        ```
+
+2. Add some co-authors
+
     ```
-    git mob-print
-    git mob-version
-    git solo
-    git suggest-coauthors
+    git add-coauthor jd "Jane Doe" "jane@example.com"
     ```
 
-1. Initialize `prepare-commit-msg` hook script [once per repository]:
+3. List available co-authors
+
+    ```
+    git mob --list
+    ```
+
+4. Initialize `prepare-commit-msg` hook script [once per repository]:
 
     ```
     git mob init
     ```
+
+`git-mob` uses a configuration file called `~/.git-coauthors` to store available coauthors by initials
 
 ### Add initials of the current mob to your prompt
 
