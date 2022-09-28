@@ -8,7 +8,6 @@ import (
 	"github.com/davidalpert/go-git-mob/internal/gitConfig"
 	"github.com/davidalpert/go-git-mob/internal/gitMessage"
 	"github.com/davidalpert/go-git-mob/internal/gitMobCommands"
-	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-git-mob/internal/version"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/olekukonko/tablewriter"
@@ -116,9 +115,6 @@ func (o *MobOptions) Validate() error {
 	}
 
 	if !o.ListOnly && !o.PrintVersion {
-		if !revParse.InsideWorkTree() {
-			return fmt.Errorf("not inside a git repository working tree")
-		}
 		if a, err := gitMobCommands.GetGitAuthor(); err != nil {
 			return err // includes configWarning
 		} else {
