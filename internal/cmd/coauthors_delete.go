@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/gitConfig"
-	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"strings"
@@ -60,10 +59,6 @@ func (o *CoauthorsDeleteOptions) Complete(cmd *cobra.Command, args []string) err
 
 // Validate the options
 func (o *CoauthorsDeleteOptions) Validate() error {
-	if !revParse.InsideWorkTree() {
-		return fmt.Errorf("not a git repository")
-	}
-
 	var foundExisting = ""
 	for ii, _ := range o.AllCoAuthorsByInitials {
 		if strings.EqualFold(o.AuthorInitials, ii) {

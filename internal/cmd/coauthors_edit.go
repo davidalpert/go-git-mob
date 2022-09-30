@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/gitConfig"
-	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/spf13/cobra"
 	"net/mail"
@@ -64,10 +63,6 @@ func (o *CoauthorsEditOptions) Complete(cmd *cobra.Command, args []string) error
 
 // Validate the options
 func (o *CoauthorsEditOptions) Validate() error {
-	if !revParse.InsideWorkTree() {
-		return fmt.Errorf("not a git repository")
-	}
-
 	if o.AuthorEmail != "" {
 		if _, err := mail.ParseAddress(o.AuthorEmail); err != nil {
 			return fmt.Errorf("invalid email address: %v", err)

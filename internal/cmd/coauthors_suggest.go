@@ -51,7 +51,7 @@ func (o *CoauthorsSuggestOptions) Complete(cmd *cobra.Command, args []string) er
 // Validate the options
 func (o *CoauthorsSuggestOptions) Validate() error {
 	if !revParse.InsideWorkTree() {
-		return fmt.Errorf("not a git repository")
+		return fmt.Errorf("not a git repository; suggesting co-authors requires a commit history")
 	}
 
 	return o.PrinterOptions.Validate()
