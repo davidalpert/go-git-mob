@@ -68,4 +68,5 @@ jobs:
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        set -o pipefail
         make test-features | reviewdog -name=features -fail-on-error=true -efm="cucumber %f:%l # Scenario: %m" -diff="git diff FETCH_HEAD" -filter-mode=nofilter -reporter=github-pr-check -tee
