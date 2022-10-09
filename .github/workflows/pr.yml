@@ -7,6 +7,11 @@ on:
     branches:
     - main
 
+permissions:
+  # contents: write
+  # packages: write
+  issues: write
+
 jobs:
   validate:
     runs-on: ubuntu-latest
