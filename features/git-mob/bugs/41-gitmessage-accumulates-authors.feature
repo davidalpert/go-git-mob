@@ -1,4 +1,4 @@
-Feature: gitmessage accumulates authors over time
+Feature: 🐛 gitmessage accumulates authors over time
 
   Background:
     Given I have installed git-mob into "local_bin" within the current directory
