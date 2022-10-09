@@ -224,8 +224,6 @@ if [ ! -f .chglog/config.yml ]; then
   git-chglog --init
 fi
 
-findCmd goreleaser "go install github.com/goreleaser/goreleaser@latest"
-
 # if we get here clean up any incomplete fixes
 rm -f _fixes
 
