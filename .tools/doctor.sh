@@ -71,21 +71,25 @@ function fix {
         rm -f _fixes
         inlineWarn "\nLooks like we've already tried this fix before and it's not working."
         contact_support
-        exit
+        exit 1
     else
         echo -e "\nmaybe we can fix this...\n"
         echo -e "> $*\n"
         echo "$*" >>_fixes
-        ($*)
-        # There needs to be some time for any util scripts to do their
-        # thing. 5 seconds seems to be sufficient.
-        sleep 5
-        echo -e "\n${GREEN}${BOLD}fix applied.${NORMAL}${NC}"
-        # Everytime we attempt a fix, there is a chance that other checks
-        # will be affected. Script should be re-run to ensure we are
-        # looking at an up to date environment.
-        inlineNote "\nRestarting checks to see if the problem is resolved."
-        (./.tools/doctor.sh) && exit
+        if ($*); then
+          # There needs to be some time for any util scripts to do their
+          # thing. 5 seconds seems to be sufficient.
+          sleep 5
+          echo -e "\n${GREEN}${BOLD}fix applied.${NORMAL}${NC}"
+          # Everytime we attempt a fix, there is a chance that other checks
+          # will be affected. Script should be re-run to ensure we are
+          # looking at an up to date environment.
+          inlineNote "\nRestarting checks to see if the problem is resolved."
+          (./.tools/doctor.sh) && exit
+        else
+          echo -e "\n${RED}${BOLD}fix failed.${NORMAL}${NC}"
+          exit 1
+        fi
     fi
 }
 
@@ -219,8 +223,6 @@ if [ ! -f .chglog/config.yml ]; then
   note "initializing git-chglog"
   git-chglog --init
 fi
-
-findCmd goreleaser "go install github.com/goreleaser/goreleaser@latest"
 
 # if we get here clean up any incomplete fixes
 rm -f _fixes
