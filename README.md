@@ -143,7 +143,7 @@ git-mob 0.5.1+f5536c2
 
 ### Post-install steps
 
-1. Install helper plugins [once per machine]:
+1. Install helper plugins: [once per machine]
 
    ```
    git mob rehash
@@ -170,7 +170,7 @@ git-mob 0.5.1+f5536c2
    git mob --list
    ```
 
-4. Initialize `prepare-commit-msg` hook script [once per repository]:
+4. Initialize `prepare-commit-msg` hook script: [once per repository]
 
    ```
    git mob init
