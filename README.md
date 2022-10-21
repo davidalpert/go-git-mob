@@ -3,7 +3,9 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 <!-- vale Google.Acronyms = NO -->
+
 [![License: MIT v3][license-shield]][license-url]
+
 <!-- vale Google.Acronyms = YES -->
 
 <!-- [![Issues][issues-shield]][issues-url] -->
@@ -64,6 +66,7 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
+
 ## About the project
 
 `git-mob` helps manage git co-authors when collaborating in real-time.
@@ -71,9 +74,11 @@
 As the original authors of the node `git-mob` tool wrote:
 
 <!-- vale off -->
+
 > Documenting code collaboration
 >
 > When we work together, we should document that. It’s more than just giving credit to others, it’s also informing everyone about who was responsible for introducing changes to a codebase. Keeping a clear record of your work has lasting value - ever stumbled on an old commit only to be left with unanswered questions? In addition to explaining in your commits why a change was introduced, it also helps to document who implemented the change in case there needs to be a follow up.
+
 <!-- vale on -->
 
 ### Why port the nodejs version to Golang?
@@ -89,15 +94,17 @@ A Golang version of `git-mob` simplifies the install and update story making thi
 ### What about mob.sh?
 
 Like the original nodejs `git-mob` plugin, this golang port tool differs from and complements [`mob.sh`](https://mob.sh/) in two key ways:
+
 - whereas `mob.sh` detects co-authors from commit messages alone, `git-mob` and `go-git-mob` understand that not all co-authors have their hands on the keyboard each session.
 - whereas `mob.sh` squashes each feature branch into a single commit, `git-mob` and `go-git-mob` leave this decision up to you, complimenting your workflow by injecting conventional `Co-authored-by:` comments into each commit message through the use of a git `prepare-commit-message` hook.
 
 ### Built with
 
-* [Golang 1.18](https://golang.org/)
-* [go-releaser](https://goreleaser.com/)
+- [Golang 1.18](https://golang.org/)
+- [go-releaser](https://goreleaser.com/)
 
 <!-- GETTING STARTED -->
+
 ## Getting started
 
 ### Install
@@ -121,6 +128,7 @@ if [[ ":$PATH:" == *":$(go env GOPATH)/bin:"* ]]; then echo "your path is correc
 #### Pre-compiled binaries
 
 Visit the [Releases](https://github.com/davidalpert/go-git-mob/releases) page to find binary packages pre-compiled for a variety of `GOOS` and `GOARCH` combinations:
+
 1. Download an appropriate package for your `GOOS` and `GOARCH`;
 1. Unzip it and put the binary in your path;
 
@@ -135,82 +143,82 @@ git-mob 0.5.1+f5536c2
 
 ### Post-install steps
 
-1. Install helper plugins [once per machine]
+1. Install helper plugins: [once per machine]
 
-    ```
-    git mob rehash
-    ```
+   ```
+   git mob rehash
+   ```
 
-    - The `rehash` sub-command generates simple shell scripts to make the following git plugin helpers available:
+   - The `rehash` sub-command generates simple shell scripts to make the following git plugin helpers available:
 
-        ```
-        git mob-print
-        git mob-version
-        git solo
-        git suggest-coauthors
-        ```
+     ```
+     git mob-print
+     git mob-version
+     git solo
+     git suggest-coauthors
+     ```
 
-2. Add some co-authors
+2. Add some co-authors:
 
-    ```
-    git add-coauthor jd "Jane Doe" "jane@example.com"
-    ```
+   ```
+   git add-coauthor jd "Jane Doe" "jane@example.com"
+   ```
 
-3. List available co-authors
+3. List available co-authors:
 
-    ```
-    git mob --list
-    ```
+   ```
+   git mob --list
+   ```
 
-4. Initialize `prepare-commit-msg` hook script [once per repository]:
+4. Initialize `prepare-commit-msg` hook script: [once per repository]
 
-    ```
-    git mob init
-    ```
+   ```
+   git mob init
+   ```
 
-`git-mob` uses a configuration file called `~/.git-coauthors` to store available coauthors by initials
+`git-mob` uses a configuration file called `~/.git-coauthors` to store available coauthors by initials.
 
 ### Add initials of the current mob to your prompt
 
 #### Zsh with `Powerlevel10k`
 
-1. edit the p10k configuration file
-    ```sh
-    vi $POWERLEVEL9K_CONFIG_FILE
-    ```
-1. search for the example prompt function
-    ```
-    prompt_example()
-    ```
-1. create a similar custom p10k prompt function to generate a mob initials prompt segment
-    ```bash
-    # custom p10k prompt to print git mob member initials
-    function prompt_gitmob_members() {
-      initials=$(git mob-print --initials 2> /dev/null)
-      if [ ! -z "$initials" ]; then
-        p10k segment -f 208 -t "[$initials]"
-      fi
-    }
-    ```
-1. add the `gitmob_members` prompt segment to the `POWERLEVEL9K_LEFT_PROMPT_ELEMENTS` or `POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS` arrays
-    ```bash
-    # The list of segments shown on the left. Fill it with the most important segments.
-    typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-      # os_icon               # os identifier
-      dir                     # current directory
-      vcs                     # git status
-      gitmob_members          # git-mob members
-      prompt_char             # prompt symbol
-    )
-    ```
-1. reload `Powerlevel10K`
-    ```sh
-    . $POWERLEVEL9K_CONFIG_FILE
-    ```
+1. edit the p10k configuration file:
+   ```sh
+   vi $POWERLEVEL9K_CONFIG_FILE
+   ```
+2. search for the example prompt function:
+   ```
+   prompt_example()
+   ```
+3. create a similar custom p10k prompt function to generate a mob initials prompt segment:
+   ```bash
+   # custom p10k prompt to print git mob member initials
+   function prompt_gitmob_members() {
+     initials=$(git mob-print --initials 2> /dev/null)
+     if [ ! -z "$initials" ]; then
+       p10k segment -f 208 -t "[$initials]"
+     fi
+   }
+   ```
+4. add the `gitmob_members` prompt segment to the `POWERLEVEL9K_LEFT_PROMPT_ELEMENTS` or `POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS` arrays:
+   ```bash
+   # The list of segments shown on the left. Fill it with the most important segments.
+   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+     # os_icon               # os identifier
+     dir                     # current directory
+     vcs                     # git status
+     gitmob_members          # git-mob members
+     prompt_char             # prompt symbol
+   )
+   ```
+5. reload `Powerlevel10K`:
+   ```sh
+   . $POWERLEVEL9K_CONFIG_FILE
+   ```
 
 #### Bash
 
-Add the initials to PS1, in `~/.bashrc`
+Add the initials to PS1, in `~/.bashrc`:
 
 ```bash
 function git_initials {
@@ -225,7 +233,7 @@ export PS1="\$(pwd)\$(git_initials) -> "
 
 #### Fish
 
-Add the following functions to `.config/fish/config.fish`
+Add the following functions to `.config/fish/config.fish`:
 
 ```bash
 function git_initials --description 'Print the initials for who I am currently pairing with'
@@ -244,11 +252,12 @@ end
 
 - `git-mob` ships with an `uninstall` sub-command which cleans up and removes the top-level mob plugins and deletes itself:
 
-    ```
-    git mob uninstall
-    ```
+  ```
+  git mob uninstall
+  ```
 
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 - TODO; coming as the project nears v1.0
@@ -261,7 +270,7 @@ end
 git mob -h
 ```
 
-> :warning: When requesting help make sure to use the short `-h` flag as `git` may intercept the full `--help` flag 
+> :warning: When requesting help make sure to use the short `-h` flag as `git` may intercept the full `--help` flag
 
 ```
 $ git mob -h
@@ -280,6 +289,7 @@ Use "git-mob [command] -h" for more information about a command.
 ```
 
 <!-- Troubleshooting -->
+
 ## Troubleshooting
 
 If you run into trouble you can ask `go-git-mob` to write some diagnostics to a log file by setting the following environment variables:
@@ -291,20 +301,25 @@ If you run into trouble you can ask `go-git-mob` to write some diagnostics to a 
 | GITMOB_LOG_FILE   | `""`      | path to a log file; when empty logs go to STDOUT                 |
 
 Dial up log levels to show more detail:
+
 ```
 GITMOB_LOG_LEVEL=debug git commit -m "my log message"
 ```
 
 Capture log messages to a file:
+
 ```
 GITMOB_LOG_FILE=./mob.log GITMOB_LOG_LEVEL=debug git commit -m "my log message"
 ```
 
 <!-- ROADMAP -->
+
 ## Roadmap
 
 <!-- vale Google.Parens = NO -->
+
 See [open issues](https://github.com/davidalpert/go-git-mob/issues) and specifically the [v1.0 - feature parity](https://github.com/davidalpert/go-git-mob/projects/1) project board for a list of known issues and up-for-grabs tasks.
+
 <!-- vale Google.Parens = YES -->
 
 ## Contributing
@@ -312,11 +327,13 @@ See [open issues](https://github.com/davidalpert/go-git-mob/issues) and specific
 See the [CONTRIBUTING](CONTRIBUTING.md) guide for local development setup and contribution guidelines.
 
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the GPU v3 License. See [LICENSE](LICENSE) for more information.
 
 <!-- CONTACT -->
+
 ## Contact
 
 David Alpert - [@davidalpert](https://twitter.com/davidalpert)
@@ -324,12 +341,14 @@ David Alpert - [@davidalpert](https://twitter.com/davidalpert)
 Project Link: [https://github.com/davidalpert/go-git-mob](https://github.com/davidalpert/go-git-mob)
 
 <!-- ACKNOWLEDGEMENTS -->
+
 ## Acknowledgements
 
-* [Richard Kotze & Dennis Ideler](https://tech.findmypast.com/co-author-commits-with-git-mob/) for the [git-mob](https://github.com/rkotze/git-mob) nodejs implementation
+- [Richard Kotze & Dennis Ideler](https://tech.findmypast.com/co-author-commits-with-git-mob/) for the [git-mob](https://github.com/rkotze/git-mob) nodejs implementation
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/davidalpert/go-git-mob
 [contributors-image-url]: https://contrib.rocks/image?repo=davidalpert/go-git-mob
 [forks-shield]: https://img.shields.io/github/forks/davidalpert/go-git-mob
@@ -338,4 +357,3 @@ Project Link: [https://github.com/davidalpert/go-git-mob](https://github.com/dav
 [issues-url]: https://github.com/davidalpert/go-git-mob/issues
 [license-shield]: https://img.shields.io/badge/License-MIT-yellow.svg
 [license-url]: https://opensource.org/licenses/MIT
-
