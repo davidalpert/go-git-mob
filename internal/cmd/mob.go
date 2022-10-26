@@ -3,6 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"sort"
+	"strings"
+
 	"github.com/davidalpert/go-git-mob/internal/authors"
 	"github.com/davidalpert/go-git-mob/internal/gitCommands"
 	"github.com/davidalpert/go-git-mob/internal/gitConfig"
@@ -12,8 +15,6 @@ import (
 	"github.com/davidalpert/go-printers/v1"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"sort"
-	"strings"
 )
 
 type MobOptions struct {
@@ -163,13 +164,6 @@ func (o *MobOptions) runMob() error {
 		if err := o.printMob(); err != nil {
 			return err
 		}
-		if gitCommands.UsingLocalTemplate() && gitMobCommands.IsCoAuthorsSet() {
-			if coauthors, err := gitMobCommands.GetCoAuthors(); err != nil {
-				return err
-			} else {
-				return gitMessage.Write(gitMessage.Path(), coauthors...)
-			}
-		}
 		return nil
 	}
 
@@ -288,13 +282,6 @@ func (o *MobOptions) setMob() error {
 	}
 	if err := gitMobCommands.AddCoAuthors(coauthors...); err != nil {
 		return fmt.Errorf("AddCoAuthors: %v", err)
-	}
-	if err := gitMessage.Write(gitMessage.Path(), coauthors...); err != nil {
-		return fmt.Errorf("WriteGitMessage: %v", err)
-	}
-
-	if gitCommands.UsingLocalTemplate() && gitCommands.UsingGlobalTemplate() {
-		gitMessage.Write(gitCommands.GetGlobalTemplate(), coauthors...)
 	}
 
 	return o.printMob()
