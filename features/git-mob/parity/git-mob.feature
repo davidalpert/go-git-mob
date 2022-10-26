@@ -132,16 +132,9 @@ Feature: git-mob.spec
       Jane Doe <jane@example.com>
       Bob Doe <bob@example.com>
       """
-    And a file named "~/.gitmessage" should contain:
-      """
-      A commit title
+    And a file named "~/.gitmessage" should not contain "Co-authored-by:"
 
-      A commit body that goes into more detail.
-
-      Co-authored-by: Bob Doe <bob@example.com>
-      """
-
-  Scenario: appends co-authors to an existing commit template
+  Scenario: does not append co-authors to an existing commit template
     Given a simple git repo at "example"
     And I cd to "example"
     And a file named "~/.gitmessage" with:
@@ -151,27 +144,14 @@ Feature: git-mob.spec
       A commit body that goes into more detail.
       """
     When I successfully run `git mob ad bd`
-    And a file named "~/.gitmessage" should contain:
-      """
-      A commit title
+    And a file named "~/.gitmessage" should not contain "Co-authored-by:"
 
-      A commit body that goes into more detail.
-
-      Co-authored-by: Amy Doe <amy@example.com>
-      Co-authored-by: Bob Doe <bob@example.com>
-      """
-
-  Scenario: appends co-authors to a new commit template
+  Scenario: does not append co-authors to a new commit template
     Given a simple git repo at "example"
     And I cd to "example"
     And a file named "~/.gitmessage" does not exist
     When I successfully run `git mob ad bd`
-    And a file named "~/.gitmessage" should contain:
-      """
-
-      Co-authored-by: Amy Doe <amy@example.com>
-      Co-authored-by: Bob Doe <bob@example.com>
-      """
+    And a file named "~/.gitmessage" should not exist
 
   @pending
   # allow running some mob commands outside a working tree
