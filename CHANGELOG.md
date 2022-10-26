@@ -34,6 +34,42 @@
 ## Changelog
 
 
+<a name="v0.9.2"></a>
+## [v0.9.2] - 2022-10-25
+### Bug Fixes
+- [#88](https://github.com/davidalpert/go-git-mob/issues/88) co-authors not cleared from message template when returning to git solo
+- colons break square brackets, added them before instead
+- lint, add period and colon consistency to README.md
+- removed instances when .gitmessage is written to during a mob command
+- colons break square brackets, added them before instead
+- lint, add period and colon consistency to README.md
+
+### Build
+- don't install goreleaser as [@latest](https://github.com/latest) requires go1.17
+- doctor script exit code should reflect doctor status
+- Features PR step could pass with errors
+- reviewdog token needs write permissions on issues
+- **deps:** bump ruby/setup-ruby from 1.115.3 to 1.117.0
+
+### Code Refactoring
+- rename a feature file
+
+### Features
+- rename feature file
+- added feature spec for expected git-mob behaviour
+
+### Test Coverage
+- fix feature specs to align with [#89](https://github.com/davidalpert/go-git-mob/issues/89)
+- example bug feature
+
+### Pull Requests
+- Merge pull request [#94](https://github.com/davidalpert/go-git-mob/issues/94) from davidalpert/88-bug-co-authors-not-cleared-from-message-template-when-returning-to-git-solo
+- Merge pull request [#89](https://github.com/davidalpert/go-git-mob/issues/89) from teezzan/fix/co-authors_not_cleared_from_message_template_on_switch
+- Merge pull request [#93](https://github.com/davidalpert/go-git-mob/issues/93) from HugeIRL/fix-readme
+- Merge pull request [#91](https://github.com/davidalpert/go-git-mob/issues/91) from davidalpert/90-pr-build-is-passing-with-failing-steps
+- Merge pull request [#87](https://github.com/davidalpert/go-git-mob/issues/87) from davidalpert/dependabot/github_actions/ruby/setup-ruby-1.117.0
+
+
 <a name="v0.9.1"></a>
 ## [v0.9.1] - 2022-09-30
 ### Bug Fixes
@@ -494,7 +530,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.9.2...HEAD
+[v0.9.2]: https://github.com/davidalpert/go-git-mob/compare/v0.9.1...v0.9.2
 [v0.9.1]: https://github.com/davidalpert/go-git-mob/compare/v0.9.0...v0.9.1
 [v0.9.0]: https://github.com/davidalpert/go-git-mob/compare/v0.8.0...v0.9.0
 [v0.8.0]: https://github.com/davidalpert/go-git-mob/compare/v0.7.3...v0.8.0
