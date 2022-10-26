@@ -40,11 +40,7 @@ Feature: message
       Jane Doe <jane@example.com>
       Amy Doe <amy@findmypast.com>
       """
-    And the file "~/.gitmessage" should contain:
-      """
-
-      Co-authored-by: Amy Doe <amy@findmypast.com>
-      """
+    And the file "~/.gitmessage" should not contain "Co-authored-by:"
     And the file ".git/config" should not contain:
       """
       template = ~/.gitmessage

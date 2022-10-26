@@ -35,19 +35,6 @@ Feature: 🐛 gitmessage accumulates authors over time
   Scenario: starting update ~/.gitmessage but does not configure commit.template
     Given I cd to "example"
     And I run `git mob ad`
-    And the file "~/.gitmessage" should contain:
-      """
-
-      Co-authored-by: Amy Doe <amy@findmypast.com>
-      """
+    And the file "~/.gitmessage" should not contain "Co-authored-by"
     When I successfully run `git mob bd`
-    Then the file "~/.gitmessage" should contain:
-      """
-
-      Co-authored-by: Bob Doe <bob@findmypast.com>
-      """
-    And the file "~/.gitmessage" should not contain:
-      """
-
-      Co-authored-by: Amy Doe <amy@findmypast.com>
-      """
+    And the file "~/.gitmessage" should not contain "Co-authored-by"

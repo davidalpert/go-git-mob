@@ -29,10 +29,6 @@ Feature: 🐛 co-authors not cleared from message template when returning to git
 
   Scenario: 
     Given I successfully run `git mob ad`
-    And the file "~/.gitmessage" should contain:
-      """
-
-      Co-authored-by: Amy Doe <amy@findmypast.com>
-      """
+    And the file "~/.gitmessage" should not contain "Co-authored-by"
     When I successfully run `git solo`
     And the file "~/.gitmessage" should not contain "Co-authored-by"
