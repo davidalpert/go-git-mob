@@ -45,7 +45,7 @@ jobs:
         go-version: '1.16.0'
 
     - name: Setup Ruby, JRuby and TruffleRuby # for integration testing
-      uses: ruby/setup-ruby@v1.126.0
+      uses: ruby/setup-ruby@v1.133.0
       with:
         ruby-version: 3.0.2
 
