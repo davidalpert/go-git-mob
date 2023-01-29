@@ -18,7 +18,7 @@ Feature: uninstall
     And I run `git config --global user.email "jane@example.com"`
 
     Given I have installed git-mob into "local_bin" within the current directory
-    And I look for executables in "local_bin" within the current directory
+    And I look for executables only in "local_bin" within the current directory
     And I run `git mob install`
     And a file named "local_bin/git-mob" should exist
     And a file named "local_bin/git-mob-print" should exist
