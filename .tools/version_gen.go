@@ -33,7 +33,7 @@ func main() {
 	}
 
 	if len(os.Args) < 2 {
-		fmt.Printf("usage: go run intneral/version_gen.go <appName>\n\nrun from project root")
+		fmt.Printf("usage: go run .tools/version_gen.go <appName>\n\nrun from project root")
 		os.Exit(1)
 	}
 
@@ -69,7 +69,7 @@ func main() {
 
 	commitsBetweenHeadAndMain, err := exec.Command("git", "rev-list", "origin/main...HEAD").Output()
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("error reading commits between origin/main and HEAD: %v; do you have a remote called 'origin'?", err))
 	}
 	if !isDirty && !strings.EqualFold(string(gitBranch), "main") && len(commitsBetweenHeadAndMain) == 0 {
 		fmt.Printf("no difference between '%s' and origin/main; replacing '%s' with 'main'\n", string(gitBranch), string(gitBranch))
@@ -82,7 +82,6 @@ func main() {
 			panic(err)
 		}
 	}
-
 	_, err = exec.Command("mkdir", "-p", "./internal/version").Output()
 	if err != nil {
 		panic(err)
@@ -202,7 +201,6 @@ func NewVersionDetail() DetailStruct {
 	}
 	return s
 }
-
 // DetailStruct provides an easy way to grab all the govvv version details together
 type DetailStruct struct {
 	AppName              string ` + "`json:\"app_name\"`" + `
