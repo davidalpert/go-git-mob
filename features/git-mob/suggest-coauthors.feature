@@ -33,9 +33,9 @@ Feature: Suggest co-authors from commit history
       """
       Here are some suggestions for coauthors based on existing authors of this repository:
       
-      git add-coauthor AD "Amy Doe" amy@findmypast.com
-      git add-coauthor BD "Bob Doe" bob@findmypast.com
-      git add-coauthor JD "Jane Doe" jane@example.com
+      git add-coauthor ad "Amy Doe" amy@findmypast.com
+      git add-coauthor bd "Bob Doe" bob@findmypast.com
+      git add-coauthor jd "Jane Doe" jane@example.com
       
       Paste any line above.
       """
@@ -48,9 +48,9 @@ Feature: Suggest co-authors from commit history
       +----------+----------+--------------------+
       | INITIALS |   NAME   |       EMAIL        |
       +----------+----------+--------------------+
-      | AD       | Amy Doe  | amy@findmypast.com |
-      | BD       | Bob Doe  | bob@findmypast.com |
-      | JD       | Jane Doe | jane@example.com   |
+      | ad       | Amy Doe  | amy@findmypast.com |
+      | bd       | Bob Doe  | bob@findmypast.com |
+      | jd       | Jane Doe | jane@example.com   |
       +----------+----------+--------------------+
       suggested co-authors
       """
@@ -60,13 +60,13 @@ Feature: Suggest co-authors from commit history
     When I run `git suggest-coauthors -oyaml`
     Then the output should contain:
       """
-      - initials: AD
+      - initials: ad
         name: Amy Doe
         email: amy@findmypast.com
-      - initials: BD
+      - initials: bd
         name: Bob Doe
         email: bob@findmypast.com
-      - initials: JD
+      - initials: jd
         name: Jane Doe
         email: jane@example.com
       """
@@ -78,17 +78,17 @@ Feature: Suggest co-authors from commit history
       """
       [
         {
-          "initials": "AD",
+          "initials": "ad",
           "name": "Amy Doe",
           "email": "amy@findmypast.com"
         },
         {
-          "initials": "BD",
+          "initials": "bd",
           "name": "Bob Doe",
           "email": "bob@findmypast.com"
         },
         {
-          "initials": "JD",
+          "initials": "jd",
           "name": "Jane Doe",
           "email": "jane@example.com"
         }

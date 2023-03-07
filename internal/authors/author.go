@@ -27,7 +27,7 @@ func (a Author) InitialsFromName() string {
 	words := strings.Split(a.Name, " ")
 	initials := make([]string, len(words))
 	for i, w := range words {
-		initials[i] = strings.ToUpper(w[0:1])
+		initials[i] = strings.ToLower(w[0:1])
 	}
 
 	return strings.Join(initials, "")
