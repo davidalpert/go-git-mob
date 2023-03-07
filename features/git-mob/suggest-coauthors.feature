@@ -33,9 +33,9 @@ Feature: Suggest co-authors from commit history
       """
       Here are some suggestions for coauthors based on existing authors of this repository:
       
-      git mob add-coauthor AD Amy Doe amy@findmypast.com
-      git mob add-coauthor BD Bob Doe bob@findmypast.com
-      git mob add-coauthor JD Jane Doe jane@example.com
+      git add-coauthor AD Amy Doe amy@findmypast.com
+      git add-coauthor BD Bob Doe bob@findmypast.com
+      git add-coauthor JD Jane Doe jane@example.com
       
       Paste any line above.
       """
