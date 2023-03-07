@@ -78,7 +78,7 @@ func (o *CoauthorsSuggestOptions) Run() error {
 			fmt.Fprintf(o.Out, "Here are some suggestions for coauthors based on existing authors of this repository:\n\n")
 			for _, ii := range initials {
 				a := aa[ii]
-				fmt.Fprintf(o.Out, "git add-coauthor %s %s %s\n", ii, a.Name, a.Email)
+				fmt.Fprintf(o.Out, "git add-coauthor %s \"%s\" %s\n", ii, a.Name, a.Email)
 			}
 			fmt.Fprintln(o.Out, "\nPaste any line above.")
 		}
