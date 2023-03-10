@@ -51,6 +51,20 @@ func (f CoAuthorsFileContent) LookupByInitials(initials ...string) []Author {
 	return parts
 }
 
+func (f CoAuthorsFileContent) LookupByEmail(email ...string) []Author {
+	parts := make([]Author, 0)
+	for _, e := range email {
+		for _, author := range f.CoAuthorsByInitial {
+			if strings.EqualFold(e, author.Email) {
+				parts = append(parts, author)
+				continue
+			}
+		}
+	}
+
+	return parts
+}
+
 func (f CoAuthorsFileContent) FindAndFormatAsList(initials ...string) []string {
 	aa := f.LookupByInitials(initials...)
 	result := make([]string, len(aa))
