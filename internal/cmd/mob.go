@@ -83,20 +83,7 @@ Examples:
 func (o *MobOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.Initials = args
 
-	allCoAuthorsByInitials, err := gitConfig.ReadAllCoAuthorsFromFile()
-	if err != nil {
-		var dupesErr authors.DuplicateInitialsError
-		switch {
-		case errors.As(err, &dupesErr):
-			fmt.Fprintf(o.ErrOut, "found in: %s\n\n", authors.CoAuthorsFilePath)
-			for ii, aa := range dupesErr.DuplicateAuthorsByInitial {
-				for _, a := range aa {
-					fmt.Fprintf(o.ErrOut, "%s %s %s\n", ii, a.Name, a.Email)
-				}
-			}
-			fmt.Fprintf(o.ErrOut, "\n")
-		default:
-		}
+	if allCoAuthorsByInitials, err := completeExistingCoauthorsByInitial(o.PrinterOptions); err != nil {
 		return err
 	} else {
 		o.AllCoAuthorsByInitials = allCoAuthorsByInitials
@@ -293,4 +280,24 @@ func setCommitTemplate() error {
 		return gitCommands.SetTemplatePath(gitMessage.CommitTemplatePath())
 	}
 	return nil
+}
+
+func completeExistingCoauthorsByInitial(po *printers.PrinterOptions) (map[string]authors.Author, error) {
+	allCoAuthorsByInitials, err := gitConfig.ReadAllCoAuthorsFromFile()
+	if err != nil {
+		var dupesErr authors.DuplicateInitialsError
+		switch {
+		case errors.As(err, &dupesErr):
+			_, _ = fmt.Fprintf(po.ErrOut, "found in: %s\n\n", authors.CoAuthorsFilePath)
+			for ii, aa := range dupesErr.DuplicateAuthorsByInitial {
+				for _, a := range aa {
+					_, _ = fmt.Fprintf(po.ErrOut, "%s %s %s\n", ii, a.Name, a.Email)
+				}
+			}
+			_, _ = fmt.Fprintf(po.ErrOut, "\n")
+		default:
+		}
+		return nil, err
+	}
+	return allCoAuthorsByInitials, nil
 }

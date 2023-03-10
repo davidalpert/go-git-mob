@@ -53,5 +53,5 @@ Feature: rehash
       """
       Here are some suggestions for coauthors based on existing authors of this repository:
 
-      git mob add-coauthor JD Jane Doe jane@example.com
+      git add-coauthor jd "Jane Doe" jane@example.com
       """

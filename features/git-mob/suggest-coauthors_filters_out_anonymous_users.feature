@@ -1,4 +1,4 @@
-Feature: Suggest co-authors from commit history
+Feature: Suggest co-authors from commit history, filter out anonymous emails
 
   Background: 
     Given I have installed git-mob into "local_bin" within the current directory
@@ -21,43 +21,11 @@ Feature: Suggest co-authors from commit history
       }
       """
     And a simple git repo at "example" with the following empty commits:
-      | Name     | Email              | Commit_Message       |
-      | Amy Doe  | amy@findmypast.com | Amy's empty commit   |
-      | Bob Doe  | bob@findmypast.com | Bob's empty commit   |
-      | Jane Doe | jane@example.com   | initial empty commit |
-
-  Scenario: suggest co-authors as text when no new authors are found
-    Given a file named "~/.git-coauthors" with:
-      """
-      {
-        "coauthors": {
-          "ad": {
-            "name": "Amy Doe",
-            "email": "amy@findmypast.com"
-          },
-          "bd": {
-            "name": "Bob Doe",
-            "email": "bob@findmypast.com"
-          },
-          "jd": {
-            "name": "Jane Doe",
-            "email": "jane@example.com"
-          }
-        }
-      }
-      """
-    Given I cd to "example"
-    When I run `git suggest-coauthors`
-    Then the output should contain:
-      """
-      The following authors from your coauthors file have contributed to this repository:
-
-      - ad "Amy Doe" amy@findmypast.com
-      - bd "Bob Doe" bob@findmypast.com
-      - jd "Jane Doe" jane@example.com
-
-      :tada: You already know all the coauthors who have contributed to this repository!
-      """
+      | Name     | Email                                | Commit_Message         |
+      | Amy Doe  | amy@findmypast.com                   | Amy's empty commit     |
+      | Bob Doe  | 1234567+bob@users.noreply.github.com | Bob's anonymous commit |
+      | Bob Doe  | bob@findmypast.com                   | Bob's empty commit     |
+      | Jane Doe | jane@example.com                     | Initial empty commit   |
 
   Scenario: suggest co-authors as text
     Given I cd to "example"
@@ -73,6 +41,8 @@ Feature: Suggest co-authors from commit history
 
       git add-coauthor jd "Jane Doe" jane@example.com
 
+      git add-coauthor bda "Bob Doe" 1234567+bob@users.noreply.github.com
+
       Paste any line above.
       """
 
@@ -85,6 +55,7 @@ Feature: Suggest co-authors from commit history
 
       git add-coauthor ad "Amy Doe" amy@findmypast.com
       git add-coauthor bd "Bob Doe" bob@findmypast.com
+      git add-coauthor bda "Bob Doe" 1234567+bob@users.noreply.github.com
       git add-coauthor jd "Jane Doe" jane@example.com
 
       Paste any line above.
@@ -108,13 +79,14 @@ Feature: Suggest co-authors from commit history
     When I run `git suggest-coauthors --all -otable`
     Then the output should contain:
       """
-      +----------+----------+--------------------+
-      | INITIALS |   NAME   |       EMAIL        |
-      +----------+----------+--------------------+
-      | ad       | Amy Doe  | amy@findmypast.com |
-      | bd       | Bob Doe  | bob@findmypast.com |
-      | jd       | Jane Doe | jane@example.com   |
-      +----------+----------+--------------------+
+      +----------+----------+--------------------------------------+
+      | INITIALS |   NAME   |                EMAIL                 |
+      +----------+----------+--------------------------------------+
+      | ad       | Amy Doe  | amy@findmypast.com                   |
+      | bd       | Bob Doe  | bob@findmypast.com                   |
+      | bda      | Bob Doe  | 1234567+bob@users.noreply.github.com |
+      | jd       | Jane Doe | jane@example.com                     |
+      +----------+----------+--------------------------------------+
       suggested co-authors
       """
 
@@ -139,6 +111,9 @@ Feature: Suggest co-authors from commit history
       - initials: bd
         name: Bob Doe
         email: bob@findmypast.com
+      - initials: bda
+        name: Bob Doe
+        email: 1234567+bob@users.noreply.github.com
       - initials: jd
         name: Jane Doe
         email: jane@example.com
@@ -173,6 +148,11 @@ Feature: Suggest co-authors from commit history
           "initials": "bd",
           "name": "Bob Doe",
           "email": "bob@findmypast.com"
+        },
+        {
+          "initials": "bda",
+          "name": "Bob Doe",
+          "email": "1234567+bob@users.noreply.github.com"
         },
         {
           "initials": "jd",

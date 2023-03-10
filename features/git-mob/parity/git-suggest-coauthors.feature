@@ -18,8 +18,8 @@ Feature: git-suggest-coauthors.spec
       """
       Here are some suggestions for coauthors based on existing authors of this repository:
 
-      git mob add-coauthor AD Amy Doe amy@findmypast.com
-      git mob add-coauthor BD Bob Doe bob@findmypast.com
+      git add-coauthor ad "Amy Doe" amy@findmypast.com
+      git add-coauthor bd "Bob Doe" bob@findmypast.com
 
       Paste any line above.
       """
