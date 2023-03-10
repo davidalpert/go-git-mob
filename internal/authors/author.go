@@ -30,7 +30,15 @@ func (a Author) InitialsFromName() string {
 		initials[i] = strings.ToLower(w[0:1])
 	}
 
+	if a.LooksAnonymous() {
+		initials = append(initials, "a")
+	}
+
 	return strings.Join(initials, "")
+}
+
+func (a Author) LooksAnonymous() bool {
+	return strings.HasSuffix(a.Email, "@users.noreply.github.com")
 }
 
 // MustParseOne parses an author string into an Author and panics if parsing fails

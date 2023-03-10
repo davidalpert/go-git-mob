@@ -86,6 +86,7 @@ func (o *CoauthorsSuggestOptions) Run() error {
 
 	foundInitials := make([]string, 0)
 	suggestedInitials := make([]string, 0)
+	anonymousSuggestions := make([]string, 0)
 	if o.IncludeAll {
 		for ii, _ := range aa {
 			suggestedInitials = append(suggestedInitials, ii)
@@ -94,6 +95,8 @@ func (o *CoauthorsSuggestOptions) Run() error {
 		for ii, _ := range aa {
 			if existingInitials, found := o.lookupExistingCoauthorInitialsByEmail(aa[ii].Email); found {
 				foundInitials = append(foundInitials, existingInitials)
+			} else if aa[ii].LooksAnonymous() {
+				anonymousSuggestions = append(anonymousSuggestions, ii)
 			} else {
 				suggestedInitials = append(suggestedInitials, ii)
 			}
@@ -102,6 +105,7 @@ func (o *CoauthorsSuggestOptions) Run() error {
 
 	sort.Strings(foundInitials)
 	sort.Strings(suggestedInitials)
+	sort.Strings(anonymousSuggestions)
 
 	if o.FormatCategory() == "text" {
 		if len(foundInitials) > 0 {
@@ -118,6 +122,13 @@ func (o *CoauthorsSuggestOptions) Run() error {
 		} else {
 			_, _ = fmt.Fprintf(o.Out, "Here are some suggestions for coauthors based on existing authors of this repository:\n\n")
 			for _, ii := range suggestedInitials {
+				a := aa[ii]
+				_, _ = fmt.Fprintf(o.Out, "git add-coauthor %s \"%s\" %s\n", ii, a.Name, a.Email)
+			}
+			if len(anonymousSuggestions) > 0 {
+				_, _ = fmt.Fprintf(o.Out, "\n")
+			}
+			for _, ii := range anonymousSuggestions {
 				a := aa[ii]
 				_, _ = fmt.Fprintf(o.Out, "git add-coauthor %s \"%s\" %s\n", ii, a.Name, a.Email)
 			}
