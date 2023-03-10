@@ -34,6 +34,48 @@
 ## Changelog
 
 
+<a name="v0.10.0"></a>
+## [v0.10.0] - 2023-03-10
+### Bug Fixes
+- build the correct cmd/git-mob package on release
+- goreleaser script had old make targets
+- co-author suggestion format isn't copy/pasteable
+- co-author suggestion uses the wrong command
+- uninstall can break hook scripts test is non-deterministic
+
+### Build
+- replace makefile with taskfile
+- **deps:** bump ruby/setup-ruby from 1.133.0 to 1.139.0
+- **deps:** bump github.com/stretchr/testify from 1.8.1 to 1.8.2
+- **deps:** bump ruby/setup-ruby from 1.126.0 to 1.133.0
+- **deps:** bump goreleaser/goreleaser-action from 3 to 4
+- **deps:** bump ruby/setup-ruby from 1.120.0 to 1.126.0
+- **deps:** bump github.com/stretchr/testify from 1.8.0 to 1.8.1
+- **deps:** bump github.com/spf13/cobra from 1.5.0 to 1.6.1
+- **deps:** bump ruby/setup-ruby from 1.117.0 to 1.120.0
+
+### Features
+- better handling of anonymous github email addresses
+- show a nice message when you know all the author suggestions
+- coauthor suggestions now filters out known coauthors
+- suggest coauthor initials as lowercase
+
+### Test Coverage
+- co-author suggestion feature uses long form
+
+### Pull Requests
+- Merge pull request [#113](https://github.com/davidalpert/go-git-mob/issues/113) from davidalpert/106-suggesting-coauthors-generates-output-which-is-not-copypastable
+- Merge pull request [#112](https://github.com/davidalpert/go-git-mob/issues/112) from davidalpert/78-explore-task-and-taskfiles-as-an-alternative-to-makemakefiles
+- Merge pull request [#109](https://github.com/davidalpert/go-git-mob/issues/109) from davidalpert/dependabot/go_modules/github.com/stretchr/testify-1.8.2
+- Merge pull request [#111](https://github.com/davidalpert/go-git-mob/issues/111) from davidalpert/dependabot/github_actions/ruby/setup-ruby-1.139.0
+- Merge pull request [#103](https://github.com/davidalpert/go-git-mob/issues/103) from davidalpert/dependabot/github_actions/goreleaser/goreleaser-action-4
+- Merge pull request [#104](https://github.com/davidalpert/go-git-mob/issues/104) from davidalpert/dependabot/github_actions/ruby/setup-ruby-1.133.0
+- Merge pull request [#101](https://github.com/davidalpert/go-git-mob/issues/101) from davidalpert/dependabot/github_actions/ruby/setup-ruby-1.126.0
+- Merge pull request [#97](https://github.com/davidalpert/go-git-mob/issues/97) from davidalpert/dependabot/go_modules/github.com/spf13/cobra-1.6.1
+- Merge pull request [#98](https://github.com/davidalpert/go-git-mob/issues/98) from davidalpert/dependabot/go_modules/github.com/stretchr/testify-1.8.1
+- Merge pull request [#96](https://github.com/davidalpert/go-git-mob/issues/96) from davidalpert/dependabot/github_actions/ruby/setup-ruby-1.120.0
+
+
 <a name="v0.9.2"></a>
 ## [v0.9.2] - 2022-10-25
 ### Bug Fixes
@@ -530,7 +572,8 @@
 - add basic CLI framework
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.9.2...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.10.0...HEAD
+[v0.10.0]: https://github.com/davidalpert/go-git-mob/compare/v0.9.2...v0.10.0
 [v0.9.2]: https://github.com/davidalpert/go-git-mob/compare/v0.9.1...v0.9.2
 [v0.9.1]: https://github.com/davidalpert/go-git-mob/compare/v0.9.0...v0.9.1
 [v0.9.0]: https://github.com/davidalpert/go-git-mob/compare/v0.8.0...v0.9.0
