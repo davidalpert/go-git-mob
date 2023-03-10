@@ -113,7 +113,9 @@ func (o *CoauthorsSuggestOptions) Run() error {
 			_, _ = fmt.Fprintf(o.Out, "\n")
 		}
 
-		if len(suggestedInitials) > 0 {
+		if len(suggestedInitials) == 0 {
+			_, _ = fmt.Fprintf(o.Out, ":tada: You already know all the coauthors who have contributed to this repository!\n")
+		} else {
 			_, _ = fmt.Fprintf(o.Out, "Here are some suggestions for coauthors based on existing authors of this repository:\n\n")
 			for _, ii := range suggestedInitials {
 				a := aa[ii]

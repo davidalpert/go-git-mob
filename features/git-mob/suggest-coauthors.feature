@@ -26,6 +26,39 @@ Feature: Suggest co-authors from commit history
       | Bob Doe  | bob@findmypast.com | Bob's empty commit   |
       | Jane Doe | jane@example.com   | initial empty commit |
 
+  Scenario: suggest co-authors as text when no new authors are found
+    Given a file named "~/.git-coauthors" with:
+      """
+      {
+        "coauthors": {
+          "ad": {
+            "name": "Amy Doe",
+            "email": "amy@findmypast.com"
+          },
+          "bd": {
+            "name": "Bob Doe",
+            "email": "bob@findmypast.com"
+          },
+          "jd": {
+            "name": "Jane Doe",
+            "email": "jane@example.com"
+          }
+        }
+      }
+      """
+    Given I cd to "example"
+    When I run `git suggest-coauthors`
+    Then the output should contain:
+      """
+      The following authors from your coauthors file have contributed to this repository:
+
+      - ad "Amy Doe" amy@findmypast.com
+      - bd "Bob Doe" bob@findmypast.com
+      - jd "Jane Doe" jane@example.com
+
+      :tada: You already know all the coauthors who have contributed to this repository!
+      """
+
   Scenario: suggest co-authors as text
     Given I cd to "example"
     When I run `git suggest-coauthors`
