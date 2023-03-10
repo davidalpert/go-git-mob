@@ -2,8 +2,8 @@
 # Make sure to check the documentation at https://goreleaser.com
 before:
   hooks:
-    - make clean
-    - go generate ./...
+    - task clean
+    - task gen
     - go mod tidy
 builds:
   - env:
