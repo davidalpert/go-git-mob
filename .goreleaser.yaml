@@ -8,6 +8,18 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+
+    # Path to main.go file or main package.
+    # Notice: when used with `gomod.proxy`, this must be a package.
+    #
+    # Default is `.`.
+    main: ./cmd/git-mob
+
+    # Binary name.
+    # Can be a path (e.g. `bin/app`) to wrap the binary in a directory.
+    # Default is the name of the project directory.
+    binary: git-mob
+
     goos:
       - linux
       - windows
