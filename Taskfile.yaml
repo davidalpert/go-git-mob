@@ -120,6 +120,9 @@ tasks:
       - 'echo "writing: ${GOPATH}/bin/git-mob"'
       - 'cp ./bin/git-mob ${GOPATH}/bin/'
       - '${GOPATH}/bin/git-mob install'
+    preconditions:
+      - '[[ -n ${GOPATH} ]]'
+      - test -d ${GOPATH}/bin
 
   uninstall:
     desc: uninstall go-git-mob from GOPATH
