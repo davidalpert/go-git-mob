@@ -100,7 +100,7 @@ Like the original nodejs `git-mob` plugin, this golang port tool differs from an
 
 ### Built with
 
-- [Golang 1.19](https://golang.org/)
+- [Golang 1.20](https://golang.org/)
 - [go-releaser](https://goreleaser.com/)
 
 <!-- GETTING STARTED -->
@@ -113,7 +113,7 @@ Like the original nodejs `git-mob` plugin, this golang port tool differs from an
 
 #### `go install`
 
-With a working golang installation at version >= 1.19 you can install or update with:
+With a working golang installation at version >= 1.20 you can install or update with:
 
 ```
 go install github.com/davidalpert/go-git-mob/cmd/git-mob@latest
