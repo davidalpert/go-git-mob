@@ -23,6 +23,11 @@ jobs:
     - name: Fetch all tags
       run: git fetch --force --tags
 
+    - name: Set Variables
+      run: |
+        echo "GO_VERSION=$(cat .tool-versions | grep golang | awk '{print $2}')" >> $GITHUB_ENV
+        echo "RUBY_VERSION=$(cat .ruby-version)" >> $GITHUB_ENV
+
     - name: Setup Reviewdog
       uses: reviewdog/action-setup@v1
       with:
@@ -42,7 +47,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.16.0'
+        go-version: ${{ env.GO_VERSION }}
 
     - name: Install Task
       uses: arduino/setup-task@v1
@@ -50,7 +55,7 @@ jobs:
     - name: Setup Ruby, JRuby and TruffleRuby # for integration testing
       uses: ruby/setup-ruby@v1.150.0
       with:
-        ruby-version: 3.0.2
+        ruby-version: ${{ env.RUBY_VERSION }}
 
     - name: Setup build dependencies
       run: |
