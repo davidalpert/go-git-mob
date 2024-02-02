@@ -29,6 +29,13 @@ Feature: git-mob.spec
     And the output should contain "Flags"
     And the output should contain "Examples"
 
+  Scenario: -p prints path to coauthors file
+    Given I set the environment variables to:
+      | variable              | value                |
+      | GITMOB_COAUTHORS_PATH | /home/.git-coauthors |
+    Given I successfully run `git mob -p`
+    Then the output should contain "/home/.git-coauthors"
+
   #@announce-stderr
   @not-windows
   Scenario: --help prints help
