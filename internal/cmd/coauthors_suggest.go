@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/apex/log"
 	"github.com/davidalpert/go-git-mob/internal/authors"
+	"github.com/davidalpert/go-git-mob/internal/diagnostics"
 	"github.com/davidalpert/go-git-mob/internal/gitCommands"
 	"github.com/davidalpert/go-git-mob/internal/revParse"
 	"github.com/davidalpert/go-printers/v1"
@@ -16,6 +18,7 @@ type CoauthorsSuggestOptions struct {
 	*printers.PrinterOptions
 	IncludeAll                 bool
 	CurrentCoAuthorsByInitials map[string]authors.Author
+	Filter                     string
 }
 
 func NewCoauthorsSuggestOptions(s printers.IOStreams) *CoauthorsSuggestOptions {
@@ -28,9 +31,9 @@ func NewCoauthorsSuggestOptions(s printers.IOStreams) *CoauthorsSuggestOptions {
 func NewCmdCoauthorsSuggest(s printers.IOStreams) *cobra.Command {
 	o := NewCoauthorsSuggestOptions(s)
 	var cmd = &cobra.Command{
-		Use:   "suggest",
+		Use:   "suggest [filter term]",
 		Short: "suggest some co-authors to add based on existing committers to your current repo",
-		Args:  cobra.NoArgs,
+		Args:  cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := o.Complete(cmd, args); err != nil {
 				return err
@@ -56,6 +59,7 @@ func (o *CoauthorsSuggestOptions) Complete(cmd *cobra.Command, args []string) er
 	} else {
 		o.CurrentCoAuthorsByInitials = allCoAuthorsByInitials
 	}
+	o.Filter = strings.Join(args, " ")
 	return nil
 }
 
@@ -77,6 +81,28 @@ func (o *CoauthorsSuggestOptions) lookupExistingCoauthorInitialsByEmail(e string
 	return "", false
 }
 
+func containsI(haystack, needle string) bool {
+	return strings.Contains(
+		strings.ToLower(haystack),
+		strings.ToLower(needle),
+	)
+}
+
+func (o *CoauthorsSuggestOptions) authorIncludedByFilter(a authors.Author) bool {
+	if o.Filter == "" {
+		diagnostics.Log.WithFields(log.Fields{"author": a}).Debug("excluding because filter is empty")
+		return true
+	}
+
+	if containsI(a.Name, o.Filter) || containsI(a.Email, o.Filter) || containsI(a.InitialsFromName(), o.Filter) {
+		fmt.Fprintf(o.Out, "including %#v because filter '%s' matches\n", a, o.Filter)
+		diagnostics.Log.WithFields(log.Fields{"author": a, "filter": o.Filter}).Debug("including because filter matches")
+		return true
+	}
+	diagnostics.Log.WithFields(log.Fields{"author": a, "filter": o.Filter}).Debug("excluding because filter doesn't matches")
+	return false
+}
+
 // Run the command
 func (o *CoauthorsSuggestOptions) Run() error {
 	aa, err := gitCommands.ShortLogAuthorSummary()
@@ -88,17 +114,21 @@ func (o *CoauthorsSuggestOptions) Run() error {
 	suggestedInitials := make([]string, 0)
 	anonymousSuggestions := make([]string, 0)
 	if o.IncludeAll {
-		for ii, _ := range aa {
-			suggestedInitials = append(suggestedInitials, ii)
+		for ii, a := range aa {
+			if o.authorIncludedByFilter(a) {
+				suggestedInitials = append(suggestedInitials, ii)
+			}
 		}
 	} else {
-		for ii, _ := range aa {
-			if existingInitials, found := o.lookupExistingCoauthorInitialsByEmail(aa[ii].Email); found {
-				foundInitials = append(foundInitials, existingInitials)
-			} else if aa[ii].LooksAnonymous() {
-				anonymousSuggestions = append(anonymousSuggestions, ii)
-			} else {
-				suggestedInitials = append(suggestedInitials, ii)
+		for ii, a := range aa {
+			if o.authorIncludedByFilter(a) {
+				if existingInitials, found := o.lookupExistingCoauthorInitialsByEmail(a.Email); found {
+					foundInitials = append(foundInitials, existingInitials)
+				} else if a.LooksAnonymous() {
+					anonymousSuggestions = append(anonymousSuggestions, ii)
+				} else {
+					suggestedInitials = append(suggestedInitials, ii)
+				}
 			}
 		}
 	}

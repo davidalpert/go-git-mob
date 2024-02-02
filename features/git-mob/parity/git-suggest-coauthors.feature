@@ -41,3 +41,22 @@ Feature: git-suggest-coauthors.spec
     And I successfully run `git suggest-coauthors -h`
     Then the output should contain "Usage"
     And the output should contain "Flags"
+
+    @wip
+  Scenario: suggests potential coauthors
+    Given a simple git repo at "example" with the following empty commits:
+      | Name        | Email               | Commit_Message          |
+      | Amy Doe     | amy@findmypast.com  | Amy's empty commit      |
+      | Kaylee Frye | kaylee@serenity.net | Kaylee F's empty commit |
+      | Kaylee Tam  | kaylee@tam.com      | Kaylee T's empty commit |
+      | Bob Doe     | bob@findmypast.com  | Bob's empty commit      |
+    When I cd to "example"
+    And I successfully run `git suggest-coauthors kaylee f`
+    Then the stdout from "git suggest-coauthors kaylee f" should contain:
+      """
+      Here are some suggestions for coauthors based on existing authors of this repository:
+
+      git add-coauthor kf "Kaylee Frye" kaylee@serenity.net
+
+      Paste any line above.
+      """
