@@ -14,7 +14,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.20.2
+	github.com/onsi/gomega v1.31.1
 	github.com/siderolabs/conform v0.1.0-alpha.27
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/cobra v1.8.0
