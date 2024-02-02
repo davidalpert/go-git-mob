@@ -22,6 +22,7 @@ type MobOptions struct {
 	Initials                 []string
 	ListOnly                 bool
 	PrintMob                 bool
+	PrintCoauthorsFilePath   bool
 	PrintVersion             bool
 	OverrideAuthorByInitials string
 	CurrentGitUser           *authors.Author
@@ -63,6 +64,7 @@ Examples:
 	o.AddPrinterFlags(cmd.Flags())
 
 	cmd.Flags().BoolVarP(&o.ListOnly, "list", "l", false, "list which co-authors are available")
+	cmd.Flags().BoolVarP(&o.PrintCoauthorsFilePath, "print-coauthors-file-path", "p", false, "print path to the coauthors file")
 	cmd.Flags().BoolVarP(&o.PrintVersion, "version", "v", false, "print git-mob version")
 	cmd.Flags().StringVarP(&o.OverrideAuthorByInitials, "override-author", "a", "", "replace the current author with the co-author matching these initials")
 
@@ -127,6 +129,10 @@ func (o *MobOptions) Run() error {
 		versionCmd := NewCmdVersion(o.IOStreams)
 		versionCmd.SetArgs([]string{}) // the version command doesn't accept the -v flag
 		return versionCmd.Execute()
+	}
+
+	if o.PrintCoauthorsFilePath {
+		return o.PrinterOptions.WriteOutput(authors.CoAuthorsFilePath)
 	}
 
 	if o.ListOnly {
