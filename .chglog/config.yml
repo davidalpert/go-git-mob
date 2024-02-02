@@ -13,6 +13,15 @@ options:
       #   - perf
       #   - refactor
   commit_groups:
+    sort_by: Custom
+    title_order:
+      - feat
+      - update
+      - perf
+      - fix
+      - refactor
+      - build
+      - chore
     title_maps:
       feat: Features
       fix: Bug Fixes
