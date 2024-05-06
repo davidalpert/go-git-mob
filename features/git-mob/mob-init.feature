@@ -21,14 +21,6 @@ Feature: mob-init
     Then the file ".git/hooks/prepare-commit-msg" should exist
     And the file ".git/hooks/prepare-commit-msg" should contain:
       """
-      #!/bin/sh
-
-      COMMIT_MSG_FILE=$1
-      COMMIT_SOURCE=$2
-      SHA1=$3
-
-      set -e
-
       git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
       """
     And the output should contain:

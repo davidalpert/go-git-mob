@@ -50,7 +50,7 @@ Feature: uninstall
     And a file named "local_bin/git-solo" should not exist
     And a file named "local_bin/git-suggest-coauthors" should not exist
 
-  Scenario: uninstall can break hook scripts
+  Scenario: uninstall no longer breaks hook scripts
 
     `git mob` doesn't track the initialization of hook scripts
     so it doesn't know what hook scripts to remove when it
@@ -60,9 +60,10 @@ Feature: uninstall
     check your `.git/hooks/prepare-commit-msg` hook script
     and remove or comment out references to `git mob`
 
-    :warning: if you have `git-mob` in your path when you run
-              this scenario it may fail as it expects to find
-              no `git-mob` instance after running `uninstall`
+    :information_source: this bug was fixed in GH-141 by updating
+                         the prepare-commit-msg script to fail
+                         silently if it cannot find the git mob
+                         plugin
 
     Given a simple git repo at "example"
     And I cd to "example"
@@ -70,8 +71,4 @@ Feature: uninstall
     And I successfully run `git commit --allow-empty -m "empty mobbed commit"`
     When I successfully run `git mob uninstall`
     And I run `git commit --allow-empty -m "empty mobbed commit"`
-    Then the exit status should be 1
-    And the output should contain:
-      """
-      git: 'mob' is not a git command. See 'git --help'.
-      """
+    Then the exit status should be 0
