@@ -173,7 +173,8 @@ grepVersion 'ruby' 'ruby --version' "$REQUIRED_RUBY_VERSION"
 findCmd gem
 findCmd bundle 'gem install bundler'
 
-findCmd godepgraph "go install github.com/kisielk/godepgraph@latest"
+# see: https://github.com/siderolabs/conform/issues/251
+#findCmd godepgraph "go install github.com/kisielk/godepgraph@latest"
 
 findCmd sbot "go install github.com/restechnica/semverbot/cmd/sbot@latest"
 if [ ! -f .semverbot.toml ]; then
@@ -181,42 +182,42 @@ if [ ! -f .semverbot.toml ]; then
   sbot init
 fi
 
-findCmd conform "go install github.com/siderolabs/conform/cmd/conform@latest"
-if [ ! -f .conform.yaml ]; then
-  note "initializing conform"
-  cat << EOD > .conform.yaml
-policies: []
-  - type: commit
-    spec:
-      header:
-        length: 80
-        imperative: true
-        case: lower
-        invalidLastCharacters: .
-      body:
-        required: false
-      gpg:
-        required: false
-      spellcheck:
-        locale: US
-      maximumOfOneCommit: false
-      conventional:
-        types:
-          - "build"    # Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-          - "ci"       # Changes to our CI configuration files and scripts (examples: CircleCi, SauceLabs)
-          - "docs"     # Documentation only changes
-          - "feat"     # A new feature
-          - "fix"      # A bug fix
-          - "perf"     # A code change that improves performance
-          - "refactor" # A code change that neither fixes a bug nor adds a feature
-          - "test"     # Adding missing tests or correcting existing tests
-        scopes:
-          - "migration"
-          - "import"
-          - "frontend"
-        descriptionLength: 72
-EOD
-fi
+#findCmd conform "go install github.com/siderolabs/conform/cmd/conform@latest"
+#if [ ! -f .conform.yaml ]; then
+#  note "initializing conform"
+#  cat << EOD > .conform.yaml
+#policies: []
+#  - type: commit
+#    spec:
+#      header:
+#        length: 80
+#        imperative: true
+#        case: lower
+#        invalidLastCharacters: .
+#      body:
+#        required: false
+#      gpg:
+#        required: false
+#      spellcheck:
+#        locale: US
+#      maximumOfOneCommit: false
+#      conventional:
+#        types:
+#          - "build"    # Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+#          - "ci"       # Changes to our CI configuration files and scripts (examples: CircleCi, SauceLabs)
+#          - "docs"     # Documentation only changes
+#          - "feat"     # A new feature
+#          - "fix"      # A bug fix
+#          - "perf"     # A code change that improves performance
+#          - "refactor" # A code change that neither fixes a bug nor adds a feature
+#          - "test"     # Adding missing tests or correcting existing tests
+#        scopes:
+#          - "migration"
+#          - "import"
+#          - "frontend"
+#        descriptionLength: 72
+#EOD
+#fi
 
 findCmd git-chglog "go install github.com/git-chglog/git-chglog/cmd/git-chglog@v0.15.1"
 if [ ! -f .chglog/config.yml ]; then
