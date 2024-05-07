@@ -34,6 +34,19 @@
 ## Changelog
 
 
+<a name="v0.11.1"></a>
+## [v0.11.1] - 2024-05-06
+### Bug Fixes
+- prepare-commit-msg script fails when cannot find git mob
+
+### Build
+- wip up the [@not](https://github.com/not)-windows as it's failing (er, passing)
+- fix issue where installing godepgraph failed with invalid go version
+
+### Pull Requests
+- Merge pull request [#147](https://github.com/davidalpert/go-git-mob/issues/147) from davidalpert/[GH-141](https://github.com/davidalpert/go-git-mob/issues/141)-hook-scripts-fail-without-login-shell
+
+
 <a name="v0.11.0"></a>
 ## [v0.11.0] - 2024-02-02
 ### Features
@@ -606,7 +619,8 @@
 - add vscode workspace
 
 
-[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/davidalpert/go-git-mob/compare/v0.11.1...HEAD
+[v0.11.1]: https://github.com/davidalpert/go-git-mob/compare/v0.11.0...v0.11.1
 [v0.11.0]: https://github.com/davidalpert/go-git-mob/compare/v0.10.0...v0.11.0
 [v0.10.0]: https://github.com/davidalpert/go-git-mob/compare/v0.9.2...v0.10.0
 [v0.9.2]: https://github.com/davidalpert/go-git-mob/compare/v0.9.1...v0.9.2
