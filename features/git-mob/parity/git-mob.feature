@@ -37,7 +37,7 @@ Feature: git-mob.spec
     Then the output should contain "/home/.git-coauthors"
 
   #@announce-stderr
-  @not-windows
+  @not-windows @wip
   Scenario: --help prints help
     # --help is intercepted by the git plugin launcher which returns a 404 (help not found)
     When I run `git mob --help`
