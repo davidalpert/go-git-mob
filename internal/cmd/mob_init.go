@@ -72,7 +72,7 @@ SHA1=$3
 
 set -e
 
-git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1
+if [ -z "$(which git-mob)" ]; then echo "WARNING: could not locate 'git-mob'; commits will not be prepared"; else git mob hooks prepare-commit-msg "$COMMIT_MSG_FILE" $COMMIT_SOURCE $SHA1; fi
 `
 	if err := os.WriteFile(fileName, []byte(fileContents), 0755); err != nil {
 		return fmt.Errorf("writing git hook: %v", err)

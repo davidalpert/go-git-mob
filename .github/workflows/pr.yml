@@ -59,9 +59,9 @@ jobs:
 
     - name: Setup build dependencies
       run: |
-        go install github.com/kisielk/godepgraph@latest
+        echo skipping: go install github.com/kisielk/godepgraph@latest
         go install github.com/restechnica/semverbot/cmd/sbot@latest
-        go install github.com/siderolabs/conform/cmd/conform@latest
+        echo skipping: go install github.com/siderolabs/conform/cmd/conform@latest
         go install github.com/git-chglog/git-chglog/cmd/git-chglog@v0.15.1
 
     - name: Validate build dependencies
