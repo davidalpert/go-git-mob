@@ -53,7 +53,7 @@ jobs:
       uses: arduino/setup-task@v2
 
     - name: Setup Ruby, JRuby and TruffleRuby # for integration testing
-      uses: ruby/setup-ruby@v1.176.0
+      uses: ruby/setup-ruby@v1.183.0
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
 
