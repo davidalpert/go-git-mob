@@ -36,6 +36,8 @@
   - [Up for grabs](#up-for-grabs)
 - [Setup for local development](#setup-for-local-development)
   - [Install prerequisites](#install-prerequisites)
+    - [With ASDF](#with-asdf)
+    - [Manually](#manually)
   - [Get the code](#get-the-code)
   - [Visit the doctor](#visit-the-doctor)
   - [Run locally](#run-locally)
@@ -68,16 +70,50 @@ The [v1.0 - feature parity](https://github.com/davidalpert/go-git-mob/projects/1
 
 ### Install prerequisites
 
-* [Make](https://www.gnu.org/software/make/manual/html_node/index.html#Top)  - often comes bundled with C compiler tools
-* [golang 1.18](https://golang.org/doc/manage-install)
+#### With ASDF
+
+This repo includes a `.tool-versions` file that works with the `asdf` version manager:
+
+* install [asdf](https://asdf-vm.com/guide/getting-started.html)
+* install project dependencies
+
+    ```
+     asdf install
+    ```
+
+If that fails you can install the various plugins individually and try again:
+
+* `golang`
+
+    ```
+    asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
+    ```
+
+* `task`
+
+    ```
+    asdf plugin add task https://github.com/particledecay/asdf-task.git
+    ```
+
+* `ruby`
+
+    ```
+    asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+    ```
+
+
+#### Manually
+
+* [Task](https://taskfile.dev/installation/)
+* [golang 1.20](https://golang.org/doc/manage-install)
   * with a working go installation:
     ```
-    go install golang.org/dl/go1.18@latest
-    go1.18 download
+    go install golang.org/dl/go1.20@latest
+    go1.20 download
     ```
-  * open a terminal with `go1.18` as the linked `go` binary
+  * open a terminal with `go1.20` as the linked `go` binary
 
-* ruby 3.0.2
+* ruby 3.3.4
 
   * this project uses ruby and cucumber/aruba for integration tests and includes a `.ruby-version` file which specifies the supported/required version of ruby
   * use a ruby version manager like [rbenv](https://github.com/rbenv) or [asdf](https://asdf-vm.com/); or
