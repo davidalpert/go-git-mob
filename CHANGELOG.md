@@ -35,15 +35,37 @@
 
 
 <a name="v0.11.1"></a>
-## [v0.11.1] - 2024-05-06
+## [v0.11.1] - 2025-10-10
+### Doc
+- update dependency setup requirements
+
 ### Bug Fixes
+- git mob coauthors suggest fails on name parts with no length
 - prepare-commit-msg script fails when cannot find git mob
 
 ### Build
+- remove vale from the doctor script
 - wip up the [@not](https://github.com/not)-windows as it's failing (er, passing)
 - fix issue where installing godepgraph failed with invalid go version
+- **deps:** bump github.com/siderolabs/conform
+- **deps:** bump github.com/stretchr/testify from 1.8.4 to 1.9.0
+- **deps:** bump ruby/setup-ruby from 1.171.0 to 1.176.0
+- **deps:** bump goreleaser/goreleaser-action from 4 to 5
+- **deps:** bump actions/checkout from 3 to 4
+- **deps:** bump actions/setup-go from 4 to 5
+- **deps:** bump arduino/setup-task from 1 to 2
+
+### Chore
+- upgrade to ruby 3.3.4
 
 ### Pull Requests
+- Merge pull request [#138](https://github.com/davidalpert/go-git-mob/issues/138) from davidalpert/dependabot/go_modules/github.com/siderolabs/conform-0.1.0-alpha.30
+- Merge pull request [#139](https://github.com/davidalpert/go-git-mob/issues/139) from davidalpert/dependabot/go_modules/github.com/stretchr/testify-1.9.0
+- Merge pull request [#148](https://github.com/davidalpert/go-git-mob/issues/148) from davidalpert/dependabot/github_actions/ruby/setup-ruby-1.176.0
+- Merge pull request [#133](https://github.com/davidalpert/go-git-mob/issues/133) from davidalpert/dependabot/github_actions/goreleaser/goreleaser-action-5
+- Merge pull request [#135](https://github.com/davidalpert/go-git-mob/issues/135) from davidalpert/dependabot/github_actions/actions/checkout-4
+- Merge pull request [#136](https://github.com/davidalpert/go-git-mob/issues/136) from davidalpert/dependabot/github_actions/actions/setup-go-5
+- Merge pull request [#137](https://github.com/davidalpert/go-git-mob/issues/137) from davidalpert/dependabot/github_actions/arduino/setup-task-2
 - Merge pull request [#147](https://github.com/davidalpert/go-git-mob/issues/147) from davidalpert/[GH-141](https://github.com/davidalpert/go-git-mob/issues/141)-hook-scripts-fail-without-login-shell
 
 
